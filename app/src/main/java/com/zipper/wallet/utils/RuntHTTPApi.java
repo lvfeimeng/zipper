@@ -89,7 +89,7 @@ public class RuntHTTPApi {
 	 * @param params
 	 * @param stringCallback
 	 */
-	public static void toReApi(String lastUrl, Map<String, Object> params, StringCallback stringCallback){
+	public static void toReApi(String lastUrl, Map<String, Object> params, MyStringCallBack stringCallback){
 		params.put("submit", "1");
 		String url = SERVER_URL+lastUrl;
 		System.out.println("---------------传输的数据-------------------");
@@ -309,9 +309,6 @@ public class RuntHTTPApi {
 
 						if(message == null){
 							message = jsonstr;
-						}
-						if(!message.toString().trim().equals("查询成功")&& !message.toString().trim().equals("成功")) {
-							//Toast.makeText(mContext, message + "", Toast.LENGTH_SHORT).show();
 						}
 						if (KEY_CODE_SUCCESS.equals(param.get(KEY_MES_CODE))) {
 							if(resPonse!=null) {
