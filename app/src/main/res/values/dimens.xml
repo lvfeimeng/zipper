@@ -1,0 +1,32 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="anima_time">300</dimen>
+    <dimen name="corner_10">10dp</dimen>
+    <dimen name="corner_5">5dp</dimen>
+    <dimen name="item_lin_height">50dp</dimen>
+    <dimen name="circle_radius_30">15dp</dimen>
+    <dimen name="circle_big_radius">100dp</dimen>
+    <dimen name="circle_height">30dp</dimen>
+    <dimen name="btn_padding_lr">20dp</dimen>
+    <dimen name="txt_size_12">12sp</dimen>
+    <dimen name="txt_size_14">14sp</dimen>
+    <dimen name="txt_size_16">16sp</dimen>
+    <dimen name="txt_size_17">17sp</dimen>
+    <dimen name="text_border">0.1dp</dimen>
+    <dimen name="txt_size_content_title">20sp</dimen>
+    <dimen name="drawablesize">3</dimen>
+    <dimen name="bank_logo_size">60dp</dimen>
+    <dimen name="bank_logo_width">80dp</dimen>
+    <dimen name="bank_logo_margin">10dp</dimen>
+    <dimen name="text_pay_size">40dp</dimen>
+    <dimen name="pay_point_size">20dp</dimen>
+    <dimen name="dialog_pay_height">400dp</dimen>
+    <dimen name="coupon_bg_width">300dp</dimen>
+    <dimen name="coupon_bg_height">70dp</dimen>
+    <dimen name="coupon_left_width">100dp</dimen>
+    <dimen name="collect_title_width">200dp</dimen>
+    <dimen name="text_padding_left">15dp</dimen>
+    <!-- end Runt -->
+
+</resources>
