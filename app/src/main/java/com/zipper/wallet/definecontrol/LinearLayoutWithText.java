@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zipper.wallet.R;
 import com.zipper.wallet.listenear.OnClickListenearAndDo;
 import com.zipper.wallet.utils.KeyBoardUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
@@ -268,71 +269,13 @@ public class LinearLayoutWithText extends LinearLayout {
         });
     }
 
-    /**
-     *
-     * 设置弹出输入框，输入文字事件  对应属性
-     *
-     * @param context
-     * @param title 弹框标题
-     * @param hint  输入框默认提示文字 必须含有“请输入”
-     */
-    public void setInputOnclickListener(final Context context,final String title,final String hint){
-        setInputOnclickListener(context,title,hint,InputType.TYPE_CLASS_TEXT);
-    }
-
 
     /**
      *
      * 设置弹出输入框，输入文字事件
-     * @param context
-     * @param title 弹框标题
-     * @param hint  输入框默认提示文字 必须含有“请输入”
-     * @param inputType  输入框输入类型 如：InputType.TYPE_CLASS_TEXT
      */
-    public void setInputOnclickListener(final Context context, final String title, final String hint, final int inputType){
-        lin.setOnClickListener(new OnClickListenearAndDo() {
-            @Override
-            public void doClick(View view) {
-                View dialogView = ((Activity)context).getLayoutInflater().inflate(R.layout.layout_edittext,null);
-                final EditText et = (EditText)dialogView.findViewById(R.id.edit_input);
-                et.setHint(hint);
-                et.setInputType(inputType);
-                String txt = right.getText().toString();
-                if(txt.indexOf("请输入")>-1) {
-                    et.setText("");
-                }else{
-                    et.setText(txt);
-                    et.setSelection(txt.length());
-                }
-                final AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle("设置" + title)
-                        .setView(dialogView)
-                        .setCancelable(false)
-                        .setNegativeButton("取消",null)
-                        .setPositiveButton("确定", null).create();
-                alertDialog.show();
-                KeyBoardUtils.openKeybord(et,context);
-                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new OnClickListenearAndDo() {
-                    @Override
-                    public void doClick(View v) {
-                        KeyBoardUtils.closeKeybord(et,context);
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListenearAndDo() {
-                    @Override
-                    public void doClick(View v) {
-                        if (TextUtils.isEmpty(et.getText())) {
-                            Toast.makeText(context,"请输入" + title,Toast.LENGTH_SHORT).show();
-                        }else{
-                            KeyBoardUtils.closeKeybord(et,context);
-                            right.setText(et.getText());
-                            alertDialog.dismiss();
-                        }
-                    }
-                });
-            }
-
-        });
+    public void setInputOnclickListener(OnClickListenearAndDo onclickListener){
+        lin.setOnClickListener(onclickListener);
     }
 
     public void setRightSize(float size){
