@@ -5,5 +5,12 @@
         <!-- Customize your theme here. -->
 
     </style>
-
+    <style name="EditText_register" parent="Theme.AppCompat.Light">
+        <item name="android:layout_height">@dimen/item_lin_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center|left</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="colorControlNormal">@color/color_gray4</item>
+        <item name="colorControlActivated">@color/color_gray3</item>
+    </style>
 </resources>

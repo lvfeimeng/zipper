@@ -38,6 +38,7 @@
     <color name="color_blue">#5070b2</color>
     <color name="color_blue_d">#182f5e</color>
     <color name="green_right">#2bcc6e</color>
+    <color name="green_deep">#029789</color>
     <color name="color_divider">#f4f4f4</color>
 
     <color name="login_black">#cacacb</color>
