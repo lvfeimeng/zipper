@@ -1,5 +1,6 @@
 package com.zipper.wallet.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -60,6 +61,20 @@ public class BackUpAcitivty extends BaseActivity {
                     @Override
                     public void doSuccessThing(Map<String, Object> param) {
                         showProgressDialog("正在导出。。。");
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        hideProgressDialog();
+                                        Intent intent = new Intent(mContext,MnemonicActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                });
+                            }
+                        },5000);
                     }
 
                     @Override

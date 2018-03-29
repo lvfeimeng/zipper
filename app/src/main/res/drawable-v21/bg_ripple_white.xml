@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/color_gray4" >
+    <item>
+        <selector>
+            <item android:drawable="@drawable/bg_enable_corner100_shadow" android:state_enabled="false" />
+            <item android:drawable="@drawable/btn_touch_down_corner100_shadow" android:state_pressed="true"/>
+            <item android:drawable="@drawable/btn_white_corner100_shadow" android:state_pressed="false"/><!-- 默認顯示顔色-->
+        </selector>
+    </item>
+
+</ripple>

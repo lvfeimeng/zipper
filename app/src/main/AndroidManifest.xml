@@ -22,6 +22,7 @@
         <activity android:name=".activity.CreateAccountActivity" />
         <activity android:name=".activity.WelcomActivity" />
         <activity android:name=".activity.BackUpAcitivty" />
+        <activity android:name=".activity.MnemonicActivity" />
     </application>
 
 </manifest>
