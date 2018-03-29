@@ -262,7 +262,7 @@ public class RuntHTTPApi {
         }
     }
 
-	public abstract class ResPonse {
+	public abstract static class ResPonse {
 		public abstract void doSuccessThing(Map<String,Object> param);
 		public abstract void doErrorThing(Map<String,Object> param);
 	}

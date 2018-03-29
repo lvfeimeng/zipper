@@ -13,4 +13,65 @@
         <item name="colorControlNormal">@color/color_gray4</item>
         <item name="colorControlActivated">@color/color_gray3</item>
     </style>
+
+
+    <!-- dialog背景样式 -->
+    <style name="MyDialog"  parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@color/transparent</item>
+        <!-- 背景 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- 边框 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 标题 -->
+        <item name="android:clipChildren">false</item>
+        <item name="android:clipToPadding">false</item>
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="DialogTheme">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+
+    <!--  列表文字按键样式 -->
+    <style name="btn_small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:paddingLeft">@dimen/btn_padding_lr</item>
+        <item name="android:paddingRight">@dimen/btn_padding_lr</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/txt_size_14</item>
+    </style>
+
+    <!--  按钮样式 -->
+    <style name="btn_sky_blue" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorButtonNormal">@color/blue_sky</item><!--正常状态下的颜色  -->
+        <item name="colorControlHighlight">@color/color_gray3</item><!--覆盖色，按下的颜色  -->
+    </style>
+
+
+    <!--  列表edittext样式 -->
+    <style name="item_edit_left">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/item_lin_height</item>
+        <item name="android:background">@null</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/color_title</item>
+        <item name="android:textColorHint">@color/login_black</item>
+        <item name="android:textSize">@dimen/txt_size_14</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <!--  按钮样式 -->
+    <style name="btn_red" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorButtonNormal">@color/login_red</item><!--正常状态下的颜色  -->
+        <item name="colorControlHighlight">@color/color_gray3</item><!--覆盖色，按下的颜色  -->
+    </style>
+
+
 </resources>

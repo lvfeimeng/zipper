@@ -17,6 +17,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".activity.AgreementActivity" />
+        <activity android:name=".activity.CreateAccountActivity" />
+        <activity android:name=".activity.WelcomActivity" />
+        <activity android:name=".activity.BackUpAcitivty" />
     </application>
 
 </manifest>

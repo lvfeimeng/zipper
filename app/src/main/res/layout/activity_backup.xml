@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_lin_height"
+            android:text="最后一步，立即备份钱包！"
+            android:textSize="23sp"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="@dimen/item_lin_height"
+            android:background="@color/color_gray" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/lin_creating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="正在创建中"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="通常需要几十秒，请耐心等待" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lin_backup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_centerInParent="true"
+                android:visibility="invisible">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/bg_circle_gray"
+                        android:gravity="center"
+                        android:text="1" />
+
+
+                    <TextView
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:text="导出[助记词]并抄写到安全的地方，千万不要保存到网络上" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/bg_circle_gray"
+                        android:gravity="center"
+                        android:text="2" />
+
+
+                    <TextView
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:text="尝试转入、转出小额资产开始使用" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/lin_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_gray6"
+        android:gravity="right|center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/txt_skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:text="跳过"
+            android:textColor="@color/blue_sky" />
+
+
+        <Button
+            android:id="@+id/btn_backup"
+            style="@style/btn_small"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="立即备份"
+            android:textColor="@color/white"
+            android:theme="@style/btn_sky_blue" />
+    </LinearLayout>
+
+
+</LinearLayout>

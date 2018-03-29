@@ -45,10 +45,11 @@
 
 
         <Button
+            android:id="@+id/btn_create"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:textColor="@color/white"
-            android:background="@drawable/btn_ripple_blue_corner"
+            android:theme="@style/btn_sky_blue"
             android:text="创建账户"/>
 
     </LinearLayout>

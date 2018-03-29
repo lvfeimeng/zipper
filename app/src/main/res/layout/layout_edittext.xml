@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/lin_edit_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_lin_height"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit_input"
+            style="@style/item_edit_left"
+            android:hint="请输入验证码"/>
+
+        <Button
+            android:id="@+id/btnSendCode"
+            style="@style/btn_small"
+            android:theme="@style/btn_red"
+            android:visibility="gone"
+            android:text="获取验证码"/>
+
+    </LinearLayout>
+
+</LinearLayout>

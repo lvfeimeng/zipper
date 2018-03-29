@@ -53,6 +53,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
+    compile 'com.facebook.rebound:rebound:0.3.6'//Rebound  “弹簧”动画效果的第三方工具包，由FaceBook
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'com.zhy:okhttputils:2.6.2'

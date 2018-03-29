@@ -37,23 +37,27 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/ed_name"
             android:hint="钱包名称"
             style="@style/EditText_register"
 
             />
         <EditText
+            android:id="@+id/ed_pwd"
             android:hint="密码"
             android:inputType="textPassword"
             style="@style/EditText_register"
 
             />
         <EditText
+            android:id="@+id/ed_repeat"
             android:inputType="textPassword"
             android:hint="重复密码"
             style="@style/EditText_register"
 
             />
         <EditText
+            android:id="@+id/ed_pwd_tip"
             style="@style/EditText_register"
             android:hint="密码提示（选填）"
 
@@ -66,6 +70,7 @@
             android:orientation="horizontal">
 
             <CheckBox
+                android:id="@+id/check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
@@ -75,12 +80,13 @@
 
 
         <Button
+            android:id="@+id/btn_create"
             android:layout_width="220dp"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:layout_gravity="center"
             android:textColor="@color/white"
-            android:background="@drawable/btn_ripple_blue_corner"
+            android:theme="@style/btn_sky_blue"
             android:text="创建账户"/>
     </LinearLayout>
 
