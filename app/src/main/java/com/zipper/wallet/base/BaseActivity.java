@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.R;
 import com.zipper.wallet.dialog.TipDialog;
 import com.zipper.wallet.listenear.OnClickListenearAndDo;
 import com.zipper.wallet.utils.RuntHTTPApi;
@@ -36,6 +37,10 @@ public class BaseActivity extends AppCompatActivity {
         ActivityManager.getInstance().addActivity(this);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = this;
+    }
+
+    public int getColorById(int colorId){
+        return getResources().getColor(colorId);
     }
 
     @Override
