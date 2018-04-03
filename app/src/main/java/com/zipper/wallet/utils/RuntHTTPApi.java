@@ -274,9 +274,9 @@ public class RuntHTTPApi {
 		ResPonse resPonse;
 
 		public final static String MESS_TIP_NET_ERROR = "网络连接不畅，请稍后再试！！！";
-		public final static String KEY_MES_CODE= "code";
+		public final static String KEY_MES_CODE= "qr_code";
 		public final static String KEY_MES_MESSAGE= "message";
-		public final static String KEY_CODE_SUCCESS= "0";//code 0 成功
+		public final static String KEY_CODE_SUCCESS= "0";//qr_code 0 成功
 
 		public  MyStringCallBack(Context context,ResPonse resPonse){
 			this.resPonse = resPonse;

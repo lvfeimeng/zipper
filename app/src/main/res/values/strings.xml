@@ -6,4 +6,5 @@
     <string name="offical_wallet_hint">直接复制粘贴以太坊官方钱包keystore文件内容至输入框。或者通过生成keystore内容的二维码，扫描录入。</string>
     <string name="observe_hint">观察钱包不需要导入私钥，只导入钱包地址，进行日常查看账户、交易和接收通知。大额资金的私钥建议使用冷钱包或硬件钱包管理，避免泄露被盗。</string>
     <string name="observe_hint2">注意：观察钱包发送交易时需要冷钱包配合签名。你可以使用另一台闲置手机，开飞行模式作为冷钱包，导入钱包私钥，配合离线签名。</string>
+    <string name="scan_code_hint">将条码二维码放入框内，即可自动扫描</string>
 </resources>

@@ -26,4 +26,25 @@
         android:layout_marginTop="10dp"
         android:background="@color/colorPrimary"/>
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="我的钱包"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="添加新资产"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimary"/>
+
 </LinearLayout>
