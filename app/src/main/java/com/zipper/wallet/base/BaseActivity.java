@@ -11,24 +11,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.definecontrol.TitleBarView;
 import com.zipper.wallet.dialog.TipDialog;
 import com.zipper.wallet.listenear.OnClickListenearAndDo;
+import com.zipper.wallet.utils.KeyBoardUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.ScreenUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     protected Context mContext;
     protected AlertDialog alertDialog;
+    protected TitleBarView titlebar;
+    protected String TAG = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +41,15 @@ public class BaseActivity extends AppCompatActivity {
         ActivityManager.getInstance().addActivity(this);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = this;
+        titlebar = (TitleBarView)findViewById(R.id.title_bar);
+        TAG = getLocalClassName();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+
+
+    public int getColorById(int colorId){
+        return getResources().getColor(colorId);
     }
 
     @Override
@@ -85,7 +99,6 @@ public class BaseActivity extends AppCompatActivity {
      * @param hint  默认提示文字
      * @param text  文本
      * @param inputType 输入类型
-     * @param okRp  按钮执行的方法
      */
     protected void showInputDialog(String title, String hint, String text , int inputType, final RuntHTTPApi.ResPonse Rp){
 
@@ -115,7 +128,41 @@ public class BaseActivity extends AppCompatActivity {
             public void doClick(View view) {
                 Map map = new HashMap();
                 map.put("view",et.getText());
-                Rp.doSuccessThing(map);
+                if(Rp !=null) {
+                    Rp.doSuccessThing(map);
+                }
+            }
+        });
+    }
+
+
+    /**
+     *  显示输入型弹框
+     * @param title 标题
+     * @param tip  文本
+     */
+    protected void showDoubleButtonDialog(String title,  String tip , final RuntHTTPApi.ResPonse Rp,String leftBtnName,String rightBtnName){
+
+        alertDialog = new AlertDialog.Builder(mContext).setTitle(title ).setMessage(tip)
+                .setCancelable(false)
+                .setNegativeButton((leftBtnName.equals("")?getString(R.string.cancel):leftBtnName), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        alertDialog.dismiss();;
+                        if(Rp !=null) {
+                            Rp.doErrorThing(null);
+                        }
+                    }
+                })
+                .setPositiveButton(rightBtnName.equals("")?getString(R.string.ok):rightBtnName, null).create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListenearAndDo() {
+            @Override
+            public void doClick(View view) {
+                Map map = new HashMap();
+                if(Rp !=null) {
+                    Rp.doSuccessThing(map);
+                }
             }
         });
     }
@@ -137,4 +184,14 @@ public class BaseActivity extends AppCompatActivity {
         progressDialog.cancel();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        KeyBoardUtils.closeKeybord(mContext);
+        if(alertDialog !=null){
+
+            alertDialog.dismiss();
+            alertDialog = null;
+        }
+    }
 }

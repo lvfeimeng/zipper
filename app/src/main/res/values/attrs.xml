@@ -50,4 +50,48 @@
         <attr name="enable" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="titlebar">
+        <attr name="relbackgroundColor" format="color" />
+        <attr name="title_text" />
+        <attr name="title_textColor"  format="color"/>
+        <attr name="right_text" />
+        <attr name="right_textColor"  format="color"/>
+        <attr name="left_text" />
+        <attr name="left_textColor"  format="color"/>
+        <attr name="right_visible">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="4" />
+            <enum name="gone" value="8" />
+        </attr>
+        <attr name="right_icon_visible">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="4" />
+            <enum name="gone" value="8" />
+        </attr>
+        <attr name="left_visible">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="4" />
+            <enum name="gone" value="8" />
+        </attr>
+        <attr name="left_icon_visible">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="4" />
+            <enum name="gone" value="8" />
+        </attr>
+        <attr name="title_visible">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="4" />
+            <enum name="gone" value="8" />
+        </attr>
+        <attr name="bottom_visible">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="4" />
+            <enum name="gone" value="8" />
+        </attr>
+        <attr name="righticon_src"  format="reference"/>
+        <attr name="lefticon_src"  format="reference"/>
+        <attr name="left_enable" format="boolean" />
+        <attr name="right_enable" format="boolean" />
+    </declare-styleable>
+
 </resources>

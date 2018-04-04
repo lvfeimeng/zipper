@@ -1,6 +1,7 @@
 package com.zipper.wallet;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -12,10 +13,10 @@ import io.reactivex.functions.Consumer;
 
 public class TestActivity extends BaseActivity {
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Disposable disposable =
                 new RxPermissions(this)
                         .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                         .subscribe(new Consumer<Boolean>() {
@@ -28,6 +29,5 @@ public class TestActivity extends BaseActivity {
                                 }
                             }
                         });
-        disposable.dispose();
     }
 }

@@ -6,117 +6,163 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_lin_height">
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:textColor="@color/color_gray1"
-            android:text="提示"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/black"
-            android:text="抄下你的钱包助记词"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="false"
-            android:text="助记词用户回复钱包或重置钱包密码，将它准确的抄写到纸上，并存放在只有你知道的安全点地方"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:padding="20dp"
-        android:background="@color/color_gray4"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:textColor="@color/black"
-            android:text="助记词"/>
-
-        <TextView
-            android:id="@+id/txt_mnem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:singleLine="false"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:text="number"/>
-
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/rel_words"
-        android:layout_width="match_parent"
-        android:padding="20dp"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp"
-            android:gravity="center"
-            android:clickable="true"
-            android:background="@drawable/btn_blue_corner100_shadow"
-            android:text="heheda"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
-            android:clickable="true"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp"
-            android:gravity="center"
-            android:background="@drawable/bg_ripple_white"
-            android:text="heheda"/>
-    </RelativeLayout>
-
-    <LinearLayout
+    <com.zipper.wallet.definecontrol.TitleBarView
+        android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingLeft="10dp"
-        android:orientation="vertical">
+        app:bottom_visible="gone"
+        app:left_icon_visible="visible"
+        app:title_text=" ">
+
+    </com.zipper.wallet.definecontrol.TitleBarView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/lin_copy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/txt_step1_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="center"
+                    android:text="抄下钱包助记词"
+                    android:textColor="@color/black"
+                    android:textSize="25sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
 
-        <Button
-            android:id="@+id/btn_next"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center"
-            android:textColor="@color/white"
-            android:theme="@style/btn_sky_blue"
-            android:text="下一步"/>
-    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:text="助记词用户回复钱包或重置钱包密码，将它准确的抄写到纸上，并存放在只有你知道的安全点地方" />
+                    
+                    
+                    
+                    <TextView
+                        android:id="@+id/txt_mnem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/black"
+                        android:padding="10dp"
+                        android:text=""
+                        android:background="@color/color_gray"/>
+                    
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lin_verify"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_bottom_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="center"
+                    android:text="备份钱包助记词"
+                    android:textColor="@color/black"
+                    android:textSize="25sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:text="已选钱包助记词" />
+
+                </LinearLayout>
+
+                <com.zipper.wallet.definecontrol.FlowLayout
+                    android:id="@+id/flowlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/bg_border_gray">
+
+
+                </com.zipper.wallet.definecontrol.FlowLayout>
+
+
+
+                <LinearLayout
+                    android:id="@+id/rel_words"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:text="请按顺序点击助记词，以确认你的助记词正确" />
+
+                    <com.zipper.wallet.definecontrol.FlowLayout
+                        android:id="@+id/flowlayout_bottom"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp">
+
+
+                    </com.zipper.wallet.definecontrol.FlowLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="20dp">
+
+
+                <Button
+                    android:id="@+id/btn_ok"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/btn_ripple_blue_corner"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="@string/ok"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

@@ -3,6 +3,8 @@ package com.zipper.wallet.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -10,6 +12,7 @@ import android.widget.EditText;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.utils.KeyBoardUtils;
 
 /**
  * Created by Administrator on 2018/3/29.
@@ -17,48 +20,53 @@ import com.zipper.wallet.base.BaseActivity;
 
 public class CreateAccountActivity extends BaseActivity {
 
-    EditText edName,edPwd,edPwdRe,edTip;
-    CheckBox checkBox;
+    EditText edName;
     Button btnCreate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
+        super.onCreate(savedInstanceState);
         edName = (EditText)findViewById(R.id.ed_name);
-        edPwd = (EditText)findViewById(R.id.ed_pwd);
-        edPwdRe = (EditText)findViewById(R.id.ed_repeat);
-        edTip = (EditText)findViewById(R.id.ed_pwd_tip);
-        btnCreate = (Button)findViewById(R.id.btn_create);
-        checkBox = (CheckBox)findViewById(R.id.check);
+        btnCreate = (Button)findViewById(R.id.btn_next);
+        edName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String str = edName.getText().toString();
+                if(str.equals("")){
+                    btnCreate.setEnabled(false);
+                }else{
+                    btnCreate.setEnabled(true);
+                }
+
+            }
+        });
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isNull(edName)){
-                    showTipDialog("请填写钱包名称",null);
-                    return;
-                }
-                if(isNull(edPwd)){
-                    showTipDialog("请填写密码",null);
-                    return;
-                }
-                if(isNull(edPwdRe)){
-                    showTipDialog("请再填写一次密码",null);
-                    return;
-                }
-                if(!edPwd.getText().toString().trim().equals(edPwdRe.getText().toString().trim())){
-                    showTipDialog("密码不一致",null);
-                    return;
-                }
-
-                if(checkBox.isChecked()){
-                    Intent intent = new Intent(CreateAccountActivity.this,BackUpAcitivty.class);
+                    Intent intent = new Intent(mContext,CreatePwdAcitivty.class);
                     startActivity(intent);
                     finish();
-                }else{
-                    toast("需要同意用户协议哦！！！");
-                }
             }
         });
+
+        titlebar.setRightOnclickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                KeyBoardUtils.closeKeybord(mContext);
+            }
+        });
+
     }
 }

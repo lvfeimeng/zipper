@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">ZipperWallet</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="offical_wallet_hint">直接复制粘贴以太坊官方钱包keystore文件内容至输入框。或者通过生成keystore内容的二维码，扫描录入。</string>
+    <string name="observe_hint">观察钱包不需要导入私钥，只导入钱包地址，进行日常查看账户、交易和接收通知。大额资金的私钥建议使用冷钱包或硬件钱包管理，避免泄露被盗。</string>
+    <string name="observe_hint2">注意：观察钱包发送交易时需要冷钱包配合签名。你可以使用另一台闲置手机，开飞行模式作为冷钱包，导入钱包私钥，配合离线签名。</string>
+    <string name="create_wallet">创建钱包</string>
+    <string name="import_wallet">导入钱包</string>
+    <string name="risk">风险评估</string>
+    <string name="risk_for_what">为什么需要风险评估</string>
+    <string name="skip">跳过</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="remove">移除</string>
+    <string name="not_remove">不移除</string>
+    <string name="deal">确认</string>
+    <string name="next">下一步</string>
+    <string name="wallet_name">钱包名称</string>
+    <string name="pwd">密码</string>
+    <string name="pwd_repeat">重复密码</string>
+    <string name="pwd_tip">密码提示</string>
+    <string name="pwd_warning">● 密码强度太弱，极易被黑客破解</string>
+    <string name="not_must">选填</string>
+    <string name="wallet_hint">钱包名称支持中英文，不支持特殊符号</string>
+    <string name="pwd_work">密码用于保护私钥和交易授权，强度非常重要。zipper不储存密码，也无法帮您找回，请务必牢记</string>
+    <string name="read_agree">我已经仔细阅读并同意</string>
+    <string name="service_clause">服务及隐私条款</string>
+    <string name="create">创建</string>
+    <string name="creating">正在后台生成短地址，可能需要一段时间，可在首页查看</string>
+    <string name="backup_tips">备份钱包：导出“助记词”并抄写到安全的地方，千万别保存到网络。然后尝试转入、转出小额资产开始使用。</string>
+    <string name="backup">备份</string>
+    <string name="backup_wallet">备份钱包</string>
+    <string name="backup_mnem">备份助记词</string>
+
 </resources>

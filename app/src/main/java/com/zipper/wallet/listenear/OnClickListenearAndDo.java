@@ -7,10 +7,9 @@ import android.view.View;
  * Created by EDZ on 2018/1/25.
  */
 
-public class OnClickListenearAndDo implements View.OnClickListener {
+public abstract class OnClickListenearAndDo implements View.OnClickListener {
     @Override
     public void onClick(final View view) {
-
         view.setEnabled(false);
         view.setClickable(false);
         new Handler().postDelayed(new Runnable() {
@@ -24,5 +23,5 @@ public class OnClickListenearAndDo implements View.OnClickListener {
         doClick(view);
     }
 
-    public void doClick(View v){}
+    public abstract void doClick(View v);
 }
