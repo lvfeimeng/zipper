@@ -37,39 +37,39 @@ public class RuntHTTPApi {
     private static final String TAG = "uploadFile";
     private static final int TIME_OUT = 10 * 1000; // 超时时间
 
-    public final static String IP = "app.qitong.shop",//http://app.qitong.shop/index.php/
-    // www.soarsan.com
-    PORT = "",
-            CHARSET = "utf-8",
-            PROJECT_URL = "http://" + IP + PORT + "/index.php/",
-            SERVER_URL = "http://" + IP + PORT + "/index.php/",
+	public final static String IP = "app.qitong.shop",//http://app.qitong.shop/index.php/
+	// www.soarsan.com
+	PORT = "",
+			CHARSET = "utf-8",
+			PROJECT_URL = "http://" + IP + PORT +"/index.php/",
+            SERVER_URL = "http://" + IP + PORT+"/index.php/",
             URL_USER_INFO = "appapi/user/self_information",//修改用户资料
             URL_ADD_ADDRESS = "appapi/user/add_address",  //添加收货地址
-            URL_DEL_ADDRESS = "appapi/user/delete_address/",    //删除收货地址
-            URL_EDIT_ADDRESS = "appapi/user/change_address/",    //修改收货地址
-            URL_ADDRESS_LIST = "appapi/user/address_list",//获取收货地址列表
-            URL_VERIFYCODE = "Appapi/user/verify_mobile_code", // 验证手机号
-            URL_PHONE_SET_PWD = "Appapi/user/mobile_find_pwd", // 手机号修改密码
-            URL_GETCODE = "Appapi/user/send_message", // 获取手机验证码
-            URL_EDITPWD = "Appapi/user/old_new_login_pwd", // 修改密码
-            URL_EDITPHONE = "Appapi/user/modify_bind_mobile", // 修改手机
-            URL_IS_IDENTIFY = "Appapi/user/is_identify_certification",//是否实名认证
-            URL_DO_IDENTIFY = "Appapi/user/apply_identify_certification",//提交实名认证
-            URL_GET_BANKCARDS = "appapi/user/bank_list",//获取绑定的银行卡列表
-            URL_ADD_BACKCARD = "appapi/user/add_bank_card",//添加银行卡
-            URL_GET_CARD_BANK_INFO = "appapi/user/bank_card_info",//查询卡号所属银行
-            URL_UNBIND_CARD = "Appapi/user/remove_bind_bank",//解除绑定银行卡
-            URL_GET_CASH = "Appapi/pay/withdraw_cash",//提现
-            URL_SET_PAY_PWD = "Appapi/pay/set_pwd",//设置支付密码
-            URL_GET_INTEGRAL_EXPENSE_RECORD = "appapi/integration/points_record/",//积分兑换记录
-            URL_GET_BALANCE = "Appapi/user/get_account_balance",//获取余额
-            URL_GET_INTEGRAL = "appapi/integration/index",//获取积分
-            URL_CREATE_ORDER = "Appapi/pay/create_order",//创建订单
-            URL_WALLETPAY = "Appapi/pay/coinspay",//创建订单
-            URL_CATEGORY = "Appapi/shop/category_list",//获取经营类目
-            URL_APPLY_STORE = "Appapi/shop/apply_shop",//申请店铺
-            URL_APPLY_STORE_STATUS = "Appapi/shop/is_audit_pass",//店铺审核状态
-            URL_QUIT_ROOM = "quit_room";
+			URL_DEL_ADDRESS = "appapi/user/delete_address/", 	//删除收货地址
+			URL_EDIT_ADDRESS = "appapi/user/change_address/", 	//修改收货地址
+			URL_ADDRESS_LIST = "appapi/user/address_list",//获取收货地址列表
+			URL_VERIFYCODE = "Appapi/user/verify_mobile_code", // 验证手机号
+			URL_PHONE_SET_PWD = "Appapi/user/mobile_find_pwd", // 手机号修改密码
+			URL_GETCODE = "Appapi/user/send_message", // 获取手机验证码
+			URL_EDITPWD = "Appapi/user/old_new_login_pwd", // 修改密码
+			URL_EDITPHONE= "Appapi/user/modify_bind_mobile", // 修改手机
+			URL_IS_IDENTIFY= "Appapi/user/is_identify_certification",//是否实名认证
+			URL_DO_IDENTIFY= "Appapi/user/apply_identify_certification",//提交实名认证
+			URL_GET_BANKCARDS= "appapi/user/bank_list",//获取绑定的银行卡列表
+			URL_ADD_BACKCARD= "appapi/user/add_bank_card",//添加银行卡
+			URL_GET_CARD_BANK_INFO= "appapi/user/bank_card_info",//查询卡号所属银行
+			URL_UNBIND_CARD= "Appapi/user/remove_bind_bank",//解除绑定银行卡
+			URL_GET_CASH= "Appapi/pay/withdraw_cash",//提现
+			URL_SET_PAY_PWD= "Appapi/pay/set_pwd",//设置支付密码
+			URL_GET_INTEGRAL_EXPENSE_RECORD= "appapi/integration/points_record/",//积分兑换记录
+			URL_GET_BALANCE= "Appapi/user/get_account_balance",//获取余额
+			URL_GET_INTEGRAL= "appapi/integration/index",//获取积分
+			URL_CREATE_ORDER= "Appapi/pay/create_order",//创建订单
+			URL_WALLETPAY= "Appapi/pay/coinspay",//创建订单
+			URL_CATEGORY= "Appapi/shop/category_list",//获取经营类目
+			URL_APPLY_STORE= "Appapi/shop/apply_shop",//申请店铺
+			URL_APPLY_STORE_STATUS= "Appapi/shop/is_audit_pass",//店铺审核状态
+			 URL_QUIT_ROOM = "quit_room";
 
 
     /**

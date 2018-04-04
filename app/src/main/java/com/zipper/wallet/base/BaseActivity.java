@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.definecontrol.TitleBarView;
+import com.gyf.barlibrary.ImmersionBar;
+import com.zipper.wallet.R;
 import com.zipper.wallet.dialog.TipDialog;
 import com.zipper.wallet.listenear.OnClickListenearAndDo;
 import com.zipper.wallet.utils.KeyBoardUtils;
@@ -38,6 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        statusBarSetting();
         ActivityManager.getInstance().addActivity(this);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = this;
@@ -48,12 +52,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
 
-    public int getColorById(int colorId){
+    public int getColorById(int colorId) {
         return getResources().getColor(colorId);
     }
 
     @Override
     public void finish() {
+        KeyBoardUtils.closeKeybord(getWindow().getDecorView(),this);
         ActivityManager.activityStack.remove(this);
         super.finish();
     }
@@ -99,6 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param hint  默认提示文字
      * @param text  文本
      * @param inputType 输入类型
+     * @param Rp      按钮执行的方法
      */
     protected void showInputDialog(String title, String hint, String text , int inputType, final RuntHTTPApi.ResPonse Rp){
 
@@ -184,6 +190,46 @@ public abstract class BaseActivity extends AppCompatActivity {
         progressDialog.cancel();
     }
 
+    private ImmersionBar mImmersionBar = null;
+
+    public void setTransparentStatusBar() {
+        if (mImmersionBar == null) {
+            mImmersionBar = ImmersionBar.with(this);
+        }
+        mImmersionBar.fitsSystemWindows(false)
+                .keyboardEnable(true)
+                .init();
+    }
+
+    public void setDefaultStatusBar() {
+        if (mImmersionBar == null) {
+            mImmersionBar = ImmersionBar.with(this);
+        }
+        mImmersionBar.fitsSystemWindows(true)
+                .statusBarColor(R.color.default_status_bar)
+                .keyboardEnable(true)
+                .init();
+    }
+
+    public void setDarkFontStatusBar() {
+        if (mImmersionBar == null) {
+            mImmersionBar = ImmersionBar.with(this);
+        }
+        mImmersionBar.fitsSystemWindows(true)
+                .statusBarColor(R.color.white)
+                .statusBarDarkFont(true)
+                .keyboardEnable(true)
+                .init();
+    }
+
+    public void statusBarSetting() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            setDarkFontStatusBar();
+        } else {
+            setDefaultStatusBar();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -192,6 +238,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             alertDialog.dismiss();
             alertDialog = null;
+        }
+        if (mImmersionBar != null) {
+            mImmersionBar.destroy();
         }
     }
 }

@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -119,7 +120,7 @@ public class ImportWalletActivity extends BaseActivity {
                     @Override
                     public void accept(Boolean granted) {
                         if (granted) {
-                            Intent intent = new Intent(ImportWalletActivity.this, CaptureActivity.class);
+                            Intent intent = new Intent(ImportWalletActivity.this, ScanQrCodeActivity.class);
                             startActivityForResult(intent, REQUEST_CODE);
                         } else {
                             toast("相机权限被禁止，请先开启权限");
@@ -151,6 +152,26 @@ public class ImportWalletActivity extends BaseActivity {
                     toast("解析二维码失败");
                 }
             }
+        }
+    }
+
+    private ImmersionBar mImmersionBar;
+    @Override
+    public void statusBarSetting() {
+        if (mImmersionBar == null) {
+            mImmersionBar = ImmersionBar.with(this);
+        }
+        mImmersionBar.fitsSystemWindows(true)
+                .statusBarColor(R.color.colorPrimary)
+                .keyboardEnable(true)
+                .init();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mImmersionBar != null) {
+            mImmersionBar.destroy();
         }
     }
 }

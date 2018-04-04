@@ -27,7 +27,7 @@ public class DeviceUtil {
     public static  void getDisplay(Context context){
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Version code is  \n");
+        sb.append("Version qr_code is  \n");
         sb.append("设备的Android版本号:");//设备的Android版本号
         sb.append(getSDKInt() + " "+getSDKVersion()+"\t");//设备的Android版本号
         sb.append("设备型号:");//设备型号
