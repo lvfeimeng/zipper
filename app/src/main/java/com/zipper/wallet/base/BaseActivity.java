@@ -1,5 +1,6 @@
 package com.zipper.wallet.base;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,10 +20,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zipper.wallet.R;
-import com.zipper.wallet.definecontrol.TitleBarView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.zipper.wallet.R;
+import com.zipper.wallet.definecontrol.TitleBarView;
 import com.zipper.wallet.dialog.TipDialog;
 import com.zipper.wallet.listenear.OnClickListenearAndDo;
 import com.zipper.wallet.utils.KeyBoardUtils;
@@ -34,7 +35,7 @@ import java.util.Map;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected Context mContext;
-    protected AlertDialog alertDialog;
+    protected Dialog alertDialog;
     protected TitleBarView titlebar;
     protected String TAG = "";
 
@@ -97,6 +98,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         new TipDialog(mContext,tip,rp).show();
 
     }
+    /**
+     * 提示框
+     *
+     * @param title 标题
+     * @param tip 提示信息
+     * @param rp 确定按钮执行的方法
+     */
+    protected void showTipDialog(final String title,final String tip, final RuntHTTPApi.ResPonse rp) {
+        new TipDialog(mContext,title,tip,rp).show();
+
+    }
 
     /**
      *  显示输入型弹框
@@ -112,7 +124,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         final EditText et = (EditText)dialogView.findViewById(R.id.edit_input);
         et.setHint(hint);
         if(inputType != 0) {
-            et.setInputType(inputType);
+            et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
         et.setText(text);
         alertDialog = new AlertDialog.Builder(mContext).setTitle(title )
@@ -121,7 +133,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        alertDialog.dismiss();;
+                        alertDialog.dismiss();
                         if(Rp !=null) {
                             Rp.doErrorThing(null);
                         }
@@ -129,7 +141,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 })
                 .setPositiveButton("确定", null).create();
         alertDialog.show();
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListenearAndDo() {
+        ((AlertDialog)alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListenearAndDo() {
             @Override
             public void doClick(View view) {
                 Map map = new HashMap();
@@ -162,7 +174,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 })
                 .setPositiveButton(rightBtnName.equals("")?getString(R.string.ok):rightBtnName, null).create();
         alertDialog.show();
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListenearAndDo() {
+        ((AlertDialog)alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListenearAndDo() {
             @Override
             public void doClick(View view) {
                 Map map = new HashMap();

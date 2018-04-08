@@ -13,13 +13,16 @@ import com.zipper.wallet.utils.RuntHTTPApi;
  */
 
 public class TipDialog extends BaseDialog {
-    String tip;
+    String tip,title;
     TipType type;
-    private TextView txtTip;
+    private TextView txtTip,txtTitle;
+    private RuntHTTPApi.ResPonse rp;
     public TipDialog(Context context, String title, String tip, TipType type, RuntHTTPApi.ResPonse rp) {
         super(context,title,rp);
         this.tip =tip;
         this.type = type;
+        this.rp = rp;
+        this.title = title;
         setContentViewId(R.layout.dialog_tip);
     }
 
@@ -38,18 +41,18 @@ public class TipDialog extends BaseDialog {
     @Override
     public void initComponent() {
         txtTip = (TextView)findViewById(R.id.txt_tip);
+        txtTitle = (TextView)findViewById(R.id.txt_title);
         super.initComponent();
         switch (type){
             case TIP:
-
                 break;
             case WORNING:
-
                 break;
             case ERROR:
                 break;
         }
         txtTip.setText(tip);
+        txtTitle.setText(title);
     }
     public enum TipType {
         WORNING,TIP,ERROR

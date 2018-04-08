@@ -75,7 +75,7 @@ public class MnemonicActivity extends BaseActivity {
             }
         });
 
-
+        showTipDialog("请勿截图","如果有人获取你的助记词将直接获取你的资产！请抄写下助记词并存放在安全地方.",null);
     }
 
     public boolean check(){
@@ -169,7 +169,7 @@ public class MnemonicActivity extends BaseActivity {
                         }
                     });
                 }
-            },100*i);
+            },50*i);
         }
     }
 

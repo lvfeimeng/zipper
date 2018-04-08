@@ -34,4 +34,17 @@ public class KeyBoardUtils {
             Log.e("KeyBoardUtils",e.getMessage());
         }
     }
+    /**
+     * 关闭软键盘
+     */
+    public static void closeKeybord(View view, Context mContext) {
+        try {
+            InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("KeyBoardUtils",e.getMessage());
+        }
+    }
 }

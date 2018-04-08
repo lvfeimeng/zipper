@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.zipper.wallet.activity.BackUpAcitivty;
+import com.zipper.wallet.activity.AddPropertyActivity;
 import com.zipper.wallet.activity.ImportWalletActivity;
+import com.zipper.wallet.activity.MyWalletActivity;
+import com.zipper.wallet.activity.UnlockActivity;
 import com.zipper.wallet.base.BaseActivity;
 
 
@@ -28,7 +30,7 @@ public class MainActivity extends BaseActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, BackUpAcitivty.class);
+                        Intent intent = new Intent(MainActivity.this, UnlockActivity.class);
                         startActivity(intent);
                         //finish();
                     }

@@ -160,7 +160,7 @@ public class BackUpAcitivty extends BaseActivity {
             SecureRandom random = new SecureRandom();//创建随机类的实例
             byte[] mnemonicSeed = new byte[16];//生成128位字节流
 
-            byte[] radomSeed = random.generateSeed(KeyCrypterScrypt.BLOCK_LENGTH);//生成128位字节流种子
+            //byte[] radomSeed = random.generateSeed(KeyCrypterScrypt.BLOCK_LENGTH);//生成128位字节流种子
             //Log.i(TAG,"radomSeed :"+ Utils.bytesToHexString(radomSeed));
 
 
@@ -174,7 +174,7 @@ public class BackUpAcitivty extends BaseActivity {
             }
             pwd = "kljlajsd";
 
-            byte[] seed = MnemonicCode.toSeed(words,"");//由助记词和密码生成种子
+            byte[] seed = MnemonicCode.toSeed(words,"");//由助记词和密码生成种子,方法内含有转换512哈系数方式
             Log.i(TAG,"seed :"+Utils.bytesToHexString(seed));
 
             /*HMac hMac = HDUtils.createHmacSha512Digest("mnemonic".getBytes());//生成512哈希数
@@ -200,6 +200,92 @@ public class BackUpAcitivty extends BaseActivity {
         }
 
     }
+
+
+
+    public List<String> getMnemonicCode(byte[] entropy) throws MnemonicException
+            .MnemonicLengthException {
+        if (entropy.length % 4 > 0) {
+            throw new MnemonicException.MnemonicLengthException("Entropy length not multiple of "
+                    + "32 bits.");
+        }
+
+        if (entropy.length == 0) {
+            throw new MnemonicException.MnemonicLengthException("Entropy is empty.");
+        }
+
+        // We take initial entropy of ENT bits and compute its
+        // checksum by taking first ENT / 32 bits of its SHA256 hash.
+
+        byte[] hash = Sha256Hash.create(entropy).getBytes();
+        boolean[] hashBits = bytesToBits(hash);
+
+        boolean[] entropyBits = bytesToBits(entropy);
+        int checksumLengthBits = entropyBits.length / 32;
+
+        // We append these bits to the end of the initial entropy.
+        boolean[] concatBits = new boolean[entropyBits.length + checksumLengthBits];
+        System.arraycopy(entropyBits, 0, concatBits, 0, entropyBits.length);
+        System.arraycopy(hashBits, 0, concatBits, entropyBits.length, checksumLengthBits);
+
+        // Next we take these concatenated bits and split them into
+        // groups of 11 bits. Each group encodes number from 0-2047
+        // which is a position in a wordlist.  We convert numbers into
+        // words and use joined words as mnemonic sentence.
+
+        ArrayList<String> words = new ArrayList<String>();
+        int nwords = concatBits.length / 11;
+        for (int i = 0;
+             i < nwords;
+             ++i) {
+            int index = 0;
+            for (int j = 0;
+                 j < 11;
+                 ++j) {
+                index <<= 1;
+                if (concatBits[(i * 11) + j]) {
+                    index |= 0x1;
+                }
+            }
+            words.add((String) this.wordList.get(index));
+        }
+
+        return words;
+
+    }
+
+    private static boolean[] bytesToBits(byte[] data) {
+        boolean[] bits = new boolean[data.length * 8];
+        for (int i = 0;
+             i < data.length;
+             ++i)
+            for (int j = 0;
+                 j < 8;
+                 ++j)
+                bits[(i * 8) + j] = (data[i] & (1 << (7 - j))) != 0;
+        return bits;
+    }
+
+
+
+    public final class MnemonicCodeTestClass extends MnemonicCode {
+        private static final String WordListPath = "english.txt";
+
+        public MnemonicCodeTestClass() throws IOException {
+            super();
+        }
+
+        @Override
+        protected InputStream openWordList() throws IOException {
+            InputStream stream = mContext.getAssets().open(WordListPath);
+            if (stream == null) {
+                throw new FileNotFoundException(WordListPath);
+            }
+            return stream;
+        }
+    }
+
+
 
     private void nothing(String pwd){
 
@@ -465,89 +551,5 @@ public class BackUpAcitivty extends BaseActivity {
         return  list;
     }
 
-
-
-
-    public List<String> getMnemonicCode(byte[] entropy) throws MnemonicException
-            .MnemonicLengthException {
-        if (entropy.length % 4 > 0) {
-            throw new MnemonicException.MnemonicLengthException("Entropy length not multiple of "
-                    + "32 bits.");
-        }
-
-        if (entropy.length == 0) {
-            throw new MnemonicException.MnemonicLengthException("Entropy is empty.");
-        }
-
-        // We take initial entropy of ENT bits and compute its
-        // checksum by taking first ENT / 32 bits of its SHA256 hash.
-
-        byte[] hash = Sha256Hash.create(entropy).getBytes();
-        boolean[] hashBits = bytesToBits(hash);
-
-        boolean[] entropyBits = bytesToBits(entropy);
-        int checksumLengthBits = entropyBits.length / 32;
-
-        // We append these bits to the end of the initial entropy.
-        boolean[] concatBits = new boolean[entropyBits.length + checksumLengthBits];
-        System.arraycopy(entropyBits, 0, concatBits, 0, entropyBits.length);
-        System.arraycopy(hashBits, 0, concatBits, entropyBits.length, checksumLengthBits);
-
-        // Next we take these concatenated bits and split them into
-        // groups of 11 bits. Each group encodes number from 0-2047
-        // which is a position in a wordlist.  We convert numbers into
-        // words and use joined words as mnemonic sentence.
-
-        ArrayList<String> words = new ArrayList<String>();
-        int nwords = concatBits.length / 11;
-        for (int i = 0;
-             i < nwords;
-             ++i) {
-            int index = 0;
-            for (int j = 0;
-                 j < 11;
-                 ++j) {
-                index <<= 1;
-                if (concatBits[(i * 11) + j]) {
-                    index |= 0x1;
-                }
-            }
-            words.add((String) this.wordList.get(index));
-        }
-
-        return words;
-
-    }
-
-    private static boolean[] bytesToBits(byte[] data) {
-        boolean[] bits = new boolean[data.length * 8];
-        for (int i = 0;
-             i < data.length;
-             ++i)
-            for (int j = 0;
-                 j < 8;
-                 ++j)
-                bits[(i * 8) + j] = (data[i] & (1 << (7 - j))) != 0;
-        return bits;
-    }
-
-
-
-    public final class MnemonicCodeTestClass extends MnemonicCode {
-        private static final String WordListPath = "english.txt";
-
-        public MnemonicCodeTestClass() throws IOException {
-            super();
-        }
-
-        @Override
-        protected InputStream openWordList() throws IOException {
-            InputStream stream = mContext.getAssets().open(WordListPath);
-            if (stream == null) {
-                throw new FileNotFoundException(WordListPath);
-            }
-            return stream;
-        }
-    }
 
 }

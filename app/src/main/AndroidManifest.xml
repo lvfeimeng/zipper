@@ -33,6 +33,8 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.AgreementActivity" />
         <activity android:name=".activity.CreateAccountActivity" />
+        <activity android:name=".activity.MnemonicActivity" />
+        <activity android:name=".activity.UnlockActivity" />
         <activity android:name=".activity.WelcomActivity" />
         <activity android:name=".activity.BackUpAcitivty" />
         <activity android:name=".activity.MyWalletActivity" />
