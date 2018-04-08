@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.zipper.wallet.definecontrol.TitleBarView
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:left_icon_visible="visible"
+        app:right_text="@string/import_wallet"
+        app:title_text="@string/create_wallet">
+
+    </com.zipper.wallet.definecontrol.TitleBarView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@string/pwd_work"
+                android:textColor="@color/color_gray1" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pwd"
+
+                android:textColor="@color/black" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp">
+
+                <LinearLayout
+                    android:id="@+id/lin_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:visibility="invisible"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:src="@mipmap/warning"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pwd_warning"
+                        android:textColor="@color/cart_red" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/ed_pwd"
+                    style="@style/EditText_register"
+                    android:layout_alignParentBottom="true"
+                    android:hint="@string/pwd"
+                    android:inputType="textPassword"
+
+                    />
+
+                <LinearLayout
+                    android:id="@+id/lin_sign"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_lin_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
+
+                    <TextView
+                        android:id="@+id/txt_strong"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="强" />
+
+                    <ImageView
+                        android:id="@+id/img_pwd_sign"
+                        android:layout_width="25dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="5dp"
+                        android:src="@mipmap/pwd_n"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/pwd_repeat"
+                android:textColor="@color/black" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp">
+
+                <TextView
+                    android:id="@+id/txt_pwdre_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/pwd_warning"
+                    android:textColor="@color/cart_red"
+                    android:visibility="invisible" />
+
+                <EditText
+                    android:id="@+id/ed_repeat"
+                    style="@style/EditText_register"
+                    android:layout_alignParentBottom="true"
+                    android:hint="@string/pwd_repeat"
+                    android:inputType="textPassword"
+
+                    />
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/pwd_tip"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/ed_pwd_tip"
+                style="@style/EditText_register"
+                android:layout_marginTop="20dp"
+                android:hint="@string/not_must"
+
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/read_agree" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/service_clause"
+                    android:textColor="@color/blue_sky" />
+
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btn_create"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/btn_ripple_blue_corner"
+                android:enabled="false"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="@string/create"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
