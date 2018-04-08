@@ -21,7 +21,7 @@
     <string name="pwd">密码</string>
     <string name="pwd_repeat">重复密码</string>
     <string name="pwd_tip">密码提示</string>
-    <string name="pwd_warning">● 密码强度太弱，极易被黑客破解</string>
+    <string name="pwd_warning">密码强度太弱，极易被黑客破解</string>
     <string name="not_must">选填</string>
     <string name="wallet_hint">钱包名称支持中英文</string>
     <string name="pwd_work">密码用于保护私钥和交易授权，强度非常重要。zipper不储存密码，也无法帮您找回，请务必牢记</string>
@@ -35,4 +35,11 @@
     <string name="backup_mnem">备份助记词</string>
 
     <string name="scan_code_hint">将条码二维码放入框内，即可自动扫描</string>
+    <string name="create_hand_pwd">创建手势密码</string>
+    <string name="input_hand_pwd">绘制手势密码</string>
+    <string name="repeat_hand_pwd">再次绘制手势密码</string>
+    <string name="re_hand_pwd">重新绘制手势密码</string>
+    <string name="warning_hand_pwd">手势密码错误</string>
+    <string name="set_hand_pwd">手势密码设置成功</string>
+    <string name="success_hand_pwd">手势密码验证成功</string>
 </resources>

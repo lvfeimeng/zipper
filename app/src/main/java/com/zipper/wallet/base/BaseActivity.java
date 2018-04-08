@@ -38,6 +38,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Dialog alertDialog;
     protected TitleBarView titlebar;
     protected String TAG = "";
+    public final String KEY_MNEN_WORDS = "mnemonicwords",KEY_IS_LOGIN = "islogin",KEY_HAND_PWD = "hand_pwd";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,6 +111,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         new TipDialog(mContext,title,tip,rp).show();
 
     }
+    /**
+     * 提示框
+     *
+     * @param title 标题
+     * @param tip 提示信息
+     * @param rp 确定按钮执行的方法
+     */
+    protected void showTipDialog(final String title,final String tip,final int image, final RuntHTTPApi.ResPonse rp) {
+        new TipDialog(mContext,title,tip, TipDialog.TipType.TIP,image,rp).show();
+
+    }
 
     /**
      *  显示输入型弹框
@@ -123,7 +136,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.layout_edittext,null);
         final EditText et = (EditText)dialogView.findViewById(R.id.edit_input);
         et.setHint(hint);
-        if(inputType != 0) {
+        if(inputType == InputType.TYPE_TEXT_VARIATION_PASSWORD) {
             et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
         et.setText(text);

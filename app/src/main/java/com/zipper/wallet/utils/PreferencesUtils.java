@@ -22,6 +22,7 @@ public class PreferencesUtils {
     public static final  String PREFERENCE_NAME="zipper";
     public static final String PROJECT = "project";
     public static final String USER = "user";
+    public static final String VISITOR = "visitor";
 
     private PreferencesUtils() {
         throw new AssertionError();

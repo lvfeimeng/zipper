@@ -11,9 +11,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:left_icon_visible="visible"
-        app:title_text="@string/backup_wallet">
+        app:bottom_visible="gone"
+        app:title_text="">
 
     </com.zipper.wallet.definecontrol.TitleBarView>
+
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:src="@mipmap/backup_icon"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/backup_wallet"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black"
+        android:textSize="25sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"

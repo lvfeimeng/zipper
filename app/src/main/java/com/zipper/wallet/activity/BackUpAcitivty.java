@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -103,7 +104,7 @@ public class BackUpAcitivty extends BaseActivity {
         btnBackup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showInputDialog("请输入密码","","",0,new RuntHTTPApi.ResPonse(){
+                showInputDialog("请输入密码","","", InputType.TYPE_TEXT_VARIATION_PASSWORD,new RuntHTTPApi.ResPonse(){
 
                     @Override
                     public void doSuccessThing(final Map<String, Object> param) {

@@ -1,6 +1,8 @@
 package com.zipper.wallet.dialog;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zipper.wallet.R;
@@ -16,14 +18,20 @@ public class TipDialog extends BaseDialog {
     String tip,title;
     TipType type;
     private TextView txtTip,txtTitle;
+    private ImageView imgView;
     private RuntHTTPApi.ResPonse rp;
-    public TipDialog(Context context, String title, String tip, TipType type, RuntHTTPApi.ResPonse rp) {
+    private int img;
+    public TipDialog(Context context, String title, String tip, TipType type,int img, RuntHTTPApi.ResPonse rp) {
         super(context,title,rp);
         this.tip =tip;
         this.type = type;
         this.rp = rp;
         this.title = title;
+        this.img = img;
         setContentViewId(R.layout.dialog_tip);
+    }
+    public TipDialog(Context context, String title, String tip, TipType type, RuntHTTPApi.ResPonse rp) {
+        this(context,title,tip,type,0,rp);
     }
 
     public TipDialog(Context context, String title, String tip, RuntHTTPApi.ResPonse rp) {
@@ -42,6 +50,13 @@ public class TipDialog extends BaseDialog {
     public void initComponent() {
         txtTip = (TextView)findViewById(R.id.txt_tip);
         txtTitle = (TextView)findViewById(R.id.txt_title);
+        imgView =(ImageView) findViewById(R.id.img);
+        if(img == 0){
+            imgView.setVisibility(View.GONE);
+        }else{
+            imgView.setVisibility(View.VISIBLE);
+            imgView.setImageResource(img);
+        }
         super.initComponent();
         switch (type){
             case TIP:

@@ -12,15 +12,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title_text=""
+        app:bottom_visible="gone"
         app:left_icon_visible="visible"
-        android:background="@color/transparent"
+        app:relbackgroundColor="@color/transparent"
         >
 
     </com.zipper.wallet.definecontrol.TitleBarView>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txt_hand_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:text="手势密码"/>
+
+        <TextView
+            android:id="@+id/txt_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="输入手势密码"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:layout_margin="30dp">
         <com.zipper.wallet.definecontrol.UnlockView
             android:id="@+id/unlock"
@@ -30,4 +56,12 @@
     </RelativeLayout>
 
 
+    <TextView
+        android:id="@+id/txt_warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/item_lin_height"
+        android:text="重新绘制"/>
 </LinearLayout>

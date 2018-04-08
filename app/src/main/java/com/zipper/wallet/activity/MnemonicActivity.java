@@ -14,11 +14,14 @@ import com.zipper.wallet.animations.MyAnimations;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.definecontrol.FlowLayout;
 import com.zipper.wallet.definecontrol.MnemWordsView;
+import com.zipper.wallet.utils.PreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Administrator on 2018/3/29.
@@ -75,9 +78,17 @@ public class MnemonicActivity extends BaseActivity {
             }
         });
 
-        showTipDialog("请勿截图","如果有人获取你的助记词将直接获取你的资产！请抄写下助记词并存放在安全地方.",null);
+        showTipDialog("请勿截图","如果有人获取你的助记词将直接获取你的资产！请抄写下助记词并存放在安全地方.",R.mipmap.no_photo,null);
+        Set set = new LinkedHashSet();
+        set.add(((List) words));
+        PreferencesUtils.putStringSet(mContext,KEY_MNEN_WORDS,set,PreferencesUtils.VISITOR);
     }
 
+    /**
+     * 验证助记词
+     *
+     * @return
+     */
     public boolean check(){
         for(int i = 0 ; i < words.size() ; i ++ ){
             if(!words.get(i).trim().equals(selectWords.get(i).getText().trim())){
@@ -87,12 +98,31 @@ public class MnemonicActivity extends BaseActivity {
         return  true;
     }
 
+
+    /**
+     *  //创建助记词控件
+     * @param showClose
+     * @param text
+     * @return
+     */
     public MnemWordsView createViews(boolean showClose, final String text){
         MnemWordsView mnemWordsView = new MnemWordsView(mContext);
         mnemWordsView.setTxt(text);
         if(!showClose){
-            mnemWordsView.setEnable(true);
             mnemWordsView.setLinCloseVisibility(View.INVISIBLE);
+
+            mnemWordsView.setEnable(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mnemWordsView.setEnable(true);
+                        }
+                    });
+                }
+            },MyAnimations.ANIMA_TIME);
         }else{
             mnemWordsView.setEnable(false);
         }
@@ -103,6 +133,7 @@ public class MnemonicActivity extends BaseActivity {
     }
 
 
+    //选择助记词
     View.OnClickListener itemClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -116,10 +147,21 @@ public class MnemonicActivity extends BaseActivity {
                 if(flowLayoutBottom.getChildCount() == 0){
                     btnOk.setEnabled(true);
                 }
+
+                List<String> residueWords = new LinkedList<String>();
+                for(int i = 0 ; i < flowLayoutBottom.getChildCount(); i ++){
+                    residueWords.add (((MnemWordsView)flowLayoutBottom.getChildAt(i)).getText());
+                }
+                randomCreateViews(residueWords);
             }
         }
     };
 
+
+    /**
+     //删掉选择的助记词
+     *
+     */
     View.OnClickListener itemCloseClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {

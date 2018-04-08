@@ -59,6 +59,13 @@
         <item name="colorControlHighlight">@color/color_gray3</item><!--覆盖色，按下的颜色  -->
     </style>
 
+    <!--  按钮样式 -->
+    <style name="btn_sky_blue_border" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorButtonNormal">@drawable/bg_blue_border_corner</item><!--正常状态下的颜色  -->
+        <item name="android:background">@drawable/bg_blue_border_corner</item><!--正常状态下的颜色  -->
+        <item name="colorControlHighlight">@color/color_gray3</item><!--覆盖色，按下的颜色  -->
+    </style>
+
 
     <!--  列表edittext样式 -->
     <style name="item_edit_left">

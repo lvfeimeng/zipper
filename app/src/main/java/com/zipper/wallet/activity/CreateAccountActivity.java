@@ -7,12 +7,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.utils.KeyBoardUtils;
+import com.zipper.wallet.utils.PreferencesUtils;
 
 /**
  * Created by Administrator on 2018/3/29.
@@ -54,6 +54,7 @@ public class CreateAccountActivity extends BaseActivity {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                PreferencesUtils.putString(mContext,"wallet_name",edName.getText().toString(),PreferencesUtils.VISITOR);
                     Intent intent = new Intent(mContext,CreatePwdAcitivty.class);
                     startActivity(intent);
                     finish();
