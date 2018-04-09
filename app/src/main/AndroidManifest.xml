@@ -34,6 +34,7 @@
         <activity android:name=".activity.AgreementActivity" />
         <activity android:name=".activity.StartActivity" />
         <activity android:name=".activity.RiskActivity" />
+        <activity android:name=".activity.PropertyActvity" />
         <activity android:name=".activity.CreateAccountActivity" />
         <activity android:name=".activity.CreatePwdAcitivty" />
         <activity android:name=".activity.MnemonicActivity" />

@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.bean.WalletBean;
 import com.zipper.wallet.utils.KeyBoardUtils;
 import com.zipper.wallet.utils.PreferencesUtils;
 
@@ -55,6 +56,7 @@ public class CreateAccountActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 PreferencesUtils.putString(mContext,"wallet_name",edName.getText().toString(),PreferencesUtils.VISITOR);
+                WalletBean.getWalletBean().setName(edName.getText().toString());
                     Intent intent = new Intent(mContext,CreatePwdAcitivty.class);
                     startActivity(intent);
                     finish();

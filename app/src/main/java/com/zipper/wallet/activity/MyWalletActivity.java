@@ -24,6 +24,7 @@ import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.WalletAdapter;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.bean.CoinsBean;
+import com.zipper.wallet.utils.PreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,12 @@ public class MyWalletActivity extends BaseActivity implements NavigationView.OnN
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_wallet);
+        String pwd = PreferencesUtils.getString(mContext,KEY_HAND_PWD,PreferencesUtils.PROJECT);
+        if(pwd !=null && !pwd.equals("")){
+            Intent intent = new Intent(mContext, UnlockActivity.class);
+            intent.putExtra("mode",1);
+            startActivity(intent);
+        }
         initView();
     }
 
@@ -89,9 +96,8 @@ public class MyWalletActivity extends BaseActivity implements NavigationView.OnN
         items = new ArrayList<>();
         testData();
         adapter = new WalletAdapter(this, items);
-        recyclerView.setAdapter(adapter);//new ConisAdapter(this,items)
-//        recyclerView.setLayoutParams(new CoordinatorLayout.LayoutParams(-1, -1));
-        //recyclerView.requestDisallowInterceptTouchEvent(true);
+        recyclerView.setAdapter(adapter);
+
         recyclerView.setFocusableInTouchMode(false);
         recyclerView.setFocusable(false);
         recyclerView.smoothScrollToPosition(0);

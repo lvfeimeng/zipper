@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.bean.WalletBean;
 import com.zipper.wallet.utils.PreferencesUtils;
 
 public class CreatePwdAcitivty extends BaseActivity {
@@ -77,8 +78,10 @@ public class CreatePwdAcitivty extends BaseActivity {
 
                 if(checkBox.isChecked()){
                     showProgressDialog(getString(R.string.creating));
-                    PreferencesUtils.putString(mContext,"wallet_pwd",edPwd.getText().toString(),PreferencesUtils.VISITOR);
-                    PreferencesUtils.putString(mContext,"wallet_pwd_tip",edTip.getText().toString(),PreferencesUtils.VISITOR);
+                    PreferencesUtils.putString(mContext,KEY_WALLET_PWD,edPwd.getText().toString(),PreferencesUtils.VISITOR);
+                    PreferencesUtils.putString(mContext,KEY_WALLET_PWD_TIP,edTip.getText().toString(),PreferencesUtils.VISITOR);
+                    WalletBean.getWalletBean().setPwd(edPwd.getText().toString());
+                    WalletBean.getWalletBean().setPwdTip(edTip.getText().toString());
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -92,7 +95,7 @@ public class CreatePwdAcitivty extends BaseActivity {
                                 }
                             });
                         }
-                    },5000);
+                    },2000);
                     /*Intent intent = new Intent(mContext,BackUpAcitivty.class);
                     startActivity(intent);
                     finish();*/

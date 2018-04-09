@@ -15,12 +15,14 @@ import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.definecontrol.FlowLayout;
 import com.zipper.wallet.definecontrol.MnemWordsView;
 import com.zipper.wallet.utils.PreferencesUtils;
+import com.zipper.wallet.utils.RuntHTTPApi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -44,7 +46,6 @@ public class MnemonicActivity extends BaseActivity {
         linCopy = (LinearLayout)findViewById(R.id.lin_copy);
         linVerify = (LinearLayout)findViewById(R.id.lin_verify);
         txtMnem = (TextView)findViewById(R.id.txt_mnem);
-
         words = (List<String>) getIntent().getSerializableExtra("list");
         btnOk.setEnabled(true);
         String str = "";
@@ -68,7 +69,17 @@ public class MnemonicActivity extends BaseActivity {
                     @Override
                     public void onClick(View view) {
                         if(check()){
-                            showDoubleButtonDialog("","助记词验证数序正确，是否移除该助记词？",null,getString(R.string.not_remove),getString(R.string.remove));
+                            showDoubleButtonDialog("", "助记词验证数序正确，是否移除该助记词？", new RuntHTTPApi.ResPonse() {
+                                @Override
+                                public void doSuccessThing(Map<String, Object> param) {
+
+                                }
+
+                                @Override
+                                public void doErrorThing(Map<String, Object> param) {
+
+                                }
+                            }, getString(R.string.not_remove), getString(R.string.remove));
                         }else{
                             showTipDialog("备份失败，请检查你的助记词",null);
                         }
