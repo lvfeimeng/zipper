@@ -74,6 +74,7 @@ public class BackUpAcitivty extends BaseActivity {
                             Intent intent = new Intent(mContext,MnemonicActivity.class);
                             intent.putExtra("list",new RuntListSeria<String>((List<String>) obj));
                             startActivity(intent);
+                            finish();
                         }
                     }else{
                         toast("未曾生成数据");
@@ -112,6 +113,7 @@ public class BackUpAcitivty extends BaseActivity {
                     public void doSuccessThing(final Map<String, Object> param) {
                         String pwd = PreferencesUtils.getString(mContext,KEY_WALLET_PWD,PreferencesUtils.VISITOR);
                         if(pwd.equals(param.get(INPUT_TEXT).toString().trim())){
+                            alertDialog.dismiss();
                             showProgressDialog("正在导出。。。");
                             new Thread(){
                                 @Override

@@ -1,5 +1,6 @@
 package com.zipper.wallet.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.animations.MyAnimations;
+import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.definecontrol.FlowLayout;
 import com.zipper.wallet.definecontrol.MnemWordsView;
@@ -72,12 +74,22 @@ public class MnemonicActivity extends BaseActivity {
                             showDoubleButtonDialog("", "助记词验证数序正确，是否移除该助记词？", new RuntHTTPApi.ResPonse() {
                                 @Override
                                 public void doSuccessThing(Map<String, Object> param) {
-
+                                    PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
+                                    startActivity(new Intent(mContext,
+                                            MyWalletActivity.class));
+                                    ActivityManager.getInstance().finishAllActivity();
+                                    finish();
+                                    alertDialog.dismiss();
                                 }
 
                                 @Override
                                 public void doErrorThing(Map<String, Object> param) {
-
+                                    PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
+                                    startActivity(new Intent(mContext,
+                                            MyWalletActivity.class));
+                                    ActivityManager.getInstance().finishAllActivity();
+                                    finish();
+                                    alertDialog.dismiss();
                                 }
                             }, getString(R.string.not_remove), getString(R.string.remove));
                         }else{

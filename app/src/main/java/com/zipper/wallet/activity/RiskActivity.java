@@ -6,10 +6,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
-import com.zipper.wallet.MainActivity;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
-import com.zipper.wallet.definecontrol.TitleBarView;
 
 public class RiskActivity extends BaseActivity {
     Button btnOk;
@@ -37,6 +35,7 @@ public class RiskActivity extends BaseActivity {
 
             Intent intent = new Intent(mContext, CreateAccountActivity.class);
             startActivity(intent);
+            finish();
         }
     };
 
