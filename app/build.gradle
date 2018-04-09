@@ -42,6 +42,7 @@ android {
         versionCode updateVersionCode()
         versionName increasedVersionCode() + versionTag()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -50,7 +51,7 @@ android {
         }
     }
 
-        // 编译支持Java8
+    // 编译支持Java8
     compileOptions {//---
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -86,9 +87,10 @@ dependencies {
     //    compile 'com.madgag.spongycastle:core:1.51.0.0'
 
     implementation 'com.android.support:cardview-v7:26.1.0'
-
+    compile 'com.github.hackware1993:MagicIndicator:1.5.0'
     compile 'io.github.novacrypto:BIP39:0.1.9'
 
+    compile 'com.android.support:multidex:1.0.1'
 
     compile 'com.google.guava:guava:13.0.1@jar'
     compile 'com.google.code.findbugs:jsr305:2.0.1@jar'

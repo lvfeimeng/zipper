@@ -51,7 +51,7 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         switch (viewType) {
             case 0:
                 view = inflate(R.layout.layout_wallet_center);
-                view.setLayoutParams(new LinearLayout.LayoutParams(-1, ScreenUtils.dp2px(mContext, 60)));
+                view.setLayoutParams(new LinearLayout.LayoutParams(-1, ScreenUtils.dp2px(mContext, 40)));
                 viewHolder = new CenterViewHolder(view);
                 break;
             case 1:
@@ -83,33 +83,15 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void loadCenterView(CenterViewHolder holder) {
-        holder.imageAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext, AddPropertyActivity.class));
-            }
-        });
-        holder.imageSort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        holder.textSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext, SearchCoinsActivity.class));
-            }
-        });
+        holder.imageAdd.setOnClickListener(v ->
+                mContext.startActivity(new Intent(mContext, AddPropertyActivity.class)));
+        holder.textSearch.setOnClickListener(v ->
+                mContext.startActivity(new Intent(mContext, SearchCoinsActivity.class)));
     }
 
-    //RecyclerView recyclerView;
-
     private void loadListData(RecViewHolder holder) {
-//        if (recyclerView == null) {
-//            recyclerView = (RecyclerView) holder.itemView;
-//        }
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        holder.recyclerView.setNestedScrollingEnabled(false);
         holder.recyclerView.addItemDecoration(
                 new HorizontalDividerItemDecoration
                         .Builder(mContext)
@@ -118,14 +100,11 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         .margin(ScreenUtils.dp2px(mContext, 15), ScreenUtils.dp2px(mContext, 15))
                         .build()
         );
-       // holder.recyclerView.setFocusable(false);
         holder.recyclerView.setFocusableInTouchMode(false);
 
         if (adapter == null) {
             adapter = new ConisAdapter(mContext, mList);
             holder.recyclerView.setAdapter(adapter);
-//            holder.recyclerView.requestDisallowInterceptTouchEvent(true);
-//            holder.recyclerView.smoothScrollToPosition(0);
         } else {
             adapter.notifyDataSetChanged();
         }
@@ -151,13 +130,11 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     static class CenterViewHolder extends RecyclerView.ViewHolder {
         ImageView imageAdd;
-        ImageView imageSort;
         TextView textSearch;
 
         public CenterViewHolder(View itemView) {
             super(itemView);
             imageAdd = (ImageView) itemView.findViewById(R.id.image_add);
-            imageSort = (ImageView) itemView.findViewById(R.id.image_sort);
             textSearch = (TextView) itemView.findViewById(R.id.text_search);
         }
     }

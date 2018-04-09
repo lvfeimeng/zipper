@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/nav_wallet_manage"
-        android:icon="@mipmap/ic_launcher"
-        android:title="钱包管理"/>
+
     <item
         android:id="@+id/nav_trading_record"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/menu_trading_record"
         android:title="交易记录"/>
+
     <item
         android:id="@+id/nav_contacts"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/menu_contact"
         android:title="联系人" />
+
     <item
-        android:id="@+id/nav_setting"
-        android:icon="@mipmap/ic_launcher"
-        android:title="系统设置"/>
+        android:id="@+id/nav_language_setting"
+        android:icon="@mipmap/menu_language_setting"
+        android:title="语言设置"/>
+
+    <item
+        android:id="@+id/nav_gesture_password"
+        android:icon="@mipmap/menu_gesture_password"
+        android:title="手势密码"/>
+
 </menu>

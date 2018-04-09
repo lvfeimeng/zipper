@@ -1,7 +1,5 @@
 package com.zipper.wallet.activity;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -18,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.WalletAdapter;
@@ -28,11 +25,9 @@ import com.zipper.wallet.bean.CoinsBean;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.functions.Consumer;
-
 public class MyWalletActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    public static final int REQUEST_CODE = 1000;
+//    public static final int REQUEST_CODE = 1000;
 
     protected TextView textWallet;
     protected CollapsingToolbarLayout collapsingToolbar;
@@ -44,7 +39,7 @@ public class MyWalletActivity extends BaseActivity implements NavigationView.OnN
     protected TextView textCollectBill;
     protected ImageView imgHome;
     protected ImageView imgQrCode;
-    protected ImageView imgScan;
+    protected ImageView imgSwitch;
 
     private WalletAdapter adapter;
     private List<CoinsBean> items;
@@ -72,8 +67,8 @@ public class MyWalletActivity extends BaseActivity implements NavigationView.OnN
         imgHome.setOnClickListener(MyWalletActivity.this);
         imgQrCode = (ImageView) findViewById(R.id.img_qr_code);
         imgQrCode.setOnClickListener(MyWalletActivity.this);
-        imgScan = (ImageView) findViewById(R.id.img_scan);
-        imgScan.setOnClickListener(MyWalletActivity.this);
+        imgSwitch = (ImageView) findViewById(R.id.img_switch);
+        imgSwitch.setOnClickListener(MyWalletActivity.this);
 
         navView.setNavigationItemSelectedListener(this);
 
@@ -90,11 +85,6 @@ public class MyWalletActivity extends BaseActivity implements NavigationView.OnN
         testData();
         adapter = new WalletAdapter(this, items);
         recyclerView.setAdapter(adapter);//new ConisAdapter(this,items)
-//        recyclerView.setLayoutParams(new CoordinatorLayout.LayoutParams(-1, -1));
-        //recyclerView.requestDisallowInterceptTouchEvent(true);
-        recyclerView.setFocusableInTouchMode(false);
-        recyclerView.setFocusable(false);
-        recyclerView.smoothScrollToPosition(0);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -108,10 +98,10 @@ public class MyWalletActivity extends BaseActivity implements NavigationView.OnN
                 int distance = getScollYDistance();
                 if (distance >= dp2px(140)) {
                     imgQrCode.setVisibility(View.VISIBLE);
-                    imgScan.setVisibility(View.VISIBLE);
+                    imgSwitch.setVisibility(View.VISIBLE);
                 } else {
                     imgQrCode.setVisibility(View.GONE);
-                    imgScan.setVisibility(View.GONE);
+                    imgSwitch.setVisibility(View.GONE);
                 }
             }
         });
@@ -136,14 +126,14 @@ public class MyWalletActivity extends BaseActivity implements NavigationView.OnN
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_wallet_manage) {
+        if (id == R.id.nav_gesture_password) {
 
         } else if (id == R.id.nav_trading_record) {
 
         } else if (id == R.id.nav_contacts) {
             startActivity(new Intent(this, ContactsActivity.class));
-        } else if (id == R.id.nav_setting) {
-
+        } else if (id == R.id.nav_language_setting) {
+            startActivity(new Intent(this, LanguageSettingActivity.class));
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -163,10 +153,10 @@ public class MyWalletActivity extends BaseActivity implements NavigationView.OnN
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.nav_menu, menu);
-        menu.findItem(R.id.nav_wallet_manage).setVisible(false);
+        menu.findItem(R.id.nav_gesture_password).setVisible(false);
         menu.findItem(R.id.nav_trading_record).setVisible(false);
         menu.findItem(R.id.nav_contacts).setVisible(false);
-        menu.findItem(R.id.nav_setting).setVisible(false);
+        menu.findItem(R.id.nav_language_setting).setVisible(false);
         return true;
     }
 
@@ -185,40 +175,44 @@ public class MyWalletActivity extends BaseActivity implements NavigationView.OnN
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.img_home) {
-            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                drawerLayout.closeDrawer(GravityCompat.START);
-            } else {
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-        } else if (view.getId() == R.id.text_switch_account) {
-            startActivity(new Intent(this, SwitchAccountActivity.class));
-        } else if (view.getId() == R.id.text_collect_bill) {
-            startActivity(new Intent(this, PayeeAddressActivity.class));
-        } else if (view.getId() == R.id.img_qr_code) {
-            startActivity(new Intent(this, PayeeAddressActivity.class));
-        } else if (view.getId() == R.id.img_scan) {
-            scanCode();
+        switch (view.getId()) {
+            case R.id.img_home:
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
+                break;
+            case R.id.text_switch_account:
+            case R.id.img_switch:
+                startActivity(new Intent(this, SwitchAccountActivity.class));
+                break;
+            case R.id.text_collect_bill:
+            case R.id.img_qr_code:
+                startActivity(new Intent(this, PayeeAddressActivity.class));
+                break;
+            default:
+                break;
         }
     }
 
-    @SuppressLint("CheckResult")
-    private void scanCode() {
-        new RxPermissions(this)
-                .request(Manifest.permission.CAMERA)
-                .subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean granted) {
-                        if (granted) {
-                            //Intent intent = new Intent(MyWalletActivity.this, CaptureActivity.class);
-                            Intent intent = new Intent(MyWalletActivity.this, ScanQrCodeActivity.class);
-                            startActivityForResult(intent, REQUEST_CODE);
-                        } else {
-                            toast("相机权限被禁止，请先开启权限");
-                        }
-                    }
-                });
-    }
+//    @SuppressLint("CheckResult")
+//    private void scanCode() {
+//        new RxPermissions(this)
+//                .request(Manifest.permission.CAMERA)
+//                .subscribe(new Consumer<Boolean>() {
+//                    @Override
+//                    public void accept(Boolean granted) {
+//                        if (granted) {
+//                            //Intent intent = new Intent(MyWalletActivity.this, CaptureActivity.class);
+//                            Intent intent = new Intent(MyWalletActivity.this, ScanQrCodeActivity.class);
+//                            startActivityForResult(intent, REQUEST_CODE);
+//                        } else {
+//                            toast("相机权限被禁止，请先开启权限");
+//                        }
+//                    }
+//                });
+//    }
 
     public int getScollYDistance() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();

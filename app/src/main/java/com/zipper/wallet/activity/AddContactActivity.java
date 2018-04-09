@@ -4,8 +4,11 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,16 +23,15 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
 
     public static final int REQUEST_CODE = 1000;
 
-    protected ImageView imageView;
-    protected EditText editFirstName;
-    protected EditText editLastName;
-    protected EditText editWalletAddress;
     protected ImageView imageScan;
+    protected TextView textSave;
+    protected Toolbar toolbar;
+    protected CollapsingToolbarLayout collapsingToolbar;
+    protected EditText editName;
+    protected EditText editWalletAddress;
     protected EditText editPhone;
     protected EditText editEmail;
     protected EditText editRemark;
-    protected ImageView imgBack;
-    protected TextView textSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,28 +41,28 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initView() {
-        imageView = (ImageView) findViewById(R.id.image_view);
-        editFirstName = (EditText) findViewById(R.id.edit_first_name);
-        editLastName = (EditText) findViewById(R.id.edit_last_name);
-        editWalletAddress = (EditText) findViewById(R.id.editWalletAddress);
         imageScan = (ImageView) findViewById(R.id.image_scan);
         imageScan.setOnClickListener(AddContactActivity.this);
-        editPhone = (EditText) findViewById(R.id.editPhone);
-        editEmail = (EditText) findViewById(R.id.editEmail);
-        editRemark = (EditText) findViewById(R.id.editRemark);
-        imgBack = (ImageView) findViewById(R.id.img_back);
-        imgBack.setOnClickListener(AddContactActivity.this);
         textSave = (TextView) findViewById(R.id.text_save);
         textSave.setOnClickListener(AddContactActivity.this);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        editName = (EditText) findViewById(R.id.edit_name);
+        editWalletAddress = (EditText) findViewById(R.id.edit_wallet_address);
+        editPhone = (EditText) findViewById(R.id.edit_phone);
+        editEmail = (EditText) findViewById(R.id.edit_email);
+        editRemark = (EditText) findViewById(R.id.edit_remark);
+
+        setSupportActionBar(toolbar);
+        collapsingToolbar.setTitle("新建联系人");
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.img_back) {
-            finish();
-        } else if (view.getId() == R.id.text_save) {
+        if (view.getId() == R.id.text_save) {
             toast("保存");
-        }else  if (view.getId()==R.id.image_scan){
+        } else if (view.getId() == R.id.image_scan) {
             scanCode();
         }
     }
@@ -69,15 +71,12 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
     private void scanCode() {
         new RxPermissions(this)
                 .request(Manifest.permission.CAMERA)
-                .subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean granted) {
-                        if (granted) {
-                            Intent intent = new Intent(AddContactActivity.this, CaptureActivity.class);
-                            startActivityForResult(intent, REQUEST_CODE);
-                        } else {
-                            toast("相机权限被禁止，请先开启权限");
-                        }
+                .subscribe(granted -> {
+                    if (granted) {
+                        Intent intent = new Intent(AddContactActivity.this, CaptureActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE);
+                    } else {
+                        toast("相机权限被禁止，请先开启权限");
                     }
                 });
     }

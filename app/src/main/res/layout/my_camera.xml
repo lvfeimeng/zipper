@@ -32,4 +32,5 @@
         android:text="@string/scan_code_hint"
         android:textColor="@color/white"
         android:textSize="14sp" />
+
 </FrameLayout>

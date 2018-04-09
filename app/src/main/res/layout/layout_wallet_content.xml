@@ -18,9 +18,6 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
             app:statusBarScrim="?attr/colorPrimary"
             app:titleEnabled="false">
-            <!--app:statusBarScrim="@android:color/transparent"-->
-            <!--app:contentScrim="?attr/colorPrimary"-->
-            <!--app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -79,9 +76,10 @@
                             android:id="@+id/text_switch_account"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawableLeft="@mipmap/scan"
+                            android:drawableLeft="@mipmap/home_switch_big"
                             android:drawablePadding="10dp"
                             android:padding="10dp"
+                            android:gravity="center_vertical"
                             android:text="转账"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
@@ -99,8 +97,9 @@
                             android:id="@+id/text_collect_bill"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawableLeft="@mipmap/qr_code"
+                            android:drawableLeft="@mipmap/home_qr_code_big"
                             android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
                             android:padding="10dp"
                             android:text="收款"
                             android:textColor="@color/white"
@@ -115,6 +114,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
+                app:contentInsetStart="0dp"
                 app:layout_collapseMode="pin">
                 <!--?attr/actionBarSize-->
                 <RelativeLayout
@@ -137,17 +137,17 @@
                         android:layout_marginRight="10dp"
                         android:padding="12dp"
                         android:visibility="gone"
-                        android:src="@mipmap/qr_code" />
+                        android:src="@mipmap/home_qr_code" />
 
                     <ImageView
-                        android:id="@+id/img_scan"
+                        android:id="@+id/img_switch"
                         android:layout_width="50dp"
                         android:layout_height="match_parent"
                         android:layout_marginRight="5dp"
                         android:layout_toLeftOf="@+id/img_qr_code"
                         android:padding="12dp"
                         android:visibility="gone"
-                        android:src="@mipmap/scan" />
+                        android:src="@mipmap/home_switch" />
 
                     <TextView
                         android:id="@+id/text_title"
@@ -168,7 +168,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -176,7 +176,7 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none" />
+            android:scrollbars="none"/>
 
     </LinearLayout>
     <!--<android.support.v4.widget.NestedScrollView-->
