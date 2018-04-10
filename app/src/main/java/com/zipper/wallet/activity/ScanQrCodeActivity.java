@@ -20,6 +20,7 @@ public class ScanQrCodeActivity extends BaseActivity {
         CodeUtils.setFragmentArgs(captureFragment, R.layout.my_camera);
         captureFragment.setAnalyzeCallback(analyzeCallback);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_my_container, captureFragment).commit();
+        findViewById(R.id.img_close).setOnClickListener(v -> finish());
     }
 
     /**

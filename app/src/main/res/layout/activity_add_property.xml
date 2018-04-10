@@ -16,7 +16,7 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:padding="10dp"
-            android:src="@mipmap/back" />
+            android:src="@mipmap/back_black" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:padding="10dp"
-            android:src="@mipmap/search" />
+            android:src="@mipmap/search_gray" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

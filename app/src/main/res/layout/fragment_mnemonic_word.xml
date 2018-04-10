@@ -19,10 +19,10 @@
                 android:id="@+id/editWord"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/edit_bg"
                 android:gravity="top"
                 android:hint="助记词，按空格分隔"
@@ -33,27 +33,40 @@
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="密码"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
             <EditText
                 android:id="@+id/editPassword"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_line"
                 android:gravity="center_vertical"
-                android:hint="密码"
+                android:hint="输入密码"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:padding="5dp"
-                android:background="@null"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@color/color_gray9" />
+                android:layout_marginTop="20dp"
+                android:text="重复钱包密码"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/editConfirmPassword"
@@ -61,22 +74,25 @@
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_line"
                 android:gravity="center_vertical"
                 android:hint="重复密码"
-                android:background="@null"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:padding="5dp"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@color/color_gray9" />
+                android:layout_marginTop="20dp"
+                android:text="密码提示"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/editPasswordHint"
@@ -84,21 +100,14 @@
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_line"
                 android:gravity="center_vertical"
-                android:hint="密码提示信息（可不填）"
+                android:hint="选填"
                 android:maxLines="1"
-                android:background="@null"
                 android:padding="5dp"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@color/color_gray9" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -124,6 +133,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="服务及隐私条款"
+                    android:layout_marginLeft="10dp"
                     android:textColor="@color/blue_sky"
                     android:textSize="12sp" />
 
@@ -131,22 +141,25 @@
 
             <Button
                 android:id="@+id/btnImport"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_width="120dp"
+                android:layout_height="45dp"
+                android:textSize="16sp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:text="开始导入"
+                android:background="@drawable/btn_bg_gray"
                 android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:text="开始导入"/>
 
             <TextView
                 android:id="@+id/textWord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="什么是助记词？"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="10dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="40dp"
+                android:text="什么是助记词？"
+                android:visibility="gone"
                 android:textColor="@color/blue_sky"
                 android:textSize="12sp" />
 

@@ -10,6 +10,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/blue_sky</item>
         <item name="colorControlNormal">@color/color_gray4</item>
+        <item name="android:splitMotionEvents">false</item>
     </style>
     <style name="EditText_register" parent="Theme.AppCompat.Light">
         <item name="android:layout_height">@dimen/item_lin_height</item>
@@ -85,7 +86,6 @@
         <item name="colorButtonNormal">@color/login_red</item><!--正常状态下的颜色  -->
         <item name="colorControlHighlight">@color/color_gray3</item><!--覆盖色，按下的颜色  -->
     </style>
-    复制代码
 
     <declare-styleable name="AutoLineFeedLayout">
         <attr name="debug" format="boolean"></attr>
@@ -98,5 +98,15 @@
         <attr name="verticalSpacing" format="reference|dimension"/>
         <attr name="horizontalSpacing" format="reference|dimension"/>
     </declare-styleable>
+
+    <style name="BottomDialog" parent="@style/Base.V7.Theme.AppCompat.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="BottomDialog.Animation" parent="Animation.AppCompat.Dialog">
+        <item name="android:windowEnterAnimation">@anim/translate_dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/translate_dialog_out</item>
+    </style>
 
 </resources>
