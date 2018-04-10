@@ -63,8 +63,6 @@ public class TitleBarView extends LinearLayout {
         setTxtTitleColor(titleColor);
         int linColor = typedArray.getColor(R.styleable.titlebar_relbackgroundColor,getResources().getColor(R.color.white));
         setlinBackground(linColor);
-        int rightdra = typedArray .getInt(R.styleable.titlebar_righticon_src,R.mipmap.arrow_right);
-        setRightIcon(rightdra);
         int leftdra = typedArray .getInt(R.styleable.titlebar_lefticon_src,R.mipmap.back_black);
         setLeftIcon(leftdra);
         int visible = typedArray.getInt(R.styleable.titlebar_title_visible,VISIBLE);
@@ -73,6 +71,8 @@ public class TitleBarView extends LinearLayout {
         setLeftVisible(visible);
         visible = typedArray.getInt(R.styleable.titlebar_right_visible,VISIBLE);
         setRightVisible(visible);
+        int rightdra = typedArray .getInt(R.styleable.titlebar_righticon_src,R.mipmap.arrow_right);
+        setRightIcon(rightdra);
         String title = typedArray.getString(R.styleable.titlebar_title_text);
         setTxtTitle(title);
         String left = typedArray.getString(R.styleable.titlebar_left_text);

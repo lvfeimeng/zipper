@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.zipper.wallet.R;
 import com.zipper.wallet.animations.MyAnimations;
 import com.zipper.wallet.base.ActivityManager;
-import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.base.CreateActvity;
 import com.zipper.wallet.definecontrol.FlowLayout;
 import com.zipper.wallet.definecontrol.MnemWordsView;
 import com.zipper.wallet.utils.PreferencesUtils;
@@ -31,7 +31,7 @@ import java.util.Set;
  * Created by Administrator on 2018/3/29.
  */
 
-public class MnemonicActivity extends BaseActivity {
+public class MnemonicActivity extends CreateActvity {
     FlowLayout flowLayout,flowLayoutBottom;
     LinearLayout linCopy,linVerify;
     TextView txtMnem;

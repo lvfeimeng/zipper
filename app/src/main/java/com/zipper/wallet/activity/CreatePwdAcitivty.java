@@ -17,11 +17,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zipper.wallet.R;
-import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.base.CreateActvity;
 import com.zipper.wallet.bean.WalletBean;
 import com.zipper.wallet.utils.PreferencesUtils;
 
-public class CreatePwdAcitivty extends BaseActivity {
+public class CreatePwdAcitivty extends CreateActvity {
 
     EditText edPwd,edPwdRe,edTip;
     CheckBox checkBox;
