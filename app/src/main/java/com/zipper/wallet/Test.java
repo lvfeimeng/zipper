@@ -28,6 +28,7 @@ public class Test {
         String mnemonic="sort spoon motion country tornado vacuum hat magic rotate outer spy unfold";
         String passphrase="1234567890";
         byte[] seed = new SeedCalculator().calculateSeed(mnemonic, passphrase);
+        //1111111
     }
 
     private static void test1() {
