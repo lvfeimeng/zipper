@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,7 +39,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Dialog alertDialog;
     protected TitleBarView titlebar;
     protected String TAG = "";
-    public final String KEY_MNEN_WORDS = "mnemonicwords",KEY_IS_LOGIN = "islogin",KEY_HAND_PWD = "hand_pwd";
+    public final String KEY_MNEN_WORDS = "mnemonicwords",
+            KEY_IS_LOGIN = "islogin",
+            KEY_HAND_PWD = "hand_pwd",
+            KEY_WALLET_PWD = "wallet_pwd",
+            KEY_WALLET_PWD_TIP = "wallet_pwd_tip",
+            INPUT_TEXT = "input_text";
 
 
     @Override
@@ -48,11 +54,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         ActivityManager.getInstance().addActivity(this);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = this;
-        titlebar = (TitleBarView)findViewById(R.id.title_bar);
+        titlebar = (TitleBarView) findViewById(R.id.title_bar);
+        if(titlebar != null){
+            titlebar.setLeftOnclickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
+        }
         TAG = getLocalClassName();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
-
 
 
     public int getColorById(int colorId) {
@@ -61,7 +73,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        KeyBoardUtils.closeKeybord(getWindow().getDecorView(),this);
+        KeyBoardUtils.closeKeybord(getWindow().getDecorView(), this);
         ActivityManager.activityStack.remove(this);
         super.finish();
     }
@@ -94,72 +106,75 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 提示框
      *
      * @param tip 提示信息
-     * @param rp 确定按钮执行的方法
+     * @param rp  确定按钮执行的方法
      */
     protected void showTipDialog(final String tip, final RuntHTTPApi.ResPonse rp) {
-        new TipDialog(mContext,tip,rp).show();
+        new TipDialog(mContext, tip, rp).show();
 
     }
+
     /**
      * 提示框
      *
      * @param title 标题
-     * @param tip 提示信息
-     * @param rp 确定按钮执行的方法
+     * @param tip   提示信息
+     * @param rp    确定按钮执行的方法
      */
-    protected void showTipDialog(final String title,final String tip, final RuntHTTPApi.ResPonse rp) {
-        new TipDialog(mContext,title,tip,rp).show();
+    protected void showTipDialog(final String title, final String tip, final RuntHTTPApi.ResPonse rp) {
+        new TipDialog(mContext, title, tip, rp).show();
 
     }
+
     /**
      * 提示框
      *
      * @param title 标题
-     * @param tip 提示信息
-     * @param rp 确定按钮执行的方法
+     * @param tip   提示信息
+     * @param rp    确定按钮执行的方法
      */
-    protected void showTipDialog(final String title,final String tip,final int image, final RuntHTTPApi.ResPonse rp) {
-        new TipDialog(mContext,title,tip, TipDialog.TipType.TIP,image,rp).show();
+    protected void showTipDialog(final String title, final String tip, final int image, final RuntHTTPApi.ResPonse rp) {
+        new TipDialog(mContext, title, tip, TipDialog.TipType.TIP, image, rp).show();
 
     }
 
     /**
-     *  显示输入型弹框
-     * @param title 标题
-     * @param hint  默认提示文字
-     * @param text  文本
+     * 显示输入型弹框
+     *
+     * @param title     标题
+     * @param hint      默认提示文字
+     * @param text      文本
      * @param inputType 输入类型
-     * @param Rp      按钮执行的方法
+     * @param Rp        按钮执行的方法
      */
-    protected void showInputDialog(String title, String hint, String text , int inputType, final RuntHTTPApi.ResPonse Rp){
+    protected void showInputDialog(String title, String hint, String text, int inputType, final RuntHTTPApi.ResPonse Rp) {
 
-        View dialogView = getLayoutInflater().inflate(R.layout.layout_edittext,null);
-        final EditText et = (EditText)dialogView.findViewById(R.id.edit_input);
+        View dialogView = getLayoutInflater().inflate(R.layout.layout_edittext, null);
+        final EditText et = (EditText) dialogView.findViewById(R.id.edit_input);
         et.setHint(hint);
-        if(inputType == InputType.TYPE_TEXT_VARIATION_PASSWORD) {
+        if (inputType == InputType.TYPE_TEXT_VARIATION_PASSWORD) {
             et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
         et.setText(text);
-        alertDialog = new AlertDialog.Builder(mContext).setTitle(title )
+        alertDialog = new AlertDialog.Builder(mContext).setTitle(title)
                 .setView(dialogView)
                 .setCancelable(false)
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         alertDialog.dismiss();
-                        if(Rp !=null) {
+                        if (Rp != null) {
                             Rp.doErrorThing(null);
                         }
                     }
                 })
                 .setPositiveButton("确定", null).create();
         alertDialog.show();
-        ((AlertDialog)alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListenearAndDo() {
+        ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListenearAndDo() {
             @Override
             public void doClick(View view) {
                 Map map = new HashMap();
-                map.put("view",et.getText());
-                if(Rp !=null) {
+                map.put(INPUT_TEXT, et.getText());
+                if (Rp != null) {
                     Rp.doSuccessThing(map);
                 }
             }
@@ -168,50 +183,54 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     /**
-     *  显示输入型弹框
+     * 显示输入型弹框
+     *
      * @param title 标题
-     * @param tip  文本
+     * @param tip   文本
      */
-    protected void showDoubleButtonDialog(String title,  String tip , final RuntHTTPApi.ResPonse Rp,String leftBtnName,String rightBtnName){
+    protected void showDoubleButtonDialog(String title, String tip, final RuntHTTPApi.ResPonse Rp, String leftBtnName, String rightBtnName) {
 
-        alertDialog = new AlertDialog.Builder(mContext).setTitle(title ).setMessage(tip)
+        alertDialog = new AlertDialog.Builder(mContext).setTitle(title).setMessage(tip)
                 .setCancelable(false)
-                .setNegativeButton((leftBtnName.equals("")?getString(R.string.cancel):leftBtnName), new DialogInterface.OnClickListener() {
+                .setNegativeButton((leftBtnName.equals("") ? getString(R.string.cancel) : leftBtnName), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        alertDialog.dismiss();;
-                        if(Rp !=null) {
+                        alertDialog.dismiss();
+                        ;
+                        if (Rp != null) {
                             Rp.doErrorThing(null);
                         }
                     }
                 })
-                .setPositiveButton(rightBtnName.equals("")?getString(R.string.ok):rightBtnName, null).create();
+                .setPositiveButton(rightBtnName.equals("") ? getString(R.string.ok) : rightBtnName, null).create();
         alertDialog.show();
-        ((AlertDialog)alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListenearAndDo() {
+        ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListenearAndDo() {
             @Override
             public void doClick(View view) {
                 Map map = new HashMap();
-                if(Rp !=null) {
+                if (Rp != null) {
                     Rp.doSuccessThing(map);
                 }
             }
         });
     }
 
-    public static boolean isNull(TextView view){
-        if(view.getText().equals("")||view.getText().toString().trim().equals("")){
+    public static boolean isNull(TextView view) {
+        if (view.getText().equals("") || view.getText().toString().trim().equals("")) {
             return true;
         }
         return false;
     }
 
-    ProgressDialog progressDialog ;
-    protected void showProgressDialog(String tip){
+    ProgressDialog progressDialog;
+
+    protected void showProgressDialog(String tip) {
         progressDialog = new ProgressDialog(mContext);
         progressDialog.setTitle(tip);
         progressDialog.show();
     }
-    protected void hideProgressDialog(){
+
+    protected void hideProgressDialog() {
         progressDialog.cancel();
     }
 
@@ -259,7 +278,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         KeyBoardUtils.closeKeybord(mContext);
-        if(alertDialog !=null){
+        if (alertDialog != null) {
 
             alertDialog.dismiss();
             alertDialog = null;
@@ -267,5 +286,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mImmersionBar != null) {
             mImmersionBar.destroy();
         }
+    }
+
+    protected boolean onBackKeyDown(){
+        return false;
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keycode, KeyEvent event) {
+
+        switch (event.getKeyCode()) {
+            case KeyEvent.KEYCODE_MENU: {
+            }
+            case KeyEvent.KEYCODE_BACK: {
+                return onBackKeyDown();
+            }
+        }
+        return super.onKeyDown(keycode, event);
     }
 }

@@ -12,6 +12,8 @@ import android.widget.Button;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.bean.WalletBean;
+import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.RuntListSeria;
 
@@ -72,6 +74,7 @@ public class BackUpAcitivty extends BaseActivity {
                             Intent intent = new Intent(mContext,MnemonicActivity.class);
                             intent.putExtra("list",new RuntListSeria<String>((List<String>) obj));
                             startActivity(intent);
+                            finish();
                         }
                     }else{
                         toast("未曾生成数据");
@@ -108,15 +111,20 @@ public class BackUpAcitivty extends BaseActivity {
 
                     @Override
                     public void doSuccessThing(final Map<String, Object> param) {
-                        showProgressDialog("正在导出。。。");
+                        String pwd = PreferencesUtils.getString(mContext,KEY_WALLET_PWD,PreferencesUtils.VISITOR);
+                        if(pwd.equals(param.get(INPUT_TEXT).toString().trim())){
+                            alertDialog.dismiss();
+                            showProgressDialog("正在导出。。。");
+                            new Thread(){
+                                @Override
+                                public void run() {
+                                    createAccount();
+                                }
+                            }.start();
 
-                        new Thread(){
-                            @Override
-                            public void run() {
-                                createAccount(param.get("view").toString());
-                            }
-                        }.start();
-
+                        }else{
+                            toast("密码错误");
+                        }
                     }
 
                     @Override
@@ -152,28 +160,27 @@ public class BackUpAcitivty extends BaseActivity {
     }
 
 
-    private void createAccount(String pwd){
+    private void createAccount(){
 
         try {
 
             MnemonicCode.setInstance(new MnemonicCodeTestClass());//首先实例化助记词类的单例模式
 
             SecureRandom random = new SecureRandom();//创建随机类的实例
-            byte[] mnemonicSeed = new byte[16];//生成128位字节流
+            byte[] randomSeed = new byte[16];//生成128位字节流
 
             //byte[] radomSeed = random.generateSeed(KeyCrypterScrypt.BLOCK_LENGTH);//生成128位字节流种子
             //Log.i(TAG,"radomSeed :"+ Utils.bytesToHexString(radomSeed));
 
 
-            random.nextBytes(mnemonicSeed);//生成128位随机数
+            random.nextBytes(randomSeed);//生成128位随机数
             //Log.i(TAG,"mnemonicSeed :"+ Utils.bytesToHexString(mnemonicSeed));//将字节流编译成字符串
 
-            List<String> words = getMnemonicCode(Utils.hexStringToByteArray("49ead87b8af348c9d22e63f420ce37fc"));//一局随机数获取助记词
+            List<String> words = getMnemonicCode(randomSeed);//一局随机数获取助记词
 
             for(String str : words){
                 Log.e(TAG,"words :"+str);
             }
-            pwd = "kljlajsd";
 
             byte[] seed = MnemonicCode.toSeed(words,"");//由助记词和密码生成种子,方法内含有转换512哈系数方式
             Log.i(TAG,"seed :"+Utils.bytesToHexString(seed));
@@ -186,9 +193,16 @@ public class BackUpAcitivty extends BaseActivity {
             //List<byte[]> keys = getPrivateKey(hash512,"abcd");
 
             DeterministicKey master = HDKeyDerivation.createMasterPrivateKey(seed);
+            String mnemonicSeed = Utils.bytesToHexString(seed);//助记词生成的根种子
+            String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
+            String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
+            WalletBean.getWalletBean().setMnemSeed(mnemonicSeed);
+            WalletBean.getWalletBean().setRandomSeed(Utils.bytesToHexString(randomSeed));
+            WalletBean.getWalletBean().setPriKey(priKey);
+            WalletBean.getWalletBean().setPubKey(pubkey);
 
-            Log.i(TAG,"512PrivateKey:"+Utils.bytesToHexString(master.getPrivKeyBytes()));
-            Log.i(TAG,"512publicKey:"+Utils.bytesToHexString(master.getPubKey()));
+            //Log.i(TAG,"512PrivateKey:"+priKey);
+            //Log.i(TAG,"512publicKey:"+pubkey);
             //Log.i(TAG,"publicKey:"+Utils.bytesToHexString(keys.get(1)));
             //Log.i(TAG,"512publicKey:"+Utils.bytesToHexString(keys512.get(1)));
             Message msg = new Message();

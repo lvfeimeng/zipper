@@ -5,6 +5,9 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorBtnBlue">#2cb2f1</color>
     <color name="colorAccentTop">#FB4345</color>
+    <color name="startBlue">#3d89e8</color>
+    <color name="centerBlue">#1ea0e7</color>
+    <color name="endBlue">#02b6e8</color>
 
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
@@ -40,9 +43,9 @@
     <color name="color_orange2">#fd7634</color>
     <color name="font_light2">#999999</color>
     <color name="font_light3">#989898</color>
-    <color name="blue_sky">#34a2ff</color>
+    <color name="blue_sky">#02b6e8</color>
     <color name="color_blue">#5070b2</color>
-    <color name="color_blue_d">#87c8ff</color>
+    <color name="color_blue_d">#02a5d1</color>
     <color name="green_right">#2bcc6e</color>
     <color name="green_deep">#029789</color>
     <color name="color_divider">#f4f4f4</color>
