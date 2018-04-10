@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.zipper.wallet.R;
-import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.base.CreateActvity;
 import com.zipper.wallet.bean.WalletBean;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
@@ -47,7 +47,7 @@ import java.util.Map;
  * Created by Administrator on 2018/3/29.
  */
 
-public class BackUpAcitivty extends BaseActivity {
+public class BackUpAcitivty extends CreateActvity {
 
     public static ArrayList<String> wordList = new ArrayList<String>(2048);
     Button btnBackup;

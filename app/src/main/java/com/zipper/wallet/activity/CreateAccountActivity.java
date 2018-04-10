@@ -10,16 +10,15 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.zipper.wallet.R;
-import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.base.CreateActvity;
 import com.zipper.wallet.bean.WalletBean;
-import com.zipper.wallet.utils.KeyBoardUtils;
 import com.zipper.wallet.utils.PreferencesUtils;
 
 /**
  * Created by Administrator on 2018/3/29.
  */
 
-public class CreateAccountActivity extends BaseActivity {
+public class CreateAccountActivity extends CreateActvity {
 
     EditText edName;
     Button btnCreate;
@@ -63,13 +62,6 @@ public class CreateAccountActivity extends BaseActivity {
             }
         });
 
-        titlebar.setRightOnclickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                KeyBoardUtils.closeKeybord(mContext);
-            }
-        });
 
     }
 }

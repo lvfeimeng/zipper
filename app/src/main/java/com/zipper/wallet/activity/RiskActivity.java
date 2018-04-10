@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.zipper.wallet.R;
-import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.base.CreateActvity;
 
-public class RiskActivity extends BaseActivity {
+public class RiskActivity extends CreateActvity {
     Button btnOk;
 
     @Override
@@ -18,13 +18,6 @@ public class RiskActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         btnOk = (Button)findViewById(R.id.btn_ok);
         btnOk.setOnClickListener(nextClick);
-
-        titlebar.setLeftOnclickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
         titlebar.setRightOnclickListener(nextClick);
     }
 
