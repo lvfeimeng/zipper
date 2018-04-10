@@ -29,6 +29,7 @@ public class Test {
         String passphrase="1234567890";
         byte[] seed = new SeedCalculator().calculateSeed(mnemonic, passphrase);
         //1111111
+        //000000000000000000000000000000
     }
 
     private static void test1() {
