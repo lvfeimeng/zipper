@@ -133,7 +133,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         layoutLanguage = (LinearLayout) headerView.findViewById(R.id.layout_language);
         checkboxGesturePassword = (CheckBox) headerView.findViewById(R.id.checkbox_gesture_password);
         layoutTradingRecord.setOnClickListener(v -> {
-            toast("交易记录");
+            startActivity(new Intent(this,TransactionActivity.class));
             drawerLayout.closeDrawer(GravityCompat.START);
         });
         textContacts.setOnClickListener(v -> {
