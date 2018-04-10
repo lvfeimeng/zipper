@@ -24,7 +24,7 @@ import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.WalletAdapter;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.bean.CoinsBean;
-import com.zipper.wallet.utils.PreferencesUtils;
+import com.zipper.wallet.utils.SqliteUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,14 +54,18 @@ public class MyWalletActivity extends BaseActivity implements NavigationView.OnN
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_wallet);
-        String pwd = PreferencesUtils.getString(mContext,KEY_HAND_PWD,PreferencesUtils.PROJECT);
+        /*String pwd = PreferencesUtils.getString(mContext,KEY_HAND_PWD,PreferencesUtils.PROJECT);
         if(pwd !=null && !pwd.equals("")){
             Intent intent = new Intent(mContext, UnlockActivity.class);
             intent.putExtra("mode",1);
             startActivity(intent);
-        }
+        }*/
         //PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,false,PreferencesUtils.USER);
         initView();
+    }
+
+    private void testSqlite(){
+        SqliteUtils.openDataBase(mContext);
     }
 
     private void initView() {
