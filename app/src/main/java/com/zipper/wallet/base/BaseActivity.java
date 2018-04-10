@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,6 +55,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = this;
         titlebar = (TitleBarView) findViewById(R.id.title_bar);
+        if(titlebar != null){
+            titlebar.setLeftOnclickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
+        }
         TAG = getLocalClassName();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
@@ -278,5 +286,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mImmersionBar != null) {
             mImmersionBar.destroy();
         }
+    }
+
+    protected boolean onBackKeyDown(){
+        return false;
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keycode, KeyEvent event) {
+
+        switch (event.getKeyCode()) {
+            case KeyEvent.KEYCODE_MENU: {
+            }
+            case KeyEvent.KEYCODE_BACK: {
+                return onBackKeyDown();
+            }
+        }
+        return super.onKeyDown(keycode, event);
     }
 }

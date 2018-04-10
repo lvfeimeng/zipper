@@ -27,7 +27,7 @@ public class StartActivity extends BaseActivity {
         btnCreate = (Button)findViewById(R.id.btn_create);
         btnImport = (Button)findViewById(R.id.btn_import);
         boolean isLogin = PreferencesUtils.getBoolean(mContext,KEY_IS_LOGIN,false,PreferencesUtils.USER);
-        if (!isLogin){
+        if (true){
             btnCreate.setVisibility(View.VISIBLE);
             btnImport.setVisibility(View.VISIBLE);
 

@@ -7,4 +7,5 @@ import org.litepal.crud.DataSupport;
  */
 
 public class WalletTable extends DataSupport {
+
 }
