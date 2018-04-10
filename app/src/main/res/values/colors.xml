@@ -32,6 +32,9 @@
     <color name="color_gray14">#f7f7f7</color>
     <color name="color_gray15">#DBDBDB</color>
     <color name="color_gray16">#f1f1f1</color>
+    <color name="color_gray17">#cbcbcb</color>
+    <color name="color_gray18">#f9f9f9</color>
+    <color name="color_gray19">#EBEBEB</color>
     <color name="color_pressed">#e6e6e6</color>
     <color name="color_black4">#081013</color>
     <color name="color_orange2">#fd7634</color>
@@ -85,4 +88,5 @@
     <color name="raido_color_normal">#767676</color>
     <color name="raido_color_checked">#17B8E5</color>
 
+    <color name="text_black">#484848</color>
 </resources>

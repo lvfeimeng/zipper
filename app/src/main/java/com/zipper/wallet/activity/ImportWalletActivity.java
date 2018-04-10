@@ -28,10 +28,7 @@ import java.util.List;
 
 public class ImportWalletActivity extends BaseActivity {
 
-//    public static final int REQUEST_CODE = 1000;
-
     protected Toolbar toolbar;
-    //    protected TabLayout tabLayout;
     protected ViewPager viewPager;
     protected MagicIndicator magicIndicator;
     protected CollapsingToolbarLayout collapsingToolbar;
@@ -45,16 +42,12 @@ public class ImportWalletActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_import_wallet);
         initView();
-//        toolbar.setNavigationIcon(R.mipmap.ic_launcher);
-//        toolbar.setOverflowIcon(ContextCompat.getDrawable(this, R.drawable.ic_menu));
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> finish());
         collapsingToolbar.setTitle("导入钱包");
         initMagicIndicator();
         initViewPager();
         ViewPagerHelper.bind(magicIndicator, viewPager);
-//        tabLayout.setupWithViewPager(viewPager);
-//        initTabLayout();
     }
 
     private void initView() {
@@ -76,31 +69,6 @@ public class ImportWalletActivity extends BaseActivity {
 //                | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);//SCROLL_FLAG_ENTER_ALWAYS
 //        collapsingToolbar.setLayoutParams(layoutParams);
     }
-
-//    private void initTabLayout() {
-////        tabs = new String[]{"助记词", "官方钱包", "私钥", "观察"};
-//        tabs = new String[]{"助记词", "私钥"};
-//        for (int i = 0; i < tabs.length; i++) {
-//            tabLayout.getTabAt(i).setText(tabs[i]);
-//        }
-//        tabLayout.getTabAt(0).select();
-//        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(TabLayout.Tab tab) {
-//
-//            }
-//
-//            @Override
-//            public void onTabUnselected(TabLayout.Tab tab) {
-//
-//            }
-//
-//            @Override
-//            public void onTabReselected(TabLayout.Tab tab) {
-//
-//            }
-//        });
-//    }
 
     private void initViewPager() {
         list = new ArrayList<>();
@@ -143,79 +111,4 @@ public class ImportWalletActivity extends BaseActivity {
         magicIndicator.setNavigator(commonNavigator);
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                finish();
-//                break;
-////            case R.id.item_scan:
-////                scanCode();
-////                break;
-//            default:
-//                break;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-//
-//    @SuppressLint("CheckResult")
-//    private void scanCode() {
-//        new RxPermissions(this)
-//                .request(Manifest.permission.CAMERA)
-//                .subscribe(granted -> {
-//                    if (granted) {
-//                        Intent intent = new Intent(ImportWalletActivity.this, ScanQrCodeActivity.class);
-//                        startActivityForResult(intent, REQUEST_CODE);
-//                    } else {
-//                        toast("相机权限被禁止，请先开启权限");
-//                    }
-//                });
-//    }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_CODE) {
-//            //处理扫描结果（在界面上显示）
-//            if (null != data) {
-//                Bundle bundle = data.getExtras();
-//                if (bundle == null) {
-//                    return;
-//                }
-//                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-//                    String result = bundle.getString(CodeUtils.RESULT_STRING);
-//                    toast("解析结果:" + result);
-//                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-//                    toast("解析二维码失败");
-//                }
-//            }
-//        }
-//    }
-
-//    private ImmersionBar mImmersionBar;
-//
-//    @Override
-//    public void statusBarSetting() {
-//        if (mImmersionBar == null) {
-//            mImmersionBar = ImmersionBar.with(this);
-//        }
-//        mImmersionBar.fitsSystemWindows(true)
-//                .statusBarColor(R.color.colorPrimary)
-//                .keyboardEnable(true)
-//                .init();
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        if (mImmersionBar != null) {
-//            mImmersionBar.destroy();
-//        }
-//    }
 }

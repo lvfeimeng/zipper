@@ -1,32 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="220dp"
-    android:background="@drawable/wallet_home_bg">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="@drawable/wallet_home_bg">
+
+        <TextView
+            android:id="@+id/text_wallet_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:maxLines="1"
+            android:text="1234567890"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/text_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/text_wallet_address"
+            android:layout_marginLeft="20dp"
+            android:maxLines="2"
+            android:text="我的钱包"
+            android:textColor="@color/white"
+            android:textSize="40sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_trading_record"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableLeft="@mipmap/menu_trading_record"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="交易记录"
+            android:textColor="@color/text_black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/text_badger"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:layout_alignParentRight="true"
+            android:paddingRight="15dp"
+            android:text=""
+            android:textColor="@color/raido_color_checked"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
 
     <TextView
-        android:id="@+id/text_wallet_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:maxLines="1"
-        android:layout_alignParentBottom="true"
-        android:text="1234567890"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="30dp"
+        android:id="@+id/text_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:drawableLeft="@mipmap/menu_contact"
+        android:drawablePadding="10dp"
         android:layout_marginTop="10dp"
-        android:textColor="@color/white"/>
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="联系人"
+        android:textColor="@color/text_black"
+        android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/text_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="40sp"
-        android:maxLines="2"
-        android:layout_above="@+id/text_wallet_address"
-        android:text="我的钱包"
-        android:layout_marginLeft="20dp"
-        android:textColor="@color/white"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/color_gray19"/>
 
-</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/layout_language"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableLeft="@mipmap/menu_language_setting"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="语言设置"
+            android:textColor="@color/text_black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/text_language"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingRight="15dp"
+            android:text="简体中文"
+            android:textColor="@color/raido_color_checked"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/checkbox_gesture_password"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:button="@null"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@mipmap/menu_gesture_password"
+        android:drawablePadding="10dp"
+        android:drawableRight="@drawable/property_checkbox"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="手势密码"
+        android:textColor="@color/text_black"
+        android:textSize="16sp" />
+
+</LinearLayout>

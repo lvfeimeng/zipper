@@ -151,14 +151,30 @@
                 android:padding="5dp"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="旷工费用"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="旷工费用"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/text_cost"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:drawablePadding="5dp"
+                    android:drawableRight="@mipmap/arrow_right"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:text="从余额中扣除"
+                    android:textColor="@color/raido_color_checked"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
             <RadioGroup
                 android:id="@+id/radio_group"
@@ -166,7 +182,8 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="2"
+                android:visibility="gone">
 
                 <RadioButton
                     android:id="@+id/raido_balance"

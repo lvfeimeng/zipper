@@ -74,7 +74,7 @@
                 android:paddingRight="20dp">
 
                 <RadioButton
-                    android:id="@+id/raido_simple"
+                    android:id="@+id/radio_simple"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical"
@@ -91,11 +91,11 @@
                     android:background="@color/color_gray" />
 
                 <RadioButton
-                    android:id="@+id/raido_traditional"
+                    android:id="@+id/radio_traditional"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical"
-                    android:text="繁体中文"
+                    android:text="繁體中文"
                     android:button="@null"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -108,7 +108,7 @@
                     android:background="@color/color_gray" />
 
                 <RadioButton
-                    android:id="@+id/raido_english"
+                    android:id="@+id/radio_english"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical"
