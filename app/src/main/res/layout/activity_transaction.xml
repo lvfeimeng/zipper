@@ -22,6 +22,7 @@
             app:statusBarScrim="@color/white"
             app:title="交易记录"
             app:titleEnabled="true">
+
             <!--app:statusBarScrim="@android:color/transparent"-->
             <!--app:contentScrim="?attr/colorPrimary"-->
             <!--app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
@@ -41,8 +42,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/white"
-                app:layout_collapseMode="pin"
-                app:navigationIcon="@mipmap/back_black"/>
+                app:contentInsetStart="0dp"
+                app:layout_collapseMode="pin">
+
+                <ImageView
+                    android:id="@+id/img_back"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:padding="8dp"
+                    android:src="@mipmap/back_black" />
+
+            </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>

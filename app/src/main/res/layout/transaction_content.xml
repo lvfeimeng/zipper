@@ -2,30 +2,33 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="48px"
         android:layout_marginRight="48px"
-        android:layout_marginTop="40px"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="20px"
+        android:paddingTop="40px">
 
         <TextView
+            android:id="@+id/text_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="等待转出"
-            android:textColor="#565656"
-            android:textSize="28px"/>
+            android:textColor="@color/color_gray_state"
+            android:textSize="14sp"/>
 
         <TextView
+            android:id="@+id/details_currency"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30px"
             android:text="- 130.25990 SMT"
             android:textColor="#494949"
-            android:textSize="48px"
+            android:textSize="28sp"
             android:textStyle="bold"/>
 
         <TextView
@@ -34,7 +37,7 @@
             android:layout_marginTop="83px"
             android:text="发款方"
             android:textColor="#C7C7CD"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -44,7 +47,7 @@
             android:maxLines="2"
             android:text="0xe54f1Dd2D3E97678F913844B6530c8Ddd4F08a97"
             android:textColor="#484848"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -53,7 +56,7 @@
             android:layout_marginTop="40px"
             android:text="收款方"
             android:textColor="#C7C7CD"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -63,7 +66,7 @@
             android:maxLines="2"
             android:text="0xe54f1Dd2D3E97678F913844B6530c8Ddd4F08a97"
             android:textColor="#484848"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -72,7 +75,7 @@
             android:layout_marginTop="40px"
             android:text="矿工费用"
             android:textColor="#C7C7CD"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -82,7 +85,7 @@
             android:maxLines="1"
             android:text="0.001786948877 ether"
             android:textColor="#484848"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -91,7 +94,7 @@
             android:layout_marginTop="40px"
             android:text="备注"
             android:textColor="#C7C7CD"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -101,7 +104,7 @@
             android:maxLines="1"
             android:text="transfer"
             android:textColor="#484848"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <View
@@ -117,7 +120,7 @@
             android:layout_marginTop="40px"
             android:text="交易ID:"
             android:textColor="#C7C7CD"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -127,7 +130,7 @@
             android:maxLines="1"
             android:text="sdjdff45ffs…67gdss"
             android:textColor="#484848"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -136,7 +139,7 @@
             android:layout_marginTop="40px"
             android:text="区块:"
             android:textColor="#C7C7CD"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -146,7 +149,7 @@
             android:maxLines="1"
             android:text="4895888"
             android:textColor="#484848"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -155,7 +158,7 @@
             android:layout_marginTop="40px"
             android:text="交易时间:"
             android:textColor="#C7C7CD"
-            android:textSize="28px"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -165,7 +168,8 @@
             android:maxLines="1"
             android:text="— : — : —"
             android:textColor="#484848"
-            android:textSize="28px"
+            android:textSize="14sp"
+
             />
 
     </LinearLayout>

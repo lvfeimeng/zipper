@@ -2,11 +2,12 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="256px">
+    android:layout_height="130dp">
 
     <LinearLayout
+        android:id="@+id/liner_gradient"
         android:layout_width="match_parent"
-        android:layout_height="196px"
+        android:layout_height="100dp"
         android:background="@drawable/wallet_inprocess_bg">
 
         <RelativeLayout
@@ -78,11 +79,12 @@
 
 
     <ImageView
-        android:layout_width="120px"
-        android:layout_height="120px"
+        android:id="@+id/img_state"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:src="@mipmap/inprocess"
+        android:background="@mipmap/inprocess"
         />
 
 
