@@ -34,7 +34,7 @@ public class UnlockActivity extends BaseActivity {
         txtTitle = (TextView) findViewById(R.id.txt_hand_title);
         txtTip = (TextView) findViewById(R.id.txt_tip);
         txtWarning = (TextView) findViewById(R.id.txt_warning);
-        pwd = PreferencesUtils.getString(mContext,"hand_pwd",PreferencesUtils.PROJECT);
+        pwd = PreferencesUtils.getString(mContext,KEY_HAND_PWD,PreferencesUtils.PROJECT);
         if(mode ==0 && pwd !=null && !pwd.equals("")){
             mode =1;
         }
@@ -87,7 +87,7 @@ public class UnlockActivity extends BaseActivity {
                 switch (mode) {
                     case 0://创建
                         Toast.makeText(mContext, getString(R.string.set_hand_pwd), Toast.LENGTH_SHORT).show();
-                        PreferencesUtils.putString(mContext,"hand_pwd",pwd,PreferencesUtils.PROJECT);
+                        PreferencesUtils.putString(mContext,KEY_HAND_PWD,pwd,PreferencesUtils.PROJECT);
                         finish();
                         break;
                     case 1://验证
@@ -103,7 +103,7 @@ public class UnlockActivity extends BaseActivity {
                         break;
                     case 3://删除
                         Toast.makeText(mContext, getString(R.string.success_hand_pwd), Toast.LENGTH_SHORT).show();
-                        PreferencesUtils.removeKey(mContext,"hand_pwd",PreferencesUtils.PROJECT);
+                        PreferencesUtils.removeKey(mContext,KEY_HAND_PWD,PreferencesUtils.PROJECT);
                         finish();
                         break;
                     default:

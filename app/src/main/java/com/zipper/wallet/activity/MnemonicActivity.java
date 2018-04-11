@@ -40,8 +40,8 @@ public class MnemonicActivity extends CreateActvity {
     List<MnemWordsView> selectWords = new ArrayList<MnemWordsView>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mnemonic);
+        super.onCreate(savedInstanceState);
         flowLayout = (FlowLayout)findViewById(R.id.flowlayout);
         flowLayoutBottom = (FlowLayout)findViewById(R.id.flowlayout_bottom);
         btnOk = (Button)findViewById(R.id.btn_ok);
