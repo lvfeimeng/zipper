@@ -17,7 +17,7 @@ public class SqliteUtils {
 
     public static void openDataBase(Context context){
         if(sqlDB == null)
-            sqlDB = context.openOrCreateDatabase("test.db",Context.MODE_PRIVATE,null);
+            sqlDB = context.openOrCreateDatabase("zipper.db",Context.MODE_PRIVATE,null);
 
         String sql = "select * from sqlite_master";
         Cursor cursor = sqlDB.rawQuery(sql, null);
