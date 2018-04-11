@@ -41,6 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected String TAG = "";
     public final String KEY_MNEN_WORDS = "mnemonicwords",
             KEY_IS_LOGIN = "islogin",
+            KEY_WALLET_NAME = "wallet_name",
             KEY_HAND_PWD = "hand_pwd",
             KEY_WALLET_PWD = "wallet_pwd",
             KEY_WALLET_PWD_TIP = "wallet_pwd_tip",

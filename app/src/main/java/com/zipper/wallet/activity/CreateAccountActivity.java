@@ -54,11 +54,11 @@ public class CreateAccountActivity extends CreateActvity {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PreferencesUtils.putString(mContext,"wallet_name",edName.getText().toString(),PreferencesUtils.VISITOR);
+                PreferencesUtils.putString(mContext,KEY_WALLET_NAME,edName.getText().toString(),PreferencesUtils.VISITOR);
                 WalletBean.getWalletBean().setName(edName.getText().toString());
-                    Intent intent = new Intent(mContext,CreatePwdAcitivty.class);
-                    startActivity(intent);
-                    finish();
+                Intent intent = new Intent(mContext,CreatePwdAcitivty.class);
+                startActivity(intent);
+                finish();
             }
         });
 
