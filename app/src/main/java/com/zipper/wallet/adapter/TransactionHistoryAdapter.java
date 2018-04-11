@@ -47,6 +47,12 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
         holder.mDate.setText(mList.get(position).getDate());
         holder.mConfirmNum.setText(mList.get(position).getConfirmNum());
         holder.mFormPrice.setText(mList.get(position).getFormPrice());
+        holder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, TransactionDefailsActivity.class).putExtra("currency",mList.get(position).getFormPrice()));
+            }
+        });
     }
 
     @Override
@@ -69,12 +75,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
             mDate = itemView.findViewById(R.id.text_date);
             mConfirmNum = itemView.findViewById(R.id.confirm_num);
             mFormPrice = itemView.findViewById(R.id.text_form);
-            mLinearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mContext.startActivity(new Intent(mContext, TransactionDefailsActivity.class));
-                }
-            });
+
         }
     }
 }
