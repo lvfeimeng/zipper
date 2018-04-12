@@ -35,15 +35,15 @@ import okhttp3.Call;
 public class RuntHTTPApi {
 
     private static final String TAG = "uploadFile";
-    private static final int TIME_OUT = 10 * 1000; // 超时时间
+    private static final int TIME_OUT = 10 * 1000; // 超时时间http://120.131.8.14:8088/coin/getcoininfos
 
-	public final static String IP = "app.qitong.shop",//http://app.qitong.shop/index.php/
+	public final static String IP = "120.131.8.14",//http://app.qitong.shop/index.php/
 	// www.soarsan.com
-	PORT = "",
+	PORT = ":8088",
 			CHARSET = "utf-8",
-			PROJECT_URL = "http://" + IP + PORT +"/index.php/",
-            SERVER_URL = "http://" + IP + PORT+"/index.php/",
-            URL_USER_INFO = "appapi/user/self_information",//修改用户资料
+			PROJECT_URL = "http://" + IP + PORT +"/",
+            SERVER_URL = "http://" + IP + PORT+"/",
+            URL_GET_COINS = "coin/getcoininfos",//获取币种列表信息
             URL_ADD_ADDRESS = "appapi/user/add_address",  //添加收货地址
 			URL_DEL_ADDRESS = "appapi/user/delete_address/", 	//删除收货地址
 			URL_EDIT_ADDRESS = "appapi/user/change_address/", 	//修改收货地址
@@ -329,13 +329,13 @@ public class RuntHTTPApi {
     }
 
 
-    public class MyStringCallBack extends StringCallback {
+    public static class MyStringCallBack extends StringCallback {
         Context mContext;
         String TAG = "MyStringCallBack";
         ResPonse resPonse;
 
         public final static String MESS_TIP_NET_ERROR = "网络连接不畅，请稍后再试！！！";
-        public final static String KEY_MES_CODE = "code";
+        public final static String KEY_MES_CODE = "errCode";
         public final static String KEY_MES_MESSAGE = "message";
         public final static String KEY_CODE_SUCCESS = "0";//code 0 成功
 
