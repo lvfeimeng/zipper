@@ -83,4 +83,9 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
                 break;
         }
     }
+
+    @Override
+    public void statusBarSetting() {
+        setTransparentStatusBar();
+    }
 }

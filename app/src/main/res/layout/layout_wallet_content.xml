@@ -127,7 +127,7 @@
                         android:layout_width="50dp"
                         android:layout_height="match_parent"
                         android:padding="12dp"
-                        android:src="@mipmap/line_spacing" />
+                        android:src="@mipmap/ic_home" />
 
                     <ImageView
                         android:id="@+id/img_qr_code"

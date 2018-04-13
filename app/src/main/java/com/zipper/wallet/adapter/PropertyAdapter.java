@@ -7,10 +7,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 import com.zipper.wallet.R;
+import com.zipper.wallet.activity.AddPropertyActivity;
 import com.zipper.wallet.bean.PropertyBean;
 import com.zipper.wallet.utils.ImgUtil;
 
@@ -18,9 +18,11 @@ import java.util.List;
 
 public class PropertyAdapter extends CommonAdapter<PropertyBean> {
 
+    private boolean isShowCheckBox;
 
-    public PropertyAdapter(Context context, List<PropertyBean> datas) {
+    public PropertyAdapter(Context context, boolean isShowCheckBox, List<PropertyBean> datas) {
         super(context, R.layout.item_property, datas);
+        this.isShowCheckBox = isShowCheckBox;
     }
 
     @Override
@@ -29,7 +31,16 @@ public class PropertyAdapter extends CommonAdapter<PropertyBean> {
         ImgUtil.loadCircleImage(bean.getIcon(), vh.imageView);
         vh.textShortName.setText(bean.getShortName());
         vh.textFullName.setText(bean.getFullName());
-        vh.checkBox.setChecked(bean.isOwn());
+        if (isShowCheckBox) {
+            vh.checkBox.setVisibility(View.VISIBLE);
+            vh.checkBox.setChecked(bean.isChecked());
+            vh.checkBox.setOnClickListener(v -> {
+                bean.setChecked(!bean.isChecked());
+                notifyDataSetChanged();
+            });
+        } else {
+            vh.checkBox.setVisibility(View.GONE);
+        }
     }
 
     static class PropertyViewHolder extends RecyclerView.ViewHolder {

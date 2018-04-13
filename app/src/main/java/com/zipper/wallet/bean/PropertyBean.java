@@ -1,11 +1,13 @@
 package com.zipper.wallet.bean;
 
-public class PropertyBean {
+import java.io.Serializable;
+
+public class PropertyBean implements Serializable {
 
     private String shortName;
     private String fullName;
     private String icon;
-    private boolean own;
+    private boolean checked;
 
     public String getShortName() {
         return shortName;
@@ -31,11 +33,11 @@ public class PropertyBean {
         this.icon = icon;
     }
 
-    public boolean isOwn() {
-        return own;
+    public boolean isChecked() {
+        return checked;
     }
 
-    public void setOwn(boolean own) {
-        this.own = own;
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }
