@@ -6,7 +6,7 @@
     <item >
         <shape android:shape="rectangle" >
             <!--    边框颜色 -->
-            <solid android:color="@color/color_gray"/>
+            <solid android:color="@color/line_input"/>
         </shape>
     </item>
 

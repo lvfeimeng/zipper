@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="11月11日"
-                    android:textColor="@color/color_data_gray"
+                    android:textColor="@color/text_hint"
                     android:textSize="14sp"
                     />
 
@@ -49,7 +49,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="12px"
                     android:layout_marginRight="14px"
-                    android:background="@color/color_data_gray"/>
+                    android:background="@color/text_hint"/>
 
                 <TextView
                     android:id="@+id/confirm_num"
@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="确认次数：333"
-                    android:textColor="@color/color_data_gray"
+                    android:textColor="@color/text_hint"
                     android:textSize="14sp"
                     />
             </LinearLayout>
@@ -96,7 +96,7 @@
         android:layout_height="1px"
         android:layout_marginLeft="51px"
         android:layout_marginRight="40.1px"
-        android:background="@color/color_grayish"
+        android:background="@color/line_rect_stroke"
         />
 
 

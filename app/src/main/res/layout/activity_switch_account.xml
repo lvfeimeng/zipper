@@ -22,9 +22,6 @@
             app:statusBarScrim="@color/white"
             app:title="转账"
             app:titleEnabled="true">
-            <!--app:statusBarScrim="@android:color/transparent"-->
-            <!--app:contentScrim="?attr/colorPrimary"-->
-            <!--app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,31 +68,49 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="收款人钱包地址"
-                android:textColor="@color/black"
+                android:textColor="@color/text_major"
                 android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/editWalletAddress"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_line"
-                android:gravity="center_vertical"
-                android:hint="输入收款人钱包地址"
-                android:maxLines="1"
-                android:padding="5dp"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp">
+
+                <EditText
+                    android:id="@+id/editWalletAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_line"
+                    android:gravity="center_vertical"
+                    android:hint="输入收款人钱包地址"
+                    android:maxLines="2"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="55dp"
+                    android:text=""
+                    android:textColor="@color/text_major"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/img_contacts"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="8dp"
+                    android:src="@mipmap/ic_select_contacts" />
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/text_select_coins"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/bg_line"
                 android:drawableRight="@mipmap/arrow_right"
                 android:gravity="center_vertical"
                 android:text="币种选择"
-                android:textColor="@color/black"
+                android:textColor="@color/text_major"
                 android:textSize="16sp" />
 
             <TextView
@@ -107,16 +122,18 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:text=""
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textColor="@color/text_major"
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="转账金额"
-                android:textColor="@color/black"
+                android:textColor="@color/text_major"
                 android:textSize="16sp" />
+
 
             <EditText
                 android:id="@+id/edit_count"
@@ -128,7 +145,7 @@
                 android:hint="输入转账金额"
                 android:maxLines="1"
                 android:padding="5dp"
-                android:textColor="@color/black"
+                android:textColor="@color/text_major"
                 android:textSize="14sp" />
 
             <TextView
@@ -136,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="备注"
-                android:textColor="@color/black"
+                android:textColor="@color/text_major"
                 android:textSize="16sp" />
 
             <EditText
@@ -149,72 +166,34 @@
                 android:hint="选填"
                 android:maxLines="1"
                 android:padding="5dp"
-                android:textColor="@color/black"
+                android:textColor="@color/text_major"
                 android:textSize="14sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="旷工费用"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_major"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/text_cost"
+                    android:id="@+id/text_cost_type"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:drawablePadding="5dp"
-                    android:drawableRight="@mipmap/arrow_right"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:drawablePadding="5dp"
+                    android:drawableRight="@mipmap/arrow_right"
+                    android:gravity="right|center_vertical"
                     android:text="从余额中扣除"
-                    android:textColor="@color/raido_color_checked"
+                    android:textColor="@color/text_link"
                     android:textSize="16sp" />
             </LinearLayout>
-
-            <RadioGroup
-                android:id="@+id/radio_group"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:visibility="gone">
-
-                <RadioButton
-                    android:id="@+id/raido_balance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:checked="true"
-                    android:drawableLeft="@drawable/raido_icon"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:text="从余额中扣除"
-                    android:textColor="@color/raido_text"
-                    android:textSize="14sp" />
-
-                <RadioButton
-                    android:id="@+id/raido_amount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:drawableLeft="@drawable/raido_icon"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:text="从转账金额中扣除"
-                    android:textColor="@color/raido_text"
-                    android:textSize="14sp" />
-
-            </RadioGroup>
 
             <SeekBar
                 android:id="@+id/seek_bar"
@@ -233,7 +212,7 @@
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
                     android:text="慢"
-                    android:textColor="@color/raido_color_normal"
+                    android:textColor="@color/text_minor"
                     android:textSize="16sp" />
 
                 <TextView
@@ -244,11 +223,11 @@
                     android:layout_marginRight="10dp"
                     android:gravity="center"
                     android:text="快"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_major"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/text_center"
+                    android:id="@+id/text_miner_cost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -258,32 +237,57 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="0.00"
-                    android:textColor="@color/raido_color_checked"
+                    android:textColor="@color/text_link"
                     android:textSize="16sp" />
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/text_real_amount"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/color_gray14"
+                android:background="@color/bg_card"
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="到账金额：0.00"
-                android:textColor="@color/black"
+                android:textColor="@color/text_major"
                 android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/btn_next"
-                android:layout_width="120dp"
-                android:layout_height="45dp"
-                android:layout_marginBottom="30dp"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="65dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/btn_bg_gray"
-                android:text="下一步"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/btn_next"
+                    android:layout_width="120dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/btn_ripple_blue_corner"
+                    android:enabled="false"
+                    android:text="下一步"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/text_help"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="帮助？"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_link"
+                    android:paddingTop="5dp"
+                    android:gravity="center"
+                    android:paddingBottom="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"/>
+
+            </LinearLayout>
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

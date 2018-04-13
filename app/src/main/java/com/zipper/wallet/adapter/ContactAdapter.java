@@ -23,21 +23,21 @@ public class ContactAdapter extends CommonAdapter<ContactBean> {
     @Override
     protected void convert(ViewHolder holder, ContactBean bean, int position) {
         ContactViewHolder vh = new ContactViewHolder(holder.getConvertView());
-        ImgUtil.loadCircleImage(bean.getPhoto(), vh.imageView);
+//        ImgUtil.loadCircleImage(bean.getPhoto(), vh.imageView);
         vh.textName.setText(bean.getName());
-        vh.textKey.setText(bean.getKey());
+//        vh.textKey.setText(bean.getKey());
     }
 
     static class ContactViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
+//        private ImageView imageView;
         private TextView textName;
-        private TextView textKey;
+//        private TextView textKey;
 
         public ContactViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.image_view);
+//            imageView = (ImageView) itemView.findViewById(R.id.image_view);
             textName = (TextView) itemView.findViewById(R.id.text_name);
-            textKey = (TextView) itemView.findViewById(R.id.text_key);
+//            textKey = (TextView) itemView.findViewById(R.id.text_key);
         }
     }
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text_search"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
+        android:text="搜索"
+        android:maxLines="1"
+        android:drawablePadding="5dp"
+        android:textColorHint="@color/text_link"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_search"
+        android:drawableLeft="@mipmap/search_gray"
+        android:paddingLeft="8dp" />
+</LinearLayout>

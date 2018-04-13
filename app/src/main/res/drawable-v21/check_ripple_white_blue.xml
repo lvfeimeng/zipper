@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--水波纹颜色-->
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/color_gray4"><!-- 點擊顯示顔色-->
+    android:color="@color/line_input"><!-- 點擊顯示顔色-->
     <!--<item>
         &lt;!&ndash;前面罩住的圆圈&ndash;&gt;
         <shape android:shape="oval">
-            <solid android:color="@color/color_gray1"/>
+            <solid android:color="@color/text_minor"/>
         </shape>
     </item>-->
     <item>

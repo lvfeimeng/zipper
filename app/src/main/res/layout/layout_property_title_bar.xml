@@ -56,7 +56,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
                             android:text="SMT"
-                            android:textColor="@color/color_gray4" />
+                            android:textColor="@color/line_input" />
                     </LinearLayout>
 
                     <TextView
@@ -74,7 +74,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="0xoakjldsf.....ajsdoif"
-                        android:textColor="@color/color_gray2" />
+                        android:textColor="@color/bg_dialog" />
                 </LinearLayout>
 
                 <RelativeLayout
@@ -94,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:text="全部 ▼"
-                        android:textColor="@color/blue_sky" />
+                        android:textColor="@color/btn_normal" />
 
 
                 </RelativeLayout>

@@ -55,9 +55,9 @@ public class TitleBarView extends LinearLayout {
         linBottom = (LinearLayout)findViewById(R.id.lin_bottom);
         txtBottmTitle = (TextView)findViewById(R.id.txt_bottom_title);
 
-        int leftTextColor = typedArray.getColor(R.styleable.titlebar_left_textColor,getResources().getColor(R.color.blue_sky));
+        int leftTextColor = typedArray.getColor(R.styleable.titlebar_left_textColor,getResources().getColor(R.color.text_link));
         setLeftTextColor(leftTextColor);
-        int rightTextColor = typedArray.getColor(R.styleable.titlebar_right_textColor,getResources().getColor(R.color.blue_sky));
+        int rightTextColor = typedArray.getColor(R.styleable.titlebar_right_textColor,getResources().getColor(R.color.text_link));
         setRightTextColor(rightTextColor);
         int titleColor = typedArray.getColor(R.styleable.titlebar_title_textColor,getResources().getColor(R.color.black));
         setTxtTitleColor(titleColor);

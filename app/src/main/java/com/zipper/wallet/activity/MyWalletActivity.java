@@ -9,6 +9,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.WalletAdapter;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.bean.CoinsBean;
+import com.zipper.wallet.utils.PreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +63,16 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_wallet);
         initView();
+        gesturePwdSetting();
+    }
+
+    private void gesturePwdSetting() {
+        String pwd = PreferencesUtils.getString(mContext, KEY_HAND_PWD, PreferencesUtils.PROJECT);
+        if (pwd != null && !pwd.equals("")) {
+            Intent intent = new Intent(mContext, UnlockActivity.class);
+            intent.putExtra("mode", 1);
+            startActivity(intent);
+        }
     }
 
     private void initView() {
@@ -86,7 +98,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         recyclerView.addItemDecoration(
                 new HorizontalDividerItemDecoration
                         .Builder(this)
-                        .color(getColorById(R.color.color_gray19))
+                        .color(getColorById(R.color.line_input))
                         .size(1)
                         .margin(dp2px(15), dp2px(15))
                         .build()
@@ -144,13 +156,30 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             startActivityForResult(new Intent(this, LanguageSettingActivity.class), 99);
             //drawerLayout.closeDrawer(GravityCompat.START);
         });
+        if (!TextUtils.isEmpty(PreferencesUtils.getString(mContext, "hand_pwd", PreferencesUtils.PROJECT))) {
+            checkboxGesturePassword.setChecked(true);
+        } else {
+            checkboxGesturePassword.setChecked(false);
+        }
         checkboxGesturePassword.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            String pwd = PreferencesUtils.getString(mContext, "hand_pwd", PreferencesUtils.PROJECT);
+            int mode = 0;
+            if (!TextUtils.isEmpty(pwd)) {
+                mode = 3;
+            }
+            startActivity(new Intent(this, UnlockActivity.class)
+                    .putExtra("mode", mode));
             //drawerLayout.closeDrawer(GravityCompat.START);
         });
 
         BadgeView badge = new BadgeView(this, textBadger);
         badge.setText("1");
         badge.show();
+
+        headerView.findViewById(R.id.layout_wallet)
+                .setOnClickListener(
+                        v -> startActivity(new Intent(this, WalletInfoActivity.class))
+                );
     }
 
     private void testData() {
@@ -227,17 +256,17 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 99) {
-            int type=data.getIntExtra("type",0);
+            int type = data.getIntExtra("type", 0);
             String language = "";
             switch (type) {
                 case 0:
-                    language="简体中文";
+                    language = "简体中文";
                     break;
                 case 1:
-                    language="繁體中文";
+                    language = "繁體中文";
                     break;
                 case 2:
-                    language="English";
+                    language = "English";
                     break;
                 default:
                     break;

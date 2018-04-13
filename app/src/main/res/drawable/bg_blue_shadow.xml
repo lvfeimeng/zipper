@@ -10,7 +10,7 @@
                 android:angle="270"
                 android:endColor="@color/colorBtnBlue"
                 android:centerColor="@color/color_button_blue"
-                android:startColor="@color/blue_sky" />
+                android:startColor="@color/btn_normal" />
 
         </shape>
     </item>

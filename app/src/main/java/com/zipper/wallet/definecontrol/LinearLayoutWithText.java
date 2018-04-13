@@ -71,9 +71,9 @@ public class LinearLayoutWithText extends LinearLayout {
         String hintRight = typedArray.getString(R.styleable.LinearLayoutWithText_hint_right);
         setRightHint(hintRight);
 
-        int hintTitleColor = typedArray.getColor(R.styleable.LinearLayoutWithText_hint_titleColor,getResources().getColor(R.color.home_black2));
+        int hintTitleColor = typedArray.getColor(R.styleable.LinearLayoutWithText_hint_titleColor,getResources().getColor(R.color.text_major));
         setTitleHintColor(hintTitleColor);
-        int hintRightColor = typedArray.getColor(R.styleable.LinearLayoutWithText_hint_rightColor,getResources().getColor(R.color.home_black2));
+        int hintRightColor = typedArray.getColor(R.styleable.LinearLayoutWithText_hint_rightColor,getResources().getColor(R.color.text_major));
         setRightHintColor(hintRightColor);
         int redPointCount = typedArray.getInt(R.styleable.LinearLayoutWithText_red_poit_count,-1);
         if(redPointCount == 0){
@@ -97,9 +97,9 @@ public class LinearLayoutWithText extends LinearLayout {
         setRightText(str);
         int bgColor = typedArray.getColor(R.styleable.LinearLayoutWithText_linbackgroundColor,getResources().getColor(R.color.white));
         setBackGround(bgColor);
-        int titleColor = typedArray.getColor(R.styleable.LinearLayoutWithText_text_titleColor,getResources().getColor(R.color.classify_black));
+        int titleColor = typedArray.getColor(R.styleable.LinearLayoutWithText_text_titleColor,getResources().getColor(R.color.text_major));
         setTitleColor(titleColor);
-        int rightColor = typedArray.getColor(R.styleable.LinearLayoutWithText_text_rightColor,getResources().getColor(R.color.home_black2));
+        int rightColor = typedArray.getColor(R.styleable.LinearLayoutWithText_text_rightColor,getResources().getColor(R.color.text_major));
         setRightColor(rightColor);
         boolean enable = typedArray .getBoolean(R.styleable.LinearLayoutWithText_enable,true);
         setEnable(enable);

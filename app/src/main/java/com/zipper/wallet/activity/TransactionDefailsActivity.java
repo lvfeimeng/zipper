@@ -66,7 +66,7 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
 
         //等待转出
         mTextState.setText("等待转出");
-        mTextState.setTextColor(R.color.color_gray_state);
+        mTextState.setTextColor(R.color.text_minor);
         mLinerGradient.setBackgroundResource(R.drawable.wallet_inprocess_bg);
         mImgState.setBackgroundResource(R.mipmap.inprocess);
         mTextUpdate.setGravity(View.VISIBLE);

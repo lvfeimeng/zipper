@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="5dp"
                     android:text="我已经咨询阅读并同意"
-                    android:textColor="@color/color_gray9"
+                    android:textColor="@color/black"
                     android:textSize="12sp" />
 
                 <TextView
@@ -165,7 +165,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="服务及隐私条款"
-                    android:textColor="@color/blue_sky"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/btn_normal"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -177,7 +178,8 @@
                 android:layout_marginBottom="30dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/btn_bg_gray"
+                android:enabled="false"
+                android:background="@drawable/btn_ripple_blue_corner"
                 android:text="导入"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
@@ -190,7 +192,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="40dp"
                 android:text="什么是私钥？"
-                android:textColor="@color/blue_sky"
+                android:textColor="@color/btn_normal"
                 android:textSize="12sp"
                 android:visibility="gone" />
 

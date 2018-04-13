@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/delete_wallet"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/text_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="是否删除钱包"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/text_major"
+        android:layout_centerHorizontal="true"/>
+    <View
+        android:id="@+id/line_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/text_top"
+        android:background="@color/line_rect_stroke"/>
+
+    <View
+        android:id="@+id/line_vertical"
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/line_horizontal"
+        android:layout_centerHorizontal="true"
+        android:background="@color/line_rect_stroke"/>
+
+    <TextView
+        android:id="@+id/text_no"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="不删除"
+        android:gravity="center"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/line_vertical"
+        android:textSize="16sp"
+        android:layout_alignTop="@+id/line_horizontal"
+        android:textColor="@color/text_minor"/>
+    <TextView
+        android:id="@+id/text_yes"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="删除"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/line_vertical"
+        android:textSize="16sp"
+        android:layout_alignTop="@+id/line_horizontal"
+        android:textColor="@color/text_link"/>
+</RelativeLayout>

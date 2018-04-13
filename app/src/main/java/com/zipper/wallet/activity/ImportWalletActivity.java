@@ -7,6 +7,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
@@ -93,7 +94,7 @@ public class ImportWalletActivity extends BaseActivity {
             public IPagerTitleView getTitleView(Context context, final int index) {
                 ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
                 colorTransitionPagerTitleView.setNormalColor(getColorById(R.color.black));
-                colorTransitionPagerTitleView.setSelectedColor(getColorById(R.color.raido_color_checked));
+                colorTransitionPagerTitleView.setSelectedColor(getColorById(R.color.text_link));
                 colorTransitionPagerTitleView.setText(tabs[index]);
                 colorTransitionPagerTitleView.setOnClickListener(view -> viewPager.setCurrentItem(index));
                 return colorTransitionPagerTitleView;
@@ -104,7 +105,7 @@ public class ImportWalletActivity extends BaseActivity {
                 LinePagerIndicator indicator = new LinePagerIndicator(context);
                 indicator.setMode(LinePagerIndicator.MODE_WRAP_CONTENT);
                 indicator.setLineHeight(dp2px(2));
-                indicator.setColors(getColorById(R.color.raido_color_checked));
+                indicator.setColors(getColorById(R.color.text_link));
                 return indicator;
             }
         });

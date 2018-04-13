@@ -57,8 +57,8 @@ public class ContactsActivity extends BaseActivity implements View.OnClickListen
         recyclerView.addItemDecoration(
                 new HorizontalDividerItemDecoration
                         .Builder(this)
-                        .color(getColorById(R.color.color_gray9))
-                        .size(1)
+                        .color(getColorById(R.color.line_input))
+                        .size(dp2px(1))
                         .margin(dp2px(15), dp2px(15))
                         .build()
         );

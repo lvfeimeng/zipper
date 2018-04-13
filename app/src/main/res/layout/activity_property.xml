@@ -41,7 +41,7 @@
                         android:id="@+id/txt_name_more"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/color_gray4"
+                        android:textColor="@color/line_input"
                         android:layout_marginLeft="15dp"
                         android:text="SMT"/>
                 </LinearLayout>
@@ -59,7 +59,7 @@
                     android:id="@+id/txt_addr"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/color_gray2"
+                    android:textColor="@color/bg_dialog"
                     android:layout_gravity="center"
                     android:text="0xoakjldsf.....ajsdoif"/>
             </LinearLayout>
@@ -78,7 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:textColor="@color/blue_sky"
+                    android:textColor="@color/btn_normal"
                     android:text="全部 ▼"/>
 
 

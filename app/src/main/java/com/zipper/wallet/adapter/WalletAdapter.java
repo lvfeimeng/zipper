@@ -11,6 +11,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
 import com.zipper.wallet.activity.AddPropertyActivity;
@@ -91,23 +98,48 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private void loadListData(RecViewHolder holder) {
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        holder.recyclerView.setNestedScrollingEnabled(false);
         holder.recyclerView.addItemDecoration(
                 new HorizontalDividerItemDecoration
                         .Builder(mContext)
-                        .color(mContext.getResources().getColor(R.color.color_gray9))
+                        .color(mContext.getResources().getColor(R.color.line_input))
                         .size(1)
                         .margin(ScreenUtils.dp2px(mContext, 15), ScreenUtils.dp2px(mContext, 15))
                         .build()
         );
         holder.recyclerView.setFocusableInTouchMode(false);
-
+        initSwipeSetting(holder.recyclerView);
+        holder.recyclerView.setNestedScrollingEnabled(false);
         if (adapter == null) {
             adapter = new ConisAdapter(mContext, mList);
             holder.recyclerView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private void initSwipeSetting(SwipeMenuRecyclerView recyclerView){
+        recyclerView.setItemViewSwipeEnabled(false);
+        recyclerView.setLongPressDragEnabled(true);
+        recyclerView.setSwipeMenuCreator((swipeLeftMenu, swipeRightMenu, viewType) -> {
+            SwipeMenuItem deleteItem=new SwipeMenuItem(mContext);
+            deleteItem.setBackgroundColorResource(R.color.btn_delete);
+            deleteItem.setText("移除");
+            deleteItem.setTextSize(16);
+            deleteItem.setTextColorResource(R.color.white);
+            deleteItem.setHeight(-1);
+            deleteItem.setWidth(ScreenUtils.dp2px(mContext,80));
+            swipeRightMenu.addMenuItem(deleteItem);
+        });
+        recyclerView.setSwipeMenuItemClickListener(menuBridge -> {
+            menuBridge.closeMenu();
+            //int direction=menuBridge.getDirection();
+            int adapterPosition=menuBridge.getAdapterPosition();
+            int menuPosition=menuBridge.getPosition();
+            if (menuPosition==0) {
+                mList.remove(adapterPosition);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -120,11 +152,11 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     static class RecViewHolder extends RecyclerView.ViewHolder {
-        RecyclerView recyclerView;
+        SwipeMenuRecyclerView recyclerView;
 
         public RecViewHolder(View itemView) {
             super(itemView);
-            recyclerView = (RecyclerView) itemView.findViewById(R.id.recycler_view);
+            recyclerView = (SwipeMenuRecyclerView) itemView.findViewById(R.id.recycler_view);
         }
     }
 
