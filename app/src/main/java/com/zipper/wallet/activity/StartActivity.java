@@ -40,7 +40,6 @@ public class StartActivity extends BaseActivity {
             sqlDB.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sign_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42));");
             //sqlDB.execSQL("drop table coininfo");
             SqliteUtils.openDataBase(mContext);*/
-
             /*RuntHTTPApi.toReApi(RuntHTTPApi.URL_GET_COINS,new HashMap<>(),new RuntHTTPApi.MyStringCallBack(mContext,new RuntHTTPApi.ResPonse() {
                 @Override
                 public void doSuccessThing(Map<String, Object> param) {
