@@ -2,17 +2,14 @@ package com.zipper.wallet.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
-import android.view.ViewGroup;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.definecontrol.WrapContentHeightViewPager;
+import com.zipper.wallet.fragment.ExportWalletFragment;
 import com.zipper.wallet.fragment.MnemonicWordFragment;
 import com.zipper.wallet.fragment.PrivateKeyFragment;
 import com.zipper.wallet.utils.MyPagerAdapter;
@@ -29,7 +26,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorT
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImportWalletActivity extends BaseActivity {
+public class ExportWalletActivity extends BaseActivity {
 
     protected Toolbar toolbar;
     protected WrapContentHeightViewPager viewPager;
@@ -43,11 +40,11 @@ public class ImportWalletActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_import_wallet);
+        setContentView(R.layout.activity_export_wallet);
         initView();
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> finish());
-        collapsingToolbar.setTitle("导入钱包");
+        collapsingToolbar.setTitle("导出钱包");
         initMagicIndicator();
         initViewPager();
         ViewPagerHelper.bind(magicIndicator, viewPager);
@@ -65,15 +62,16 @@ public class ImportWalletActivity extends BaseActivity {
 
     private void initViewPager() {
         list = new ArrayList<>();
-        list.add(new MnemonicWordFragment());
-//        list.add(new OfficialWalletFragment());
-        list.add(new PrivateKeyFragment());
-//        list.add(new ObserveFragment());
+        //0-备份助记词,1-导出明文私钥，20-导出加密私钥
+        list.add(ExportWalletFragment.newInstance(0));
+        list.add(ExportWalletFragment.newInstance(1));
+        list.add(ExportWalletFragment.newInstance(2));
         viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), list));
+        viewPager.setOffscreenPageLimit(3);
     }
 
     private void initMagicIndicator() {
-        tabs = new String[]{"助记词", "私钥"};
+        tabs = new String[]{"导出助记词", "导出明文私钥","导出加密私钥"};
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
 
