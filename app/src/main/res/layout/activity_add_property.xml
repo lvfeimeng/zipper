@@ -26,16 +26,28 @@
             android:textColor="@color/black"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/text_submit"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="16sp"
+            android:text="提交"
+            android:textColor="@color/text_link" />
+
         <ImageView
             android:id="@+id/img_search"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:padding="10dp"
-            android:src="@mipmap/search_gray" />
+            android:src="@mipmap/search_gray"
+            android:visibility="gone" />
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

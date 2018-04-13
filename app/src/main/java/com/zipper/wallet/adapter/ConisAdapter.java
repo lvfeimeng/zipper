@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 import com.zipper.wallet.R;
-import com.zipper.wallet.activity.PropertyDetailActivity;
+import com.zipper.wallet.activity.PropertyActvity;
 import com.zipper.wallet.bean.CoinsBean;
 import com.zipper.wallet.utils.ImgUtil;
 
@@ -30,13 +30,9 @@ public class ConisAdapter extends CommonAdapter<CoinsBean> {
         vh.textFullName.setText(bean.getFullName());
         vh.textCoinsCount.setText(bean.getCount());
         holder.getConvertView()
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mContext.startActivity(new Intent(mContext, PropertyDetailActivity.class)
-                                .putExtra("id", bean.getId()));
-                    }
-                });
+                .setOnClickListener(v ->
+                        mContext.startActivity(new Intent(mContext, PropertyActvity.class)
+                                .putExtra("id", bean.getId())));
     }
 
     static class CoinsViewHolder extends RecyclerView.ViewHolder {

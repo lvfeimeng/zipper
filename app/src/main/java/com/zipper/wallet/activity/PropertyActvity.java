@@ -91,7 +91,7 @@ public class PropertyActvity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(mContext)
                 .size(ScreenUtils.dp2px(mContext,1))
-                .color(mContext.getResources().getColor(R.color.color_gray))
+                .color(mContext.getResources().getColor(R.color.line_input))
                 .build());
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

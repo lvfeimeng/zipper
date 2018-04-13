@@ -20,6 +20,7 @@
             app:contentScrim="@color/white"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
             app:statusBarScrim="@color/white"
+            app:expandedTitleMarginStart="15dp"
             app:titleEnabled="true">
             <!--app:statusBarScrim="@android:color/transparent"-->
             <!--app:contentScrim="?attr/colorPrimary"-->
@@ -52,7 +53,8 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="新建"
-                    android:textColor="@color/raido_color_checked" />
+                    android:textSize="16sp"
+                    android:textColor="@color/text_link" />
 
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -107,6 +109,6 @@
     <!--android:gravity="center"-->
     <!--android:padding="10dp"-->
     <!--android:text="新建"-->
-    <!--android:textColor="@color/raido_color_checked" />-->
+    <!--android:textColor="@color/line_link" />-->
     <!--</RelativeLayout>-->
 </android.support.design.widget.CoordinatorLayout>

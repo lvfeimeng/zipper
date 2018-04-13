@@ -3,12 +3,12 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 <item android:state_pressed="true">
     <shape android:shape="rectangle">
-        <solid android:color="@color/color_blue" />
+        <solid android:color="@color/gradient_blue_left" />
     </shape>
 </item>
 <item>
     <shape android:shape="rectangle">
-        <solid android:color="@color/blue_sky" />
+        <solid android:color="@color/btn_normal" />
     </shape>
 </item>
 </selector>

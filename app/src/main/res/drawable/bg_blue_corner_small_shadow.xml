@@ -12,8 +12,8 @@
 
             <gradient
                 android:angle="270"
-                android:endColor="@color/color_gray4"
-                android:startColor="@color/color_gray" />
+                android:endColor="@color/line_input"
+                android:startColor="@color/line_input" />
 
             <corners
                 android:bottomLeftRadius="@dimen/corner_3"
@@ -34,8 +34,8 @@
 
             <gradient
                 android:angle="270"
-                android:endColor="@color/blue_sky"
-                android:startColor="@color/blue_sky" />
+                android:endColor="@color/btn_normal"
+                android:startColor="@color/btn_normal" />
 
             <corners
                 android:bottomLeftRadius="@dimen/corner_3"

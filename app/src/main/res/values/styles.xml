@@ -8,16 +8,16 @@
         <item name="android:windowBackground">@color/white</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/blue_sky</item>
-        <item name="colorControlNormal">@color/color_gray4</item>
+        <item name="colorAccent">@color/btn_normal</item>
+        <item name="colorControlNormal">@color/line_input</item>
         <item name="android:splitMotionEvents">false</item>
     </style>
     <style name="EditText_register" parent="Theme.AppCompat.Light">
         <item name="android:layout_height">@dimen/item_lin_height</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center|left</item>
-        <item name="colorControlActivated">@color/color_gray1</item>
-        <item name="colorControlNormal">@color/color_gray4</item>
+        <item name="colorControlActivated">@color/text_hint</item>
+        <item name="colorControlNormal">@color/text_hint</item>
     </style>
 
 
@@ -55,16 +55,16 @@
 
     <!--  按钮样式 -->
     <style name="btn_sky_blue" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorButtonNormal">@color/blue_sky</item><!--正常状态下的颜色  -->
+        <item name="colorButtonNormal">@color/btn_normal</item><!--正常状态下的颜色  -->
         <item name="android:background">@drawable/bg_gray_enable</item><!--正常状态下的颜色  -->
-        <item name="colorControlHighlight">@color/color_gray3</item><!--覆盖色，按下的颜色  -->
+        <item name="colorControlHighlight">@color/line_input</item><!--覆盖色，按下的颜色  -->
     </style>
 
     <!--  按钮样式 -->
     <style name="btn_sky_blue_border" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="colorButtonNormal">@drawable/bg_blue_border_corner</item><!--正常状态下的颜色  -->
         <item name="android:background">@drawable/bg_blue_border_corner</item><!--正常状态下的颜色  -->
-        <item name="colorControlHighlight">@color/color_gray3</item><!--覆盖色，按下的颜色  -->
+        <item name="colorControlHighlight">@color/line_input</item><!--覆盖色，按下的颜色  -->
     </style>
 
 
@@ -75,16 +75,16 @@
         <item name="android:background">@null</item>
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/color_title</item>
-        <item name="android:textColorHint">@color/login_black</item>
+        <item name="android:textColor">@color/text_major</item>
+        <item name="android:textColorHint">@color/text_hint</item>
         <item name="android:textSize">@dimen/txt_size_14</item>
         <item name="android:maxLines">1</item>
     </style>
 
     <!--  按钮样式 -->
     <style name="btn_red" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorButtonNormal">@color/login_red</item><!--正常状态下的颜色  -->
-        <item name="colorControlHighlight">@color/color_gray3</item><!--覆盖色，按下的颜色  -->
+        <item name="colorButtonNormal">@color/btn_delete</item><!--正常状态下的颜色  -->
+        <item name="colorControlHighlight">@color/line_input</item><!--覆盖色，按下的颜色  -->
     </style>
 
     <declare-styleable name="AutoLineFeedLayout">

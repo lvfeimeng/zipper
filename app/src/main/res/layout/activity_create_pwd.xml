@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:text="@string/pwd_work"
-                android:textColor="@color/color_gray1" />
+                android:textColor="@color/text_minor" />
 
 
             <TextView
@@ -65,7 +65,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/pwd_warning"
-                        android:textColor="@color/cart_red" />
+                        android:textColor="@color/btn_delete" />
                 </LinearLayout>
 
                 <EditText
@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="@string/pwd_warning"
-                    android:textColor="@color/cart_red"
+                    android:textColor="@color/btn_delete"
                     android:visibility="invisible" />
 
                 <EditText
@@ -172,7 +172,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:text="@string/service_clause"
-                    android:textColor="@color/blue_sky" />
+                    android:textColor="@color/btn_normal" />
 
 
             </LinearLayout>

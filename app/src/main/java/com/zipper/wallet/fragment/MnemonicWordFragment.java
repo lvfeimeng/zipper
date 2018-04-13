@@ -1,8 +1,12 @@
 package com.zipper.wallet.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,29 +15,40 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.activity.BackUpAcitivty;
+import com.zipper.wallet.activity.MyWalletActivity;
+import com.zipper.wallet.base.BaseFragment;
+import com.zipper.wallet.utils.AddrUtils;
 
 import net.bither.bitherj.crypto.hd.DeterministicKey;
 import net.bither.bitherj.crypto.hd.HDKeyDerivation;
 import net.bither.bitherj.crypto.mnemonic.MnemonicCode;
 import net.bither.bitherj.crypto.mnemonic.MnemonicException;
+import net.bither.bitherj.utils.Base58;
 import net.bither.bitherj.utils.Sha256Hash;
 import net.bither.bitherj.utils.Utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * 助记词.
  */
-public class MnemonicWordFragment extends Fragment {
+public class MnemonicWordFragment extends BaseFragment {
 
+    private static final String TAG = "MnemonicWordFragment";
 
     protected View rootView;
     protected EditText editWord;
@@ -68,23 +83,84 @@ public class MnemonicWordFragment extends Fragment {
         textAgreement = (TextView) rootView.findViewById(R.id.textAgreement);
         btnImport = (Button) rootView.findViewById(R.id.btnImport);
         textWord = (TextView) rootView.findViewById(R.id.textWord);
-        btnImport.setOnClickListener(v -> importWallet());
+        addTextChangedListener(editWord);
+        addTextChangedListener(editPassword);
+        addTextChangedListener(editConfirmPassword);
+        textAgreement.setOnClickListener(v -> {
+        });
+        btnImport.setOnClickListener(v -> submit());
+    }
+
+    private String wordStr = "";
+    private String password = "";
+    private String passwordConfirm = "";
+    private String passwordHint = "";
+
+    private void submit() {
+        try {
+            wordStr = editWord.getText().toString().trim();
+            password = editPassword.getText().toString().trim();
+            passwordConfirm = editConfirmPassword.getText().toString().trim();
+            passwordHint = editPasswordHint.getText().toString().trim();
+            if (!checkBox.isChecked()) {
+                Toast.makeText(getActivity(), "请同意服务及隐私条款", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (TextUtils.isEmpty(wordStr) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passwordConfirm)) {
+                Toast.makeText(getActivity(), "助记词及密码不能为空", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!password.equals(passwordConfirm)) {
+                Toast.makeText(getActivity(), "两次密码不一致", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            List<String> words = new ArrayList<>();
+            words.addAll(Arrays.asList(wordStr.split(" ")));
+            String address= AddrUtils.mnemonicWordToAddress(words);
+            Log.d(TAG, "address: " + address);
+            startActivity(new Intent(getActivity(), MyWalletActivity.class));
+            getActivity().finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addTextChangedListener(EditText editText) {
+        editText.addTextChangedListener(new TextWatcherImpl() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (editText == editWord) {
+                    wordStr = s.toString().trim();
+                } else if (editText == editPassword) {
+                    password = s.toString().trim();
+                } else if (editText == editConfirmPassword) {
+                    passwordConfirm = s.toString().trim();
+                }
+                if (TextUtils.isEmpty(wordStr) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passwordConfirm)) {
+                    btnImport.setEnabled(false);
+                } else {
+                    btnImport.setEnabled(true);
+                }
+            }
+        });
     }
 
     private void importWallet() {
-        try{
+        try {
             MnemonicCode.setInstance(new MnemonicCodeTestClass());
-            SecureRandom random=new SecureRandom();
-            byte[] mnemonicSeed=new byte[16];
+            SecureRandom random = new SecureRandom();
+            byte[] mnemonicSeed = new byte[16];
             random.nextBytes(mnemonicSeed);
-            List<String> words=getMnemonicCode(Utils.hexStringToByteArray(Utils.bytesToHexString(mnemonicSeed)));
-            byte[] seed = MnemonicCode.toSeed(words,"");
+            List<String> words = getMnemonicCode(Utils.hexStringToByteArray(Utils.bytesToHexString(mnemonicSeed)));
+            byte[] seed = MnemonicCode.toSeed(words, "");
             //Utils.bytesToHexString(seed)
             DeterministicKey master = HDKeyDerivation.createMasterPrivateKey(seed);
 
-             Utils.bytesToHexString(master.getPrivKeyBytes());
-             Utils.bytesToHexString(master.getPubKey());
-        }catch(Exception e){
+            Utils.bytesToHexString(master.getPrivKeyBytes());
+            Utils.bytesToHexString(master.getPubKey());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -139,7 +215,9 @@ public class MnemonicWordFragment extends Fragment {
         return words;
 
     }
+
     public static ArrayList<String> wordList = new ArrayList<String>(2048);
+
     private static boolean[] bytesToBits(byte[] data) {
         boolean[] bits = new boolean[data.length * 8];
         for (int i = 0;
@@ -168,6 +246,5 @@ public class MnemonicWordFragment extends Fragment {
             return stream;
         }
     }
-
 
 }

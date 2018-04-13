@@ -24,16 +24,16 @@ import java.util.List;
 
 public class StartActivity extends BaseActivity {
 
-    private Button btnCreate,btnImport;
+    private Button btnCreate, btnImport;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_start);
         super.onCreate(savedInstanceState);
-        btnCreate = (Button)findViewById(R.id.btn_create);
-        btnImport = (Button)findViewById(R.id.btn_import);
-        boolean isLogin = PreferencesUtils.getBoolean(mContext,KEY_IS_LOGIN,false,PreferencesUtils.USER);
-        if (true){
+        btnCreate = (Button) findViewById(R.id.btn_create);
+        btnImport = (Button) findViewById(R.id.btn_import);
+        boolean isLogin = PreferencesUtils.getBoolean(mContext, KEY_IS_LOGIN, false, PreferencesUtils.USER);
+        if (true) {
             btnCreate.setVisibility(View.VISIBLE);
             btnImport.setVisibility(View.VISIBLE);
             /*SQLiteDatabase sqlDB = mContext.openOrCreateDatabase("zipper.db", Context.MODE_PRIVATE,null);
@@ -74,13 +74,13 @@ public class StartActivity extends BaseActivity {
                 e.printStackTrace();
             }*/
 
-        }else {
+        } else {
             btnCreate.setVisibility(View.GONE);
             btnImport.setVisibility(View.GONE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    ((Activity)mContext).runOnUiThread(new Runnable() {
+                    ((Activity) mContext).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             startActivity(new Intent(mContext,
@@ -92,17 +92,23 @@ public class StartActivity extends BaseActivity {
             }, 2000);
         }
         btnCreate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(mContext, RiskActivity.class));
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, RiskActivity.class));
 
-                    }
-                });
+            }
+        });
         btnImport.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(mContext, AddPropertyActivity.class));
-                    }
-                });
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, ImportWalletActivity.class));
+            }
+        });
+
+
+        findViewById(R.id.btn_wallet_home).setOnClickListener(v ->
+                startActivity(new Intent(mContext, MyWalletActivity.class))
+        );
+
     }
 }

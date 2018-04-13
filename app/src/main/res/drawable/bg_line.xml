@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/color_gray9" />
-    <item
-        android:bottom="1px"
-        android:drawable="@color/white" />
-</layer-list>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="false">
+        <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+            <item android:drawable="@color/line_input" />
+            <item
+                android:bottom="1dp"
+                android:drawable="@color/white" />
+        </layer-list>
+    </item>
+    <item android:state_focused="true">
+        <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+            <item android:drawable="@color/text_link" />
+            <item
+                android:bottom="1dp"
+                android:drawable="@color/white" />
+        </layer-list>
+    </item>
+</selector>

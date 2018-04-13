@@ -7,65 +7,65 @@
     android:background="@color/white"
     android:layout_height="match_parent"
     tools:context=".activity.PropertyDetailActivity">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp">-->
 
-        <ImageView
-            android:id="@+id/img_back"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:src="@mipmap/back_black" />
+        <!--<ImageView-->
+            <!--android:id="@+id/img_back"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:padding="10dp"-->
+            <!--android:src="@mipmap/back_black" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="ETH"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:text="ETH"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="18sp" />-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
-    <TextView
-        android:id="@+id/text_wallet_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="20dp"
-        android:text="0"
-        android:textColor="@color/black"
-        android:textSize="24sp" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <Button
-            android:id="@+id/btn_switch_account"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/green_deep"
-            android:text="转账"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-        <Button
-            android:id="@+id/btn_collecting_bill"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/colorPrimary"
-            android:text="收款"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-    </LinearLayout>
+    <!--<TextView-->
+        <!--android:id="@+id/text_wallet_count"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_marginBottom="30dp"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:text="0"-->
+        <!--android:textColor="@color/black"-->
+        <!--android:textSize="24sp" />-->
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1"/>-->
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp">-->
+        <!--<Button-->
+            <!--android:id="@+id/btn_switch_account"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:background="@color/green_deep"-->
+            <!--android:text="转账"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="16sp" />-->
+        <!--<Button-->
+            <!--android:id="@+id/btn_collecting_bill"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:background="@color/colorPrimary"-->
+            <!--android:text="收款"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="16sp" />-->
+    <!--</LinearLayout>-->
 
 </LinearLayout>

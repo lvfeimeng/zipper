@@ -130,4 +130,9 @@ public class UnlockActivity extends BaseActivity {
 
 
     }
+
+    @Override
+    public void statusBarSetting() {
+        setTransparentStatusBar();
+    }
 }

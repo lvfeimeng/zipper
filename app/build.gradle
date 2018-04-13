@@ -42,6 +42,7 @@ android {
         versionCode updateVersionCode()
         versionName increasedVersionCode() + versionTag()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -50,7 +51,7 @@ android {
         }
     }
 
-        // 编译支持Java8
+    // 编译支持Java8
     compileOptions {//---
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -107,6 +108,10 @@ dependencies {
     compile 'org.apache.httpcomponents:httpmime:4.1@jar'
     compile 'org.apache.httpcomponents:httpcore:4.3.2@jar'
     compile 'org.apache.james:apache-mime4j-core:0.7.1@jar'
+
+    compile 'com.android.support:multidex:1.0.1'
+
+    compile 'com.yanzhenjie:recyclerview-swipe:1.1.4'
 
 }
 repositories {

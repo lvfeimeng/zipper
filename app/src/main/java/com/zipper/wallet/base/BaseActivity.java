@@ -56,7 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = this;
         titlebar = (TitleBarView) findViewById(R.id.title_bar);
-        if(titlebar != null){
+        if (titlebar != null) {
             titlebar.setLeftOnclickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -247,6 +247,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .init();
     }
 
+    public void setTransparentStatusBar(boolean fits) {
+        if (mImmersionBar == null) {
+            mImmersionBar = ImmersionBar.with(this);
+        }
+        mImmersionBar.fitsSystemWindows(fits)
+                .keyboardEnable(true)
+                .init();
+    }
+
     public void setDefaultStatusBar() {
         if (mImmersionBar == null) {
             mImmersionBar = ImmersionBar.with(this);
@@ -290,7 +299,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected boolean onBackKeyDown(){
+    protected boolean onBackKeyDown() {
         return false;
     }
 
@@ -302,7 +311,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             case KeyEvent.KEYCODE_MENU: {
             }
             case KeyEvent.KEYCODE_BACK: {
-                return onBackKeyDown();
+                onBackKeyDown();
             }
         }
         return super.onKeyDown(keycode, event);

@@ -23,7 +23,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="30dp"
                 android:text="@string/observe_hint"
-                android:textColor="@color/color_gray9"
+                android:textColor="@color/line_input"
                 android:textSize="14sp" />
 
 
@@ -47,7 +47,7 @@
                 android:layout_height="1px"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@color/color_gray9" />
+                android:background="@color/line_input" />
 
 
             <Button
@@ -58,7 +58,7 @@
                 android:layout_marginRight="20dp"
                 android:text="开始导入"
                 android:layout_marginTop="30dp"
-                android:background="@color/blue_sky"
+                android:background="@color/btn_normal"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
@@ -72,7 +72,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="30dp"
                 android:text="@string/observe_hint"
-                android:textColor="@color/color_gray9"
+                android:textColor="@color/line_input"
                 android:textSize="12sp" />
 
 
@@ -84,7 +84,7 @@
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="10dp"
                 android:layout_gravity="center_horizontal"
-                android:textColor="@color/blue_sky"
+                android:textColor="@color/btn_normal"
                 android:textSize="12sp" />
 
         </LinearLayout>

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.base.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * 私钥.
  */
-public class PrivateKeyFragment extends Fragment {
+public class PrivateKeyFragment extends BaseFragment {
 
 
     protected View rootView;

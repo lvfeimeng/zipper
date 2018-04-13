@@ -180,20 +180,20 @@ public class CreatePwdAcitivty extends CreateActvity {
                 if(pwd.length()>7 && isHigh && hasLow && hasUp && flag){
                     linSign.setVisibility(View.VISIBLE);
                     imgPwdSign.setImageResource(R.mipmap.pwd_good);
-                    txtStrong.setTextColor(getResources().getColor(R.color.blue_sky));
+                    txtStrong.setTextColor(getResources().getColor(R.color.text_link));
                     txtStrong.setText("很好");
                     linWarining.setVisibility(View.INVISIBLE);
                 }else if(pwd.length()>7 && flag){
                     Log.i(TAG,"pwdWatcher "+" 一般:"+(pwd.length()>6 && flag));
                     linSign.setVisibility(View.VISIBLE);
                     imgPwdSign.setImageResource(R.mipmap.pwd_well);
-                    txtStrong.setTextColor(getResources().getColor(R.color.blue_sky));
+                    txtStrong.setTextColor(getResources().getColor(R.color.text_link));
                     txtStrong.setText("一般");
                     linWarining.setVisibility(View.INVISIBLE);
                 }else if(pwd.length()<8 || !flag){
                     linSign.setVisibility(View.VISIBLE);
                     imgPwdSign.setImageResource(R.mipmap.pwd_low);
-                    txtStrong.setTextColor(getResources().getColor(R.color.cart_red));
+                    txtStrong.setTextColor(getResources().getColor(R.color.btn_delete));
                     ((View)txtStrong.getParent()).setVisibility(View.VISIBLE);
                     linWarining.setVisibility(View.VISIBLE);
                     txtStrong.setText("弱");

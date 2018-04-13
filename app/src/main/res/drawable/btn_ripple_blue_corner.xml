@@ -4,19 +4,19 @@
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/corner_3"/>
-            <solid android:color="@color/color_gray4" />
+            <solid android:color="@color/line_input" />
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/corner_3"/>
-            <solid android:color="@color/color_blue" />
+            <solid android:color="@color/gradient_blue_left" />
         </shape>
     </item>
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/corner_3"/>
-            <solid android:color="@color/blue_sky" />
+            <solid android:color="@color/btn_normal" />
         </shape>
     </item>
 </selector>

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_gray18"
+    android:background="@color/bg_dialog"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -36,7 +36,7 @@
             android:gravity="center"
             android:maxLines="1"
             android:text="确认"
-            android:textColor="@color/raido_color_checked"
+            android:textColor="@color/text_link"
             android:textSize="16sp" />
 
     </RelativeLayout>
@@ -44,7 +44,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/color_gray17" />
+        android:background="@color/line_input" />
 
     <RadioGroup
         android:id="@+id/radio_group"

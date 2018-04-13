@@ -1,6 +1,7 @@
 package com.zipper.wallet.base;
 
 import android.app.Application;
+import android.support.multidex.MultiDex;
 
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
@@ -13,5 +14,6 @@ public class App extends Application {
         super.onCreate();
         ZXingLibrary.initDisplayOpinion(this);
         LitePal.initialize(this);
+        MultiDex.install(this);
     }
 }

@@ -20,6 +20,7 @@
             app:contentScrim="@color/white"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
             app:statusBarScrim="@color/white"
+            app:expandedTitleMarginStart="15dp"
             app:titleEnabled="true">
 
             <LinearLayout
@@ -49,7 +50,7 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="保存"
-                    android:textColor="@color/raido_color_checked" />
+                    android:textColor="@color/text_link" />
 
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -86,7 +87,7 @@
                     <!--android:layout_centerVertical="true"-->
                     <!--android:layout_marginRight="20dp"-->
                     <!--android:layout_toRightOf="@id/image_view"-->
-                    <!--android:background="@color/color_gray9" />-->
+                    <!--android:background="@color/line_input" />-->
 
                 <!--<EditText-->
                     <!--android:id="@+id/edit_first_name"-->
@@ -184,10 +185,10 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@color/color_gray9" />
+                android:background="@color/line_input" />
 
             <TextView
                 android:layout_width="wrap_content"

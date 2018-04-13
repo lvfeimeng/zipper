@@ -3,15 +3,18 @@ package com.zipper.wallet.activity;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,6 +29,10 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.bean.SwitchAccountBean;
+import com.zipper.wallet.dialog.ConfirmSwitchAccountDialog;
+import com.zipper.wallet.dialog.MinerCostTypeDialog;
+import com.zipper.wallet.utils.ToastUtils;
 
 public class SwitchAccountActivity extends BaseActivity {
 
@@ -39,15 +46,25 @@ public class SwitchAccountActivity extends BaseActivity {
     protected TextView textShowCoin;
     protected EditText editCount;
     protected EditText editRemark;
-    //    protected RadioButton raidoBalance;
-//    protected RadioButton raidoAmount;
-//    protected RadioGroup radioGroup;
     protected SeekBar seekBar;
     protected TextView textLeft;
     protected TextView textRight;
-    protected TextView textCenter;
-    protected TextView textCost;
     protected Button btnNext;
+
+    private ImageView imgBack;
+    private ImageView imgContacts;
+    private TextView textCostType;
+    private TextView textMinerCost;
+    private TextView textRealAmount;
+    private TextView textHelp;
+
+    private String payerAddress, payeeName, payeeAddress, unit, totalAmount, realAmount, minerCost, remark;
+    private int coinsType, minerCostType;
+
+    SwitchAccountBean bean;
+    ConfirmSwitchAccountDialog confirmDialog;
+
+    MinerCostTypeDialog minerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,89 +84,98 @@ public class SwitchAccountActivity extends BaseActivity {
         textShowCoin = (TextView) findViewById(R.id.text_show_coin);
         editCount = (EditText) findViewById(R.id.edit_count);
         editRemark = (EditText) findViewById(R.id.edit_remark);
-//        raidoBalance = (RadioButton) findViewById(R.id.raido_balance);
-//        raidoAmount = (RadioButton) findViewById(R.id.raido_amount);
-//        radioGroup = (RadioGroup) findViewById(R.id.radio_group);
         seekBar = (SeekBar) findViewById(R.id.seek_bar);
         textLeft = (TextView) findViewById(R.id.text_left);
         textRight = (TextView) findViewById(R.id.text_right);
-        textCenter = (TextView) findViewById(R.id.text_center);
-        textCost = (TextView) findViewById(R.id.text_cost);
+        textCostType = (TextView) findViewById(R.id.text_cost_type);
         btnNext = (Button) findViewById(R.id.btn_next);
 
+        imgBack = (ImageView) findViewById(R.id.img_back);
+        imgContacts = (ImageView) findViewById(R.id.img_contacts);
+        textMinerCost = (TextView) findViewById(R.id.text_miner_cost);
+        textRealAmount = (TextView) findViewById(R.id.text_real_amount);
+        textHelp = (TextView) findViewById(R.id.text_help);
+
+        addTextChangedListener(editWalletAddress);
+        addTextChangedListener(editCount);
+
+        imgBack.setOnClickListener(v -> finish());
+        textHelp.setOnClickListener(v -> {
+        });
         textSelectCoins.setOnClickListener(v -> startActivityForResult(new Intent(this, SelectCoinsActivity.class), 100));
-        findViewById(R.id.img_back).setOnClickListener(v -> finish());
-        textCost.setOnClickListener(v ->
+        textCostType.setOnClickListener(v ->
                 {
-                    if (bottomDialog == null) {
-                        initDialog();
+                    if (minerDialog == null) {
+                        minerDialog = new MinerCostTypeDialog(this);
+                        minerDialog.setCallback(minerCallback);
                     }
-                    bottomDialog.show();
+                    minerDialog.show();
                 }
         );
-    }
 
-    Dialog bottomDialog = null;
-    View contentView = null;
-    RadioGroup radioGroup;
-    RadioButton raidoBalance, raidoSwitch;
-    TextView textConfirm;
-    ImageView imgClose;
-    int checkedId;
+        imgContacts.setOnClickListener(v -> startActivityForResult(new Intent(this, ContactsActivity.class), 200));
 
-    private void initDialog() {
-        bottomDialog = new Dialog(this, R.style.BottomDialog);
-        contentView = LayoutInflater.from(this).inflate(R.layout.dialog_miner_cost, null);
-
-        bottomDialog.setContentView(contentView);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) contentView.getLayoutParams();
-        params.width = getResources().getDisplayMetrics().widthPixels;
-        params.bottomMargin = 0;
-        contentView.setLayoutParams(params);
-        bottomDialog.setCanceledOnTouchOutside(true);
-        bottomDialog.getWindow().setGravity(Gravity.BOTTOM);
-        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
-        textConfirm = contentView.findViewById(R.id.text_confirm);
-        imgClose = contentView.findViewById(R.id.img_close);
-        radioGroup = contentView.findViewById(R.id.radio_group);
-        raidoBalance = contentView.findViewById(R.id.radio_balance);
-        raidoSwitch = contentView.findViewById(R.id.radio_switch);
-
-        imgClose.setOnClickListener(v -> dismissDialog());
-        textConfirm.setOnClickListener(v -> {
-            switch (checkedId) {
-                case R.id.raido_balance:
-                    textCost.setText("从余额中扣除");
-                    break;
-                case R.id.radio_switch:
-                    textCost.setText("从转账金额中扣除");
-                    break;
-                default:
-                    break;
-            }
-            dismissDialog();
-        });
-        checkedId = R.id.raido_balance;
-        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            this.checkedId = checkedId;
-            radioGroup.check(checkedId);
+        btnNext.setOnClickListener(v -> {
+            submit();
         });
     }
 
-    private void dismissDialog() {
-        if (bottomDialog != null && bottomDialog.isShowing()) {
-            bottomDialog.dismiss();
-        }
-    }
-
-    private void setRadioButtonDrawable(RadioButton radioButton) {
-        if (radioButton == null) {
+    //    private String payerAddress, payeeName, payeeAddress, unit, totalAmount, realAmount, minerCost, remark;
+//    private int coinsType, minerCostType;
+    private void submit() {
+        payerAddress = "sfsdfsdfwerwrewrw";//获取自己的钱包地址
+        payeeName = "张三";//收款人姓名
+        payeeAddress = editWalletAddress.getText().toString().trim();
+        if (TextUtils.isEmpty(payeeAddress)) {
+            toast("请输入收款人钱包地址");
             return;
         }
-        Drawable drawable = getResources().getDrawable(R.mipmap.ok_blue);
-        drawable.setBounds(0, dp2px(5), 0, dp2px(5));
-        radioButton.setCompoundDrawables(null, null, drawable, null);
+        String coin = textShowCoin.getText().toString().trim();
+//        if (TextUtils.isEmpty(coin)) {
+//            toast("请选择币种");
+//            return;
+//        }
+        totalAmount = editCount.getText().toString().trim();
+        if (TextUtils.isEmpty(totalAmount)) {
+            toast("请输入转账金额");
+            return;
+        }
+        remark = editRemark.getText().toString().trim();
+        if (TextUtils.isEmpty(remark)) {
+            remark = "无";
+        }
+        minerCost = textMinerCost.getText().toString().trim();
+        minerCost = "0.00001";
+        if (TextUtils.isEmpty(minerCost)) {
+            toast("请选择需要支付的矿工费用");
+            return;
+        }
+        realAmount = String.valueOf(Double.parseDouble(totalAmount) - Double.parseDouble(minerCost));
+        textRealAmount.setText("到账金额：" + realAmount);
+        bean = new SwitchAccountBean();
+        bean.setUnit(unit);
+        bean.setTotalAmount(totalAmount);
+        bean.setMinerCost(minerCost);
+        bean.setRealAmount(realAmount);
+        bean.setPayeeName(payeeName);
+        bean.setPayeeAddress(payeeAddress);
+        bean.setPayerAddress(payerAddress);
+        bean.setRemark(remark);
+        confirmDialog = new ConfirmSwitchAccountDialog(this, bean);
+        confirmDialog.show();
+        confirmDialog.handleResult(() -> {
+            toast("确认转账");
+        });
     }
+
+//    private void setRadioButtonDrawable(RadioButton radioButton) {
+//        if (radioButton == null) {
+//            return;
+//        }
+//        Drawable drawable = getResources().getDrawable(R.mipmap.ok_blue);
+//        drawable.setBounds(0, dp2px(5), 0, dp2px(5));
+//        radioButton.setCompoundDrawables(null, null, drawable, null);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -182,9 +208,12 @@ public class SwitchAccountActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
-            //处理扫描结果（在界面上显示）
-            if (null != data) {
+        if (null == data) {
+            return;
+        }
+        switch (requestCode) {
+            case REQUEST_CODE:
+                //处理扫描结果（在界面上显示）
                 Bundle bundle = data.getExtras();
                 if (bundle == null) {
                     return;
@@ -195,8 +224,56 @@ public class SwitchAccountActivity extends BaseActivity {
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     toast("解析二维码失败");
                 }
-            }
+                break;
+            case 100://选择币种
+                break;
+            case 200://选择联系人
+                break;
+            default:
+                break;
         }
+
     }
+
+    private void addTextChangedListener(EditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (editText == editWalletAddress) {
+                    String text = s.toString().trim();
+                    payeeAddress = text.substring(text.lastIndexOf("】") + 1);
+                } else if (editText == editCount) {
+                    totalAmount = s.toString().trim();
+                }
+                if (TextUtils.isEmpty(payeeAddress) || TextUtils.isEmpty(totalAmount)) {
+                    btnNext.setEnabled(false);
+                } else {
+                    btnNext.setEnabled(true);
+                }
+            }
+        });
+    }
+
+    private MinerCostTypeDialog.Callback minerCallback = new MinerCostTypeDialog.Callback() {
+        @Override
+        public void minerCostType(int type, String text) {
+            textCostType.setText(text);
+//            if (type == 0) {//从余额中扣除
+//
+//            } else if (type == 1) {//从转账金额中扣除
+//
+//            }
+        }
+    };
 
 }

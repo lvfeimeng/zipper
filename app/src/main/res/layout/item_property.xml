@@ -22,10 +22,11 @@
         android:layout_width="80dp"
         android:layout_alignParentRight="true"
         android:button="@null"
-        android:paddingLeft="10dp"
+        android:paddingLeft="30dp"
+        android:gravity="center"
         android:drawableLeft="@drawable/property_checkbox"
         android:layout_centerVertical="true"
-        android:layout_height="50dp" />
+        android:layout_height="60dp" />
 
     <TextView
         android:id="@+id/text_short_name"

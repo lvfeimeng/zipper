@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:textSize="18sp"
-            android:textColor="@color/color_gray1"
+            android:textColor="@color/text_minor"
             android:text="标题"/>
 
         <Button
