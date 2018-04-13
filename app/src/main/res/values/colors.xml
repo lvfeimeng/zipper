@@ -92,4 +92,6 @@
     <color name="raido_color_checked">#17B8E5</color>
 
     <color name="text_black">#484848</color>
+    <color name="color_data_gray">#C7C7CD</color>
+    <color name="color_grayish">#EBEBEB</color>
 </resources>
