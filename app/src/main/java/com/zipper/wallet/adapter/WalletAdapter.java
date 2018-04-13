@@ -93,7 +93,8 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         holder.imageAdd.setOnClickListener(v ->
                 mContext.startActivity(new Intent(mContext, AddPropertyActivity.class)));
         holder.textSearch.setOnClickListener(v ->
-                mContext.startActivity(new Intent(mContext, SearchCoinsActivity.class)));
+                mContext.startActivity(new Intent(mContext, SearchCoinsActivity.class)
+                .putExtra("isShowCheckBox",false)));
     }
 
     private void loadListData(RecViewHolder holder) {

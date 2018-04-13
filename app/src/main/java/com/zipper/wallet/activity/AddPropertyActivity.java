@@ -3,7 +3,6 @@ package com.zipper.wallet.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,14 +18,17 @@ import com.zipper.wallet.bean.PropertyBean;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddPropertyActivity extends BaseActivity implements View.OnClickListener {
+public class AddPropertyActivity extends BaseActivity {
 
     protected ImageView imgBack;
-    protected ImageView imgSearch;
     protected SwipeMenuRecyclerView recyclerView;
     protected TextView textSubmit;
+    private View headerView;
+
     private PropertyAdapter adapter;
     private List<PropertyBean> items;
+
+    private boolean isHeaderViewClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,19 +39,27 @@ public class AddPropertyActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.img_back) {
-            finish();
-        } else if (view.getId() == R.id.img_search) {
-            startActivity(new Intent(this, SearchCoinsActivity.class));
+    protected void onResume() {
+        super.onResume();
+        if (headerView != null && isHeaderViewClicked) {
+            headerView.setVisibility(View.VISIBLE);
+            recyclerView.addHeaderView(headerView);
+            recyclerView.smoothScrollToPosition(0);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (headerView != null && isHeaderViewClicked) {
+            headerView.setVisibility(View.GONE);
+            recyclerView.removeHeaderView(headerView);
         }
     }
 
     private void initView() {
         imgBack = (ImageView) findViewById(R.id.img_back);
-        imgBack.setOnClickListener(AddPropertyActivity.this);
-        imgSearch = (ImageView) findViewById(R.id.img_search);
-        imgSearch.setOnClickListener(AddPropertyActivity.this);
+        imgBack.setOnClickListener(v -> finish());
         recyclerView = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
         textSubmit = (TextView) findViewById(R.id.text_submit);
         textSubmit.setOnClickListener(v -> {
@@ -58,11 +68,11 @@ public class AddPropertyActivity extends BaseActivity implements View.OnClickLis
 
     private void initData() {
         items = new ArrayList<>();
-        adapter = new PropertyAdapter(this, items);
+        adapter = new PropertyAdapter(this, true, items);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        View view=inflate(R.layout.layout_add_property_search);
-        view.setLayoutParams(new LinearLayout.LayoutParams(-1,dp2px(35)));
-        recyclerView.addHeaderView(view);
+        headerView = inflate(R.layout.layout_add_property_search);
+        headerView.setLayoutParams(new LinearLayout.LayoutParams(-1, dp2px(35)));
+        recyclerView.addHeaderView(headerView);
         recyclerView.addItemDecoration(
                 new HorizontalDividerItemDecoration
                         .Builder(this)
@@ -71,26 +81,53 @@ public class AddPropertyActivity extends BaseActivity implements View.OnClickLis
                         .margin(dp2px(15), dp2px(15))
                         .build()
         );
+        recyclerView.setSwipeItemClickListener((itemView, position) -> {
+            items.get(position).setChecked(!items.get(position).isChecked());
+            adapter.notifyDataSetChanged();
+        });
         recyclerView.setAdapter(adapter);
-        view.setOnClickListener(v->toast("搜索"));
+        headerView.setOnClickListener(v -> {
+            isHeaderViewClicked = true;
+            startActivityForResult(new Intent(this, SearchCoinsActivity.class)
+                    .putExtra("isShowCheckBox", true), 100);
+        });
         testData();
     }
 
     private void testData() {
-        String url = "http://img4.imgtn.bdimg.com/it/u=1373411777,3992091759&fm=27&gp=0.jpg";
+        String url = "http://img.mp.sohu.com/q_mini,c_zoom,w_640/upload/20170625/f76be47471c14f5ca6df64b94d02f648_th.jpg";
         PropertyBean bean = null;
         for (int i = 0; i < 10; i++) {
             bean = new PropertyBean();
             bean.setIcon(url);
             bean.setShortName("ETH");
             bean.setFullName("Ethereum Foundation");
-            if (i % 3 == 2) {
-                bean.setOwn(true);
-            } else {
-                bean.setOwn(false);
-            }
             items.add(bean);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    private List<PropertyBean> resultList = null;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 100) {
+            if (data != null) {
+                resultList = (List<PropertyBean>) data.getSerializableExtra("search_list");
+                if (resultList != null) {
+                    List<PropertyBean> temp=new ArrayList<>();
+                    for (PropertyBean item : items) {
+                        if (item.isChecked()) {
+                            temp.add(item);
+                        }
+                    }
+                    resultList.addAll(temp);
+                    items.removeAll(temp);
+                    items.addAll(0, resultList);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        }
     }
 }
