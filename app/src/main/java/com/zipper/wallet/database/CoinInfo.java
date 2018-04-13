@@ -57,6 +57,21 @@ public class CoinInfo extends DataSupport {
         return map;
     }
 
+    @Override
+    public String toString() {
+        return "CoinInfo{" +
+                "id=" + id +
+                ", type=" + type +
+                ", name='" + name + '\'' +
+                ", full_name='" + full_name + '\'' +
+                ", addr_algorithm='" + addr_algorithm + '\'' +
+                ", addr_algorithm_param='" + addr_algorithm_param + '\'' +
+                ", sign_algorithm='" + sign_algorithm + '\'' +
+                ", sign_algorithm_param='" + sign_algorithm_param + '\'' +
+                ", token_type='" + token_type + '\'' +
+                ", token_addr='" + token_addr + '\'' +
+                '}';
+    }
 
     public int getType() {
         return type;

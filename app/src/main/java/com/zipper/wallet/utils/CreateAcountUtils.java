@@ -199,7 +199,7 @@ public class CreateAcountUtils {
      * @return
      */
     public static String getFirstAddress(DeterministicKey externalKey){
-        return getFirstAddress(externalKey,0);
+        return getAddress(externalKey,0);
     }
 
     /**
@@ -208,7 +208,7 @@ public class CreateAcountUtils {
      * @param i
      * @return
      */
-    public static String getFirstAddress(DeterministicKey externalKey,int i){
+    public static String getAddress(DeterministicKey externalKey,int i){
         DeterministicKey key = externalKey.deriveSoftened(i);
         return  key.toAddress();
     }
