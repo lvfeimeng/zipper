@@ -49,9 +49,10 @@ public class WalletInfoActivity extends BaseActivity {
         imgBack.setOnClickListener(v -> finish());
         textRight.setOnClickListener(v -> rightClick());
         textModifyPassword.setOnClickListener(v -> {
-            startActivity(new Intent(this,UpdatePasActivity.class));
+            startActivity(new Intent(this, UpdatePasActivity.class));
         });
         textExportWallet.setOnClickListener(v -> {
+            startActivity(new Intent(this, ExportWalletActivity.class));
         });
         textDeleteWallet.setOnClickListener(v -> deleteWallet());
     }
