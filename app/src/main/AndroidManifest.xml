@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.zipper.wallet">
+          package="com.zipper.wallet">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
 
     <application
         android:name=".base.App"
@@ -23,44 +23,46 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.ImportWalletActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activity.AgreementActivity" />
-        <activity android:name=".activity.StartActivity" />
-        <activity android:name=".activity.RiskActivity" />
-        <activity android:name=".activity.PropertyActvity" />
-        <activity android:name=".activity.CreateAccountActivity" />
-        <activity android:name=".activity.CreatePwdAcitivty" />
-        <activity android:name=".activity.MnemonicActivity" />
-        <activity android:name=".activity.UnlockActivity" />
-        <activity android:name=".activity.WelcomActivity" />
-        <activity android:name=".activity.BackUpAcitivty" />
-        <activity android:name=".activity.MyWalletActivity" />
-        <activity android:name=".activity.ContactsActivity" />
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".activity.AgreementActivity"/>
+        <activity android:name=".activity.StartActivity"/>
+        <activity android:name=".activity.RiskActivity"/>
+        <activity android:name=".activity.PropertyActvity"/>
+        <activity android:name=".activity.CreateAccountActivity"/>
+        <activity android:name=".activity.CreatePwdAcitivty"/>
+        <activity android:name=".activity.MnemonicActivity"/>
+        <activity android:name=".activity.UnlockActivity"/>
+        <activity android:name=".activity.WelcomActivity"/>
+        <activity android:name=".activity.BackUpAcitivty"/>
+        <activity android:name=".activity.MyWalletActivity">
+        </activity>
+        <activity android:name=".activity.ContactsActivity"/>
         <activity
             android:name=".activity.AddContactActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activity.AddPropertyActivity" />
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".activity.AddPropertyActivity"/>
         <activity
             android:name=".activity.SearchCoinsActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activity.PayeeAddressActivity" />
-        <activity android:name=".activity.PropertyDetailActivity" />
-        <activity android:name=".activity.ScanQrCodeActivity" />
-        <activity android:name=".activity.SwitchAccountActivity" />
-        <activity android:name=".activity.LanguageSettingActivity" />
-        <activity android:name=".activity.SelectCoinsActivity" />
-        <activity android:name=".activity.TransactionActivity" />
-        <activity android:name=".activity.TransactionDefailsActivity" />
-        <activity android:name=".activity.WalletInfoActivity" />
-        <activity android:name=".activity.UpdatePasActivity" />
-
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".activity.PayeeAddressActivity"/>
+        <activity android:name=".activity.PropertyDetailActivity"/>
+        <activity android:name=".activity.ScanQrCodeActivity"/>
+        <activity android:name=".activity.SwitchAccountActivity"/>
+        <activity android:name=".activity.LanguageSettingActivity"/>
+        <activity android:name=".activity.SelectCoinsActivity"/>
+        <activity android:name=".activity.TransactionActivity">
+        </activity>
+        <activity android:name=".activity.TransactionDefailsActivity">
+        </activity>
+        <activity android:name=".activity.UpdatePasActivity">
+        </activity>
     </application>
 
 </manifest>
