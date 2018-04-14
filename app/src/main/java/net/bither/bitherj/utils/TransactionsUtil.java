@@ -279,7 +279,7 @@ public class TransactionsUtil {
         for (AbstractHD.PathType pathType : AbstractHD.PathType.values()) {
             HDAccount.HDAccountAddress hdAccountAddress;
 //            boolean hasTx = true;
-            int unusedAddressCnt = 0; //HDAccount.MaxUnusedNewAddressCount
+            int unusedAddressCnt = 0; //WalletInfo.MaxUnusedNewAddressCount
             int maxUnusedAddressCount = HDAccount.MaxUnusedNewAddressCount;
             int addressIndex = 0;
             while (unusedAddressCnt <= maxUnusedAddressCount) {
@@ -321,7 +321,7 @@ public class TransactionsUtil {
                             apiBlockCount = jsonObject.getInt(BLOCK_COUNT);
                         }
                         int txCnt = jsonObject.getInt(TX_CNT);
-                        // TODO: HDAccount
+                        // TODO: WalletInfo
                         transactions = TransactionsUtil.getTransactionsFromBither(jsonObject, storeBlockHeight);
                         transactions = AddressManager.getInstance().compressTxsForHDAccount(transactions);
 
@@ -408,7 +408,7 @@ public class TransactionsUtil {
         for (AbstractHD.PathType pathType : AbstractHD.PathType.values()) {
             HDAccount.HDAccountAddress hdAccountAddress;
 //            boolean hasTx = true;
-            int unusedAddressCnt = 0; //HDAccount.MaxUnusedNewAddressCount
+            int unusedAddressCnt = 0; //WalletInfo.MaxUnusedNewAddressCount
             int maxUnusedAddressCount = HDAccount.MaxUnusedNewAddressCount;
             int addressIndex = 0;
             while (unusedAddressCnt <= maxUnusedAddressCount) {

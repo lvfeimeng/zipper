@@ -208,9 +208,9 @@ public class AddressManager implements HDMKeychain.HDMAddressChangeDelegate,
         HashSet<String> needNotifyDesktopHDMHS = new HashSet<String>();
         HashSet<Integer> needNotifyHDAccountIdHS = new HashSet<Integer>();
 
-//        List<HDAccount.HDAccountAddress> relatedAddresses = new ArrayList<HDAccount
+//        List<WalletInfo.HDAccountAddress> relatedAddresses = new ArrayList<WalletInfo
 //                .HDAccountAddress>();
-//        List<HDAccount.HDAccountAddress> relatedHDMonitoredAddresses = new ArrayList<HDAccount
+//        List<WalletInfo.HDAccountAddress> relatedHDMonitoredAddresses = new ArrayList<WalletInfo
 //                .HDAccountAddress>();
         List<DesktopHDMAddress> relatedDesktopHDMAddresses = new ArrayList<DesktopHDMAddress>();
 
@@ -232,10 +232,10 @@ public class AddressManager implements HDMKeychain.HDMAddressChangeDelegate,
                     (compressedTx, inAddresses);
         }
 
-//        for (HDAccount.HDAccountAddress hdAccountAddress : relatedAddresses) {
+//        for (WalletInfo.HDAccountAddress hdAccountAddress : relatedAddresses) {
 //            relatedAddressesHS.add(hdAccountAddress.getAddress());
 //        }
-//        for (HDAccount.HDAccountAddress hdAccountAddress : relatedHDMonitoredAddresses) {
+//        for (WalletInfo.HDAccountAddress hdAccountAddress : relatedHDMonitoredAddresses) {
 //            relatedHDMonitoredAddressesHS.add(hdAccountAddress.getAddress());
 //        }
         for (DesktopHDMAddress desktopHDMAddress : relatedDesktopHDMAddresses) {
@@ -319,17 +319,17 @@ public class AddressManager implements HDMKeychain.HDMAddressChangeDelegate,
             }
         }
 
-//        List<HDAccount.HDAccountAddress> needNotifityAddressList = new ArrayList<HDAccount
+//        List<WalletInfo.HDAccountAddress> needNotifityAddressList = new ArrayList<WalletInfo
 //                .HDAccountAddress>();
-//        for (HDAccount.HDAccountAddress hdAccountAddress : relatedAddresses) {
+//        for (WalletInfo.HDAccountAddress hdAccountAddress : relatedAddresses) {
 //            if (needNotifyHDAccountHS.contains(hdAccountAddress.getAddress())) {
 //                needNotifityAddressList.add(hdAccountAddress);
 //            }
 //        }
 //
-//        List<HDAccount.HDAccountAddress> needNotifyHDMonitoredAddressList = new
-//                ArrayList<HDAccount.HDAccountAddress>();
-//        for (HDAccount.HDAccountAddress hdAccountAddress : relatedHDMonitoredAddresses) {
+//        List<WalletInfo.HDAccountAddress> needNotifyHDMonitoredAddressList = new
+//                ArrayList<WalletInfo.HDAccountAddress>();
+//        for (WalletInfo.HDAccountAddress hdAccountAddress : relatedHDMonitoredAddresses) {
 //            if (needNotifyHDAccountMonitoredHS.contains(hdAccountAddress.getAddress())) {
 //                needNotifyHDMonitoredAddressList.add(hdAccountAddress);
 //            }
@@ -924,7 +924,7 @@ public class AddressManager implements HDMKeychain.HDMAddressChangeDelegate,
 //                }
 //            }
 //        }
-//        List<HDAccount.HDAccountAddress> hdAccountAddressList = AbstractDb.hdAccountAddressProvider
+//        List<WalletInfo.HDAccountAddress> hdAccountAddressList = AbstractDb.hdAccountAddressProvider
 //                .belongAccount(this.hdAccountHot.hdSeedId, inAddressList);
 //        return hdAccountAddressList != null && hdAccountAddressList.size() > 0;
 //    }

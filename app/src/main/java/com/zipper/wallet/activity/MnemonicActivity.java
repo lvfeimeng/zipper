@@ -1,5 +1,6 @@
 package com.zipper.wallet.activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,10 +15,12 @@ import com.zipper.wallet.R;
 import com.zipper.wallet.animations.MyAnimations;
 import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.CreateActvity;
+import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.definecontrol.FlowLayout;
 import com.zipper.wallet.definecontrol.MnemWordsView;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
+import com.zipper.wallet.utils.SqliteUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,6 +78,12 @@ public class MnemonicActivity extends CreateActvity {
                                 @Override
                                 public void doSuccessThing(Map<String, Object> param) {
                                     PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
+                                    SqliteUtils.openDataBase(mContext);
+                                    ContentValues values = new ContentValues();
+                                    //在values中添加内容
+                                    values.put("mnem_seed","");
+                                    SqliteUtils.update("walletinfo",values,"name=?",new String[]{PreferencesUtils.getString(mContext,KEY_WALLET_NAME,PreferencesUtils.VISITOR)});
+                                    PreferencesUtils.clearData(mContext,PreferencesUtils.VISITOR);
                                     startActivity(new Intent(mContext,
                                             MyWalletActivity.class));
                                     ActivityManager.getInstance().finishAllActivity();
@@ -105,6 +114,23 @@ public class MnemonicActivity extends CreateActvity {
         Set set = new LinkedHashSet();
         set.add(((List) words));
         PreferencesUtils.putStringSet(mContext,KEY_MNEN_WORDS,set,PreferencesUtils.VISITOR);
+        List<WalletInfo> list = new ArrayList<>();
+        WalletInfo hd = null;
+
+        SqliteUtils.openDataBase(mContext);
+        List<Map> maps = SqliteUtils.selecte("walletinfo");
+            for(Map map : maps){
+                list.add(new WalletInfo(map));
+            }
+
+        for(WalletInfo walletInfo : list){
+            if(walletInfo.getName().equals(PreferencesUtils.getString(mContext,KEY_WALLET_NAME,PreferencesUtils.VISITOR))){
+                hd = walletInfo;
+                Log.i(TAG,String.format("name:%s", walletInfo.getName()));
+            }
+            RuntHTTPApi.printMap(walletInfo.toMap(),"");
+        }
+
     }
 
     /**
@@ -219,7 +245,7 @@ public class MnemonicActivity extends CreateActvity {
         for(int i = 0 ; i < size; i ++){
             int a = (int)(Math.random()*100);
             int lo = a%residue.size() == 0? 0:a%residue.size()-1;
-            Log.i(TAG,String.format("a:%s,lo:%s",a,lo));
+            //Log.i(TAG,String.format("a:%s,lo:%s",a,lo));
             final String text = residue.get(lo);
             residue.remove(lo);
             new Handler().postDelayed(new Runnable() {

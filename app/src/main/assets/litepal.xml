@@ -8,7 +8,7 @@
     	For example:
     	<dbname value="demo" />
     -->
-    <dbname value="zipper" />
+    <dbname value="ZipperOne" />
 
     <!--
     	Define the version of your database. Each time you want
@@ -33,6 +33,7 @@
     -->
     <list>
         <mapping class="com.zipper.wallet.database.CoinInfo" />
+        <mapping class="com.zipper.wallet.database.WalletInfo" />
     </list>
 
     <!--

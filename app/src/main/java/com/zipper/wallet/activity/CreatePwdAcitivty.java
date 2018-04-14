@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.WebBrowserActivity;
 import com.zipper.wallet.base.CreateActvity;
 import com.zipper.wallet.bean.WalletBean;
 import com.zipper.wallet.utils.PreferencesUtils;
@@ -26,7 +27,7 @@ public class CreatePwdAcitivty extends CreateActvity {
     EditText edPwd,edPwdRe,edTip;
     CheckBox checkBox;
     Button btnCreate;
-    TextView txtPwdReWar,txtStrong;
+    TextView txtPwdReWar,txtStrong,txtAgree;
     ImageView imgPwdSign;
     LinearLayout linSign,linWarining;
     @Override
@@ -47,6 +48,27 @@ public class CreatePwdAcitivty extends CreateActvity {
         txtPwdReWar = (TextView)findViewById(R.id.txt_pwdre_warning);
         imgPwdSign = (ImageView)findViewById(R.id.img_pwd_sign);
         linSign = (LinearLayout)findViewById(R.id.lin_sign) ;
+        txtAgree = (TextView)findViewById(R.id.txt_agreement);
+        txtAgree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(mContext , WebBrowserActivity.class);
+                intent.putExtra(PARAMS_TITLE,"服务协议");
+                intent.putExtra(PARAMS_URL,"file:///android_asset/agreement.html");
+                startActivity(intent);
+
+                /*AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                LinearLayout dialogView = (LinearLayout)getLayoutInflater().inflate(R.layout.layout_web, null);
+                WebView webView = (WebView) dialogView.findViewById(R.id.web_view);
+                dialogView.removeView(webView);
+                webView.setWebViewClient(new WebViewClient());
+                webView.loadUrl("file:///android_asset/agreement.html");
+                builder.setView(webView);
+                builder.show();*/
+
+            }
+        });
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

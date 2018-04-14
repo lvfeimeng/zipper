@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Set;
 
 public class HDAccount extends Address {
-    public static final String HDAccountPlaceHolder = "HDAccount";
+    public static final String HDAccountPlaceHolder = "WalletInfo";
     public static final String HDAccountMonitoredPlaceHolder = "HDAccountMonitored";
     public static final int MaxUnusedNewAddressCount = 20;
 
@@ -96,9 +96,9 @@ public class HDAccount extends Address {
         isFromXRandom = random.getClass().getCanonicalName().indexOf("XRandom") >= 0;
         mnemonicSeed = new byte[16];
         random.nextBytes(mnemonicSeed);
-        Log.i("HDAccount","mnemonicSeed:"+mnemonicSeed);
+        Log.i("WalletInfo","mnemonicSeed:"+mnemonicSeed);
         hdSeed = seedFromMnemonic(mnemonicSeed);
-        Log.i("HDAccount","hdSeed:"+hdSeed);
+        Log.i("WalletInfo","hdSeed:"+hdSeed);
         EncryptedData encryptedHDSeed = new EncryptedData(hdSeed, password, isFromXRandom);
         EncryptedData encryptedMnemonicSeed = new EncryptedData(mnemonicSeed, password,
                 isFromXRandom);

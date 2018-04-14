@@ -18,7 +18,7 @@ public class CoinInfo extends DataSupport {
     private int id;
 
     private int type;
-    private String name,full_name,addr_algorithm,addr_algorithm_param,sign_algorithm,sign_algorithm_param,token_type,token_addr;
+    private String name,full_name,addr_algorithm,addr_algorithm_param,sign_algorithm,sing_algorithm_param,token_type,token_addr;
 
     public CoinInfo() {
     }
@@ -33,7 +33,7 @@ public class CoinInfo extends DataSupport {
             setAddr_algorithm(map.get("addr_algorithm")+"");
             setAddr_algorithm_param(map.get("addr_algorithm_param")+"");
             setSign_algorithm(map.get("sign_algorithm")+"");
-            setSign_algorithm_param(map.get("sign_algorithm_param")+"");
+            setSing_algorithm_param(map.get("sing_algorithm_param")+"");
             setToken_type(map.get("token_type")+"");
             setToken_addr(map.get("token_addr")+"");
         }catch (Exception e){
@@ -51,7 +51,7 @@ public class CoinInfo extends DataSupport {
         map.put("addr_algorithm",getAddr_algorithm());
         map.put("addr_algorithm_param",getAddr_algorithm_param());
         map.put("sign_algorithm",getSign_algorithm());
-        map.put("sign_algorithm_param",getSign_algorithm_param());
+        map.put("sing_algorithm_param",getSing_algorithm_param());
         map.put("token_type",getToken_type());
         map.put("token_addr",getToken_addr());
         return map;
@@ -67,7 +67,7 @@ public class CoinInfo extends DataSupport {
                 ", addr_algorithm='" + addr_algorithm + '\'' +
                 ", addr_algorithm_param='" + addr_algorithm_param + '\'' +
                 ", sign_algorithm='" + sign_algorithm + '\'' +
-                ", sign_algorithm_param='" + sign_algorithm_param + '\'' +
+                ", sing_algorithm_param='" + sing_algorithm_param + '\'' +
                 ", token_type='" + token_type + '\'' +
                 ", token_addr='" + token_addr + '\'' +
                 '}';
@@ -129,12 +129,12 @@ public class CoinInfo extends DataSupport {
         this.sign_algorithm = sign_algorithm;
     }
 
-    public String getSign_algorithm_param() {
-        return sign_algorithm_param;
+    public String getSing_algorithm_param() {
+        return sing_algorithm_param;
     }
 
-    public void setSign_algorithm_param(String sign_algorithm_param) {
-        this.sign_algorithm_param = sign_algorithm_param;
+    public void setSing_algorithm_param(String sing_algorithm_param) {
+        this.sing_algorithm_param = sing_algorithm_param;
     }
 
     public String getToken_type() {
