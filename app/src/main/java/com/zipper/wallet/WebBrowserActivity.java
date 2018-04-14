@@ -40,9 +40,9 @@ public class WebBrowserActivity extends BaseActivity {
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(@Nullable Bundle savedInstanceState){
         setContentView(R.layout.activity_web_browser);
+        super.onCreate(savedInstanceState);
         progressbar = (ProgressBar) findViewById(R.id.myProgressBar);
 
         View imgLeft = findViewById(R.id.imgLeft);

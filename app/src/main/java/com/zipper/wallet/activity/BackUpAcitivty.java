@@ -23,6 +23,7 @@ import com.zipper.wallet.utils.RuntListSeria;
 import com.zipper.wallet.utils.SqliteUtils;
 
 import net.bither.bitherj.core.AbstractHD;
+import net.bither.bitherj.crypto.EncryptedData;
 import net.bither.bitherj.crypto.hd.DeterministicKey;
 import net.bither.bitherj.utils.Utils;
 
@@ -158,8 +159,14 @@ public class BackUpAcitivty extends CreateActvity {
             walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME,PreferencesUtils.VISITOR));
             walletInfo.setTip(PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD_TIP,PreferencesUtils.VISITOR));
 
-            walletInfo.setEsda_seed(priKey);
-            walletInfo.setMnem_seed( Utils.bytesToHexString(randomSeed));
+            walletInfo.setEsda_seed(new EncryptedData(Utils.hexStringToByteArray(priKey),
+                    PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD,PreferencesUtils.VISITOR),
+                    false)
+                    .toEncryptedString());
+            walletInfo.setMnem_seed( new EncryptedData(Utils.hexStringToByteArray(Utils.bytesToHexString(randomSeed)),
+                    PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD,PreferencesUtils.VISITOR),
+                    false)
+                    .toEncryptedString());
             walletInfo.setAddress(firstAddr);
             //walletInfo.setId(4);
             SQLiteDatabase db = SqliteUtils.openDataBase(mContext);

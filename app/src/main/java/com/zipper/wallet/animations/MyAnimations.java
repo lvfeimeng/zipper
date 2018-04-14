@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -25,7 +24,7 @@ import com.zipper.wallet.R;
  */
 
 public class MyAnimations {
-    public static final int ANIMA_TIME = 300;
+    public static int ANIMA_TIME = 300;
     public static final float MOVE_SPACE = 1;
     public static final float SITU = 0;
 

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.zipper.wallet.activity.ImportWalletActivity;
+import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 
 import java.util.Map;
@@ -36,6 +37,7 @@ public class CreateActvity extends BaseActivity {
         showDoubleButtonDialog("放弃创建钱包", "钱包还未创建成功，是否放弃？", new RuntHTTPApi.ResPonse() {
             @Override
             public void doSuccessThing(Map<String, Object> param) {
+                PreferencesUtils.clearData(mContext,PreferencesUtils.VISITOR);
                 finish();
             }
 

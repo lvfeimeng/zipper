@@ -22,8 +22,11 @@
 
             <ImageView
                 android:id="@+id/img_back"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingBottom="13dp"
+                android:paddingTop="13dp"
+                android:src="@mipmap/back_black"
                 android:visibility="gone"/>
             <TextView
                 android:id="@+id/txt_left"
@@ -64,8 +67,10 @@
 
             <ImageView
                 android:id="@+id/img_right"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingBottom="13dp"
+                android:paddingTop="13dp"
                 android:visibility="gone"/>
 
             <TextView

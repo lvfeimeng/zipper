@@ -322,11 +322,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     public boolean onKeyDown(int keycode, KeyEvent event) {
 
         switch (event.getKeyCode()) {
-            case KeyEvent.KEYCODE_MENU: {
-            }
-            case KeyEvent.KEYCODE_BACK: {
+            case KeyEvent.KEYCODE_MENU:
+                break;
+            case KeyEvent.KEYCODE_BACK:
                 onBackKeyDown();
-            }
+                break;
         }
         return super.onKeyDown(keycode, event);
     }
