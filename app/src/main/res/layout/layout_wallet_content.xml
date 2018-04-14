@@ -14,11 +14,12 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
-            app:statusBarScrim="?attr/colorPrimary"
+            app:contentScrim="@drawable/wallet_home_bg"
             app:titleEnabled="false">
-
+            <!--app:statusBarScrim="?attr/colorPrimary"-->
+            <!--app:contentScrim="?attr/colorPrimary"-->
+            <!--@drawable/wallet_home_bg-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="210dp"

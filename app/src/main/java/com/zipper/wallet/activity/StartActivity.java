@@ -44,51 +44,51 @@ public class StartActivity extends BaseActivity {
         if (true) {
             btnCreate.setVisibility(View.VISIBLE);
             btnImport.setVisibility(View.VISIBLE);
-            SQLiteDatabase sqlDB =  SqliteUtils.openDataBase(mContext);
-            sqlDB.execSQL("drop table coininfo");
-            sqlDB.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42));");
-
-            SqliteUtils.openDataBase(mContext);
-            RuntHTTPApi.toReApi(RuntHTTPApi.URL_GET_COINS,new HashMap<>(),new RuntHTTPApi.MyStringCallBack(mContext,new RuntHTTPApi.ResPonse() {
-                @Override
-                public void doSuccessThing(Map<String, Object> param) {
-                    SQLiteDatabase db = LitePal.getDatabase();
-                    RuntHTTPApi.printMap(param,"");
-                    Log.i("StartActivity",(param.get("data") instanceof Collection)+"");
-                    if(param.get("data") instanceof Collection){
-                        for(Map map :(List<Map>)param.get("data") ){
-                            CoinInfo coinInfo = new CoinInfo(map);
-                            Log.i(TAG,coinInfo.getName()+"信息正在保存");
-                            coinInfo.save();
-                            Log.i(TAG,"信息保存成功");
-                        }
-                    }
-                    SqliteUtils.openDataBase(mContext);
-                }
-
-                @Override
-                public void doErrorThing(Map<String, Object> param) {
-
-                }
-            }));
-
-            /*WalletInfo hd = new WalletInfo(mContext);
-            hd.createTable(mContext);*/
-            SqliteUtils.test();
-
-            List<WalletInfo> list = new ArrayList<>();
-            SqliteUtils.openDataBase(mContext);
-            List<Map> maps = SqliteUtils.selecte("walletinfo");
-            for(Map map : maps){
-                list.add(new WalletInfo(map));
-            }
-
-            for(WalletInfo walletInfo : list){
-                if(walletInfo.getName().equals(PreferencesUtils.getString(mContext,KEY_WALLET_NAME,PreferencesUtils.VISITOR))){
-                    Log.i(TAG,String.format("name:%s", walletInfo.getName()));
-                }
-                RuntHTTPApi.printMap(walletInfo.toMap(),"");
-            }
+//            SQLiteDatabase sqlDB =  SqliteUtils.openDataBase(mContext);
+//            sqlDB.execSQL("drop table coininfo");
+//            sqlDB.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42));");
+//
+//            SqliteUtils.openDataBase(mContext);
+//            RuntHTTPApi.toReApi(RuntHTTPApi.URL_GET_COINS,new HashMap<>(),new RuntHTTPApi.MyStringCallBack(mContext,new RuntHTTPApi.ResPonse() {
+//                @Override
+//                public void doSuccessThing(Map<String, Object> param) {
+//                    SQLiteDatabase db = LitePal.getDatabase();
+//                    RuntHTTPApi.printMap(param,"");
+//                    Log.i("StartActivity",(param.get("data") instanceof Collection)+"");
+//                    if(param.get("data") instanceof Collection){
+//                        for(Map map :(List<Map>)param.get("data") ){
+//                            CoinInfo coinInfo = new CoinInfo(map);
+//                            Log.i(TAG,coinInfo.getName()+"信息正在保存");
+//                            coinInfo.save();
+//                            Log.i(TAG,"信息保存成功");
+//                        }
+//                    }
+//                    SqliteUtils.openDataBase(mContext);
+//                }
+//
+//                @Override
+//                public void doErrorThing(Map<String, Object> param) {
+//
+//                }
+//            }));
+//
+//            /*WalletInfo hd = new WalletInfo(mContext);
+//            hd.createTable(mContext);*/
+//            SqliteUtils.test();
+//
+//            List<WalletInfo> list = new ArrayList<>();
+//            SqliteUtils.openDataBase(mContext);
+//            List<Map> maps = SqliteUtils.selecte("walletinfo");
+//            for(Map map : maps){
+//                list.add(new WalletInfo(map));
+//            }
+//
+//            for(WalletInfo walletInfo : list){
+//                if(walletInfo.getName().equals(PreferencesUtils.getString(mContext,KEY_WALLET_NAME,PreferencesUtils.VISITOR))){
+//                    Log.i(TAG,String.format("name:%s", walletInfo.getName()));
+//                }
+//                RuntHTTPApi.printMap(walletInfo.toMap(),"");
+//            }
 
 
         } else {
@@ -127,5 +127,10 @@ public class StartActivity extends BaseActivity {
                 startActivity(new Intent(mContext, MyWalletActivity.class))
         );
 
+    }
+
+    @Override
+    public void statusBarSetting() {
+        setTransparentStatusBar();
     }
 }
