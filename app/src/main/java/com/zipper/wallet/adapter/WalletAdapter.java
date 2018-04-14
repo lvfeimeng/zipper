@@ -11,19 +11,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
 import com.zipper.wallet.activity.AddPropertyActivity;
-import com.zipper.wallet.activity.SearchCoinsActivity;
+import com.zipper.wallet.activity.SearchPropertyActivity;
 import com.zipper.wallet.bean.CoinsBean;
-import com.zipper.wallet.utils.MyRecViewHolder;
 import com.zipper.wallet.utils.ScreenUtils;
 
 import java.util.ArrayList;
@@ -93,8 +87,8 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         holder.imageAdd.setOnClickListener(v ->
                 mContext.startActivity(new Intent(mContext, AddPropertyActivity.class)));
         holder.textSearch.setOnClickListener(v ->
-                mContext.startActivity(new Intent(mContext, SearchCoinsActivity.class)
-                .putExtra("isShowCheckBox",false)));
+                mContext.startActivity(new Intent(mContext, SearchPropertyActivity.class)
+                        .putExtra("isShowCheckBox", false)));
     }
 
     private void loadListData(RecViewHolder holder) {
@@ -118,25 +112,25 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private void initSwipeSetting(SwipeMenuRecyclerView recyclerView){
+    private void initSwipeSetting(SwipeMenuRecyclerView recyclerView) {
         recyclerView.setItemViewSwipeEnabled(false);
         recyclerView.setLongPressDragEnabled(true);
         recyclerView.setSwipeMenuCreator((swipeLeftMenu, swipeRightMenu, viewType) -> {
-            SwipeMenuItem deleteItem=new SwipeMenuItem(mContext);
+            SwipeMenuItem deleteItem = new SwipeMenuItem(mContext);
             deleteItem.setBackgroundColorResource(R.color.btn_delete);
             deleteItem.setText("移除");
             deleteItem.setTextSize(16);
             deleteItem.setTextColorResource(R.color.white);
             deleteItem.setHeight(-1);
-            deleteItem.setWidth(ScreenUtils.dp2px(mContext,80));
+            deleteItem.setWidth(ScreenUtils.dp2px(mContext, 80));
             swipeRightMenu.addMenuItem(deleteItem);
         });
         recyclerView.setSwipeMenuItemClickListener(menuBridge -> {
             menuBridge.closeMenu();
             //int direction=menuBridge.getDirection();
-            int adapterPosition=menuBridge.getAdapterPosition();
-            int menuPosition=menuBridge.getPosition();
-            if (menuPosition==0) {
+            int adapterPosition = menuBridge.getAdapterPosition();
+            int menuPosition = menuBridge.getPosition();
+            if (menuPosition == 0) {
                 mList.remove(adapterPosition);
                 adapter.notifyDataSetChanged();
             }

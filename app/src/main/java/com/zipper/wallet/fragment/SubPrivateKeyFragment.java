@@ -165,13 +165,8 @@ public class SubPrivateKeyFragment extends BaseFragment {
                 } else {
                     if (TextUtils.isEmpty(key) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword) || TextUtils.isEmpty(keyPassword)) {
                         btnImport.setEnabled(false);
-                        Log.d(TAG, "afterTextChanged: ---key--->"+key);
-                        Log.d(TAG, "afterTextChanged: ---password--->"+password);
-                        Log.d(TAG, "afterTextChanged: ---confirmPassword--->"+confirmPassword);
-                        Log.d(TAG, "afterTextChanged: ---keyPassword--->"+keyPassword);
                     } else {
                         btnImport.setEnabled(true);
-                        Log.d(TAG, "afterTextChanged: ------>true");
                     }
                 }
             }

@@ -70,12 +70,16 @@ public class WalletInfoActivity extends BaseActivity {
     private void rightClick() {
         if (editWalletName.isFocusable()) {//当前为可编辑状态
             textRight.setText("编辑");
+            editWalletName.setFocusable(false);
+            editWalletName.setFocusableInTouchMode(false);
+            editWalletName.setCursorVisible(false);
         } else {//当前为不可编辑状态
             textRight.setText("保存");
             editWalletName.setFocusable(true);
             editWalletName.setFocusableInTouchMode(true);
             editWalletName.requestFocus();
             editWalletName.setSelection(editWalletName.length());
+            editWalletName.setCursorVisible(true);
         }
     }
 }

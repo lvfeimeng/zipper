@@ -24,10 +24,13 @@ import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.WalletAdapter;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.bean.CoinsBean;
+import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.utils.PreferencesUtils;
+import com.zipper.wallet.utils.SqliteUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MyWalletActivity extends BaseActivity implements View.OnClickListener {
 
@@ -47,7 +50,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
 
     //headerview控件
     protected TextView textWalletAddress;
-    protected TextView textName;
+    protected TextView textWalletName;
     protected TextView textBadger;
     protected RelativeLayout layoutTradingRecord;
     protected TextView textContacts;
@@ -137,7 +140,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             return;
         }
         textWalletAddress = (TextView) headerView.findViewById(R.id.text_wallet_address);
-        textName = (TextView) headerView.findViewById(R.id.text_name);
+        textWalletName = (TextView) headerView.findViewById(R.id.text_wallet_name);
         textBadger = (TextView) headerView.findViewById(R.id.text_badger);
         layoutTradingRecord = (RelativeLayout) headerView.findViewById(R.id.layout_trading_record);
         textContacts = (TextView) headerView.findViewById(R.id.text_contacts);
@@ -176,11 +179,27 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         badge.setText("1");
         badge.show();
 
-        headerView.findViewById(R.id.layout_wallet)
+        headerView.findViewById(R.id.img_setting)
                 .setOnClickListener(
                         v -> startActivity(new Intent(this, WalletInfoActivity.class))
                 );
+
+
+//            List<WalletInfo> list = new ArrayList<>();
+//           SqliteUtils.openDataBase(mContext);
+//           List<Map> maps = SqliteUtils.selecte("walletinfo");
+//           for(Map map : maps){
+//              list.add(new WalletInfo(map));            }
+//
+//        for(WalletInfo walletInfo : list){
+//               if(walletInfo.getName().equals(PreferencesUtils.getString(mContext,KEY_WALLET_NAME,PreferencesUtils.VISITOR))){
+//
+//               }
+//           }
+
+
     }
+
 
     private void testData() {
         String icon = "http://upload.news.cecb2b.com/2013/1211/1386729783853.jpg";
