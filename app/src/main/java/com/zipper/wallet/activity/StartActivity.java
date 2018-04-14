@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.zipper.wallet.R;
 import com.zipper.wallet.animations.MyAnimations;
 import com.zipper.wallet.utils.PreferencesUtils;
@@ -34,14 +35,25 @@ public class StartActivity extends AppCompatActivity {
         btnImport.setVisibility(View.INVISIBLE);
         btnHome.setVisibility(View.GONE);
         boolean isfirst = PreferencesUtils.getBoolean(this, "is_first", true, PreferencesUtils.PROJECT);
+        setTransparentStatusBar();
         if(isfirst){
             startActivity(new Intent(this,
                     WelcomActivity.class));
             finish();
             return;
         }
+        /*CreateAcountUtils.instance(this);
+        byte[] seed = CreateAcountUtils.createRandomSeed();
+        Log.i("StartActivity","seed:" + Utils.bytesToHexString(seed));
+        EncryptedData ed = new EncryptedData(seed,"abcd",false);
+        Log.i("StartActivity","seed:" + Utils.bytesToHexString(seed));
+        String encrypte = ed.toEncryptedString();
+        Log.i("StartActivity","Encrypted seed:" + encrypte);
+        Log.i("StartActivity","decrypt seed:" + Utils.bytesToHexString(new EncryptedData(encrypte).decrypt("abcd")));*/
+
+
         boolean isLogin = PreferencesUtils.getBoolean(this, "islogin", false, PreferencesUtils.USER);
-        if (true) {
+        if (!isLogin) {
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -102,4 +114,25 @@ public class StartActivity extends AppCompatActivity {
         );
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mImmersionBar != null) {
+            mImmersionBar.destroy();
+        }
+    }
+
+    private ImmersionBar mImmersionBar = null;
+
+    public void setTransparentStatusBar() {
+        if (mImmersionBar == null) {
+            mImmersionBar = ImmersionBar.with(this);
+        }
+        mImmersionBar.fitsSystemWindows(false)
+                .keyboardEnable(true)
+                .init();
+    }
+
+
 }
