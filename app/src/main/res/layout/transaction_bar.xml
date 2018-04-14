@@ -13,6 +13,7 @@
         <RelativeLayout
             android:id="@+id/rel_back"
             android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
             android:layout_height="@dimen/item_lin_height"
             android:orientation="vertical">
 

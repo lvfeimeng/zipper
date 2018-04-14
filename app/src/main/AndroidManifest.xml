@@ -61,6 +61,7 @@
         <activity android:name=".activity.TransactionDefailsActivity" />
         <activity android:name=".activity.WalletInfoActivity" />
         <activity android:name=".activity.UpdatePasActivity" />
+        <activity android:name=".activity.ExportWalletActivity" />
 
     </application>
 
