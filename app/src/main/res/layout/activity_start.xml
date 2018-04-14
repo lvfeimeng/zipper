@@ -19,29 +19,19 @@
         android:orientation="vertical">
         <ImageView
             android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="20dp"
-            android:background="@color/bg_dialog"/>
-        <ImageView
-            android:layout_width="200dp"
             android:layout_height="70dp"
             android:layout_marginBottom="30dp"
             android:background="@color/bg_dialog"/>
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:textColor="@color/white"
-            android:layout_marginBottom="10dp"
-            android:text="Zipper Wallet"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:gravity="center"
             android:textColor="@color/white"
             android:layout_marginBottom="30dp"
-            android:text="一个牛逼的数字钱包"/>
+            android:text="For my zipper is the Force, and
+a powerful ally it is. Life creates it, makes it grow. It’s energy surrounds us and binds us."/>
 
 
         <Button
