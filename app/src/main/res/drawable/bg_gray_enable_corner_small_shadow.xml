@@ -12,7 +12,7 @@
 
             <gradient
                 android:angle="270"
-                android:endColor="@color/text_minor"
+                android:endColor="@color/btn_disable"
                 android:startColor="@color/line_input" />
 
             <corners
