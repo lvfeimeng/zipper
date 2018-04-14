@@ -141,8 +141,6 @@ public class MnemonicWordFragment extends BaseFragment {
 
             generateWalletAddress(words);
 
-//            String address= AddrUtils.mnemonicWordToAddress(words);
-//            Log.d(TAG, "address: " + address);
             startActivity(new Intent(getActivity(), MyWalletActivity.class));
             getActivity().finish();
         } catch (Exception e) {

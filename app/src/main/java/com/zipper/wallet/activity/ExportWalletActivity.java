@@ -10,8 +10,6 @@ import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.definecontrol.WrapContentHeightViewPager;
 import com.zipper.wallet.fragment.ExportWalletFragment;
-import com.zipper.wallet.fragment.MnemonicWordFragment;
-import com.zipper.wallet.fragment.PrivateKeyFragment;
 import com.zipper.wallet.utils.MyPagerAdapter;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -36,11 +34,19 @@ public class ExportWalletActivity extends BaseActivity {
     private String[] tabs;
 
     private List<Fragment> list;
+    private String mnemonicWord = "",
+            cleartext = "",
+            ciphertext = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_export_wallet);
+        if (getIntent()!=null) {
+            mnemonicWord=getIntent().getStringExtra("mnemonicWord");
+            cleartext=getIntent().getStringExtra("cleartext");
+            ciphertext=getIntent().getStringExtra("ciphertext");
+        }
         initView();
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> finish());
@@ -63,15 +69,15 @@ public class ExportWalletActivity extends BaseActivity {
     private void initViewPager() {
         list = new ArrayList<>();
         //0-备份助记词,1-导出明文私钥，20-导出加密私钥
-        list.add(ExportWalletFragment.newInstance(0));
-        list.add(ExportWalletFragment.newInstance(1));
-        list.add(ExportWalletFragment.newInstance(2));
+        list.add(ExportWalletFragment.newInstance(0,mnemonicWord));
+        list.add(ExportWalletFragment.newInstance(1,cleartext));
+        list.add(ExportWalletFragment.newInstance(2,ciphertext));
         viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), list));
         viewPager.setOffscreenPageLimit(3);
     }
 
     private void initMagicIndicator() {
-        tabs = new String[]{"导出助记词", "导出明文私钥","导出加密私钥"};
+        tabs = new String[]{"导出助记词", "导出明文私钥", "导出加密私钥"};
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
 

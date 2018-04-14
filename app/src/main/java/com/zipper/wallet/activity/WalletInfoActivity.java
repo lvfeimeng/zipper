@@ -4,13 +4,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.dialog.DeleteWalletDialog;
+import com.zipper.wallet.utils.CreateAcountUtils;
+import com.zipper.wallet.utils.RuntHTTPApi;
+import com.zipper.wallet.utils.SqliteUtils;
+
+import net.bither.bitherj.crypto.EncryptedData;
+import net.bither.bitherj.crypto.mnemonic.MnemonicException;
+import net.bither.bitherj.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class WalletInfoActivity extends BaseActivity {
 
@@ -26,11 +39,31 @@ public class WalletInfoActivity extends BaseActivity {
 
     private DeleteWalletDialog dialog;
 
+    private WalletInfo walletInfo = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_wallet_info);
         initView();
+        initData();
+    }
+
+    private void initData() {
+        try {
+            List<WalletInfo> list = new ArrayList<>();
+            SqliteUtils.openDataBase(WalletInfoActivity.this);
+            List<Map> maps = SqliteUtils.selecte("walletinfo");
+            for (Map map : maps) {
+                list.add(new WalletInfo(map));
+            }
+            walletInfo = list.get(0);
+            if (walletInfo != null) {
+                editWalletName.setText(walletInfo.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initView() {
@@ -52,7 +85,8 @@ public class WalletInfoActivity extends BaseActivity {
             startActivity(new Intent(this, UpdatePasActivity.class));
         });
         textExportWallet.setOnClickListener(v -> {
-            startActivity(new Intent(this, ExportWalletActivity.class));
+            inputPwd();
+//            startActivity(new Intent(this, ExportWalletActivity.class));
         });
         textDeleteWallet.setOnClickListener(v -> deleteWallet());
     }
@@ -82,4 +116,67 @@ public class WalletInfoActivity extends BaseActivity {
             editWalletName.setCursorVisible(true);
         }
     }
+
+    private void inputPwd() {
+        showInputDialog("请输入密码", "", "", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
+
+            @Override
+            public void doSuccessThing(final Map<String, Object> param) {
+                showProgressDialog("正在导出。。。");
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            String pwd = param.get(INPUT_TEXT).toString().trim();
+                            byte[] bytes = new EncryptedData(walletInfo.getEsda_seed()).decrypt(pwd);
+                            if (bytes == null) {
+                                return;
+                            }
+                            String cleartext = Utils.bytesToHexString(bytes);
+                            String ciphertext = new EncryptedData(bytes, pwd).toEncryptedString();
+                            String mnemonicWord = getMnemonicWord(walletInfo, pwd);
+                            runOnUiThread(() ->
+                                    {
+                                        startActivity(new Intent(WalletInfoActivity.this, ExportWalletActivity.class)
+                                                .putExtra("mnemonicWord", mnemonicWord)
+                                                .putExtra("cleartext", cleartext)
+                                                .putExtra("ciphertext", ciphertext));
+                                        hideProgressDialog();
+                                        finish();
+                                    }
+                            );
+                        } catch (Exception e) {
+                            runOnUiThread(() -> {
+                                hideProgressDialog();
+                                toast("密码错误");
+                            });
+                        }
+                    }
+                }.start();
+                alertDialog.dismiss();
+            }
+
+            @Override
+            public void doErrorThing(Map<String, Object> param) {
+
+            }
+        });
+    }
+
+
+    private String getMnemonicWord(WalletInfo walletInfo, String pwd) throws MnemonicException.MnemonicLengthException {
+        CreateAcountUtils.instance(this);
+        byte[] mnem_bytes = new EncryptedData(walletInfo.getMnem_seed()).decrypt(pwd);
+        CreateAcountUtils.instance(this);
+        List<String> words = CreateAcountUtils.getMnemonicCode(mnem_bytes);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < words.size(); i++) {
+            sb.append(words.get(i));
+            if (i < words.size() - 1) {
+                sb.append("   ");
+            }
+        }
+        return sb.toString();
+    }
+
 }

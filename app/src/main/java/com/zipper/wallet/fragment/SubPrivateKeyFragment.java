@@ -1,6 +1,10 @@
 package com.zipper.wallet.fragment;
 
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -17,10 +21,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.activity.MyWalletActivity;
+import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.base.BaseFragment;
-import com.zipper.wallet.utils.AddrUtils;
+import com.zipper.wallet.database.WalletInfo;
+import com.zipper.wallet.utils.CreateAcountUtils;
+import com.zipper.wallet.utils.PreferencesUtils;
+import com.zipper.wallet.utils.SqliteUtils;
 
-import java.security.NoSuchAlgorithmException;
+import net.bither.bitherj.crypto.ECKey;
+import net.bither.bitherj.crypto.EncryptedData;
+import net.bither.bitherj.utils.Utils;
+
+import java.math.BigInteger;
 
 /**
  * 明文私钥、密文私钥共用页面
@@ -43,6 +56,8 @@ public class SubPrivateKeyFragment extends BaseFragment {
 
     private int type = 0;//0---明文，1--密文
 
+    private Context mContext;
+
     public SubPrivateKeyFragment() {
         // Required empty public constructor
     }
@@ -53,6 +68,7 @@ public class SubPrivateKeyFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_sub_private_key, container, false);
         initView(rootView);
+        mContext = getActivity();
         return rootView;
     }
 
@@ -128,13 +144,12 @@ public class SubPrivateKeyFragment extends BaseFragment {
                 return;
             }
 
-            String addresss = "";
             if (type == 0) {//0---明文，1--密文
-                addresss = AddrUtils.cleartextPrivKeyToAddress(key.getBytes());
+                generateWalletAddress(key.getBytes());
             } else {
-                addresss = AddrUtils.ciphertextPrivKeyToAddress(key, keyPassword);
+                byte[] bytes = new EncryptedData(key).decrypt(password);
+                generateWalletAddress(bytes);
             }
-            Log.d(TAG, "address: " + addresss);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,6 +186,45 @@ public class SubPrivateKeyFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    private void generateWalletAddress(byte[] bytes) {
+        try {
+            CreateAcountUtils.instance(mContext);
+
+            BigInteger privKey = new BigInteger(1, bytes);
+            ECKey ecKey = new ECKey(privKey);
+
+            //DeterministicKey master =null;//生成根公私钥对象
+
+            String priKey = Utils.bytesToHexString(ecKey.getPrivKeyBytes());//根私钥
+            //String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
+
+            String firstAddr = ecKey.toAddress();
+            //String firstAddr = CreateAcountUtils.getAddress(CreateAcountUtils.getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()), 60);
+
+            WalletInfo walletInfo = new WalletInfo(mContext);
+            walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME, PreferencesUtils.VISITOR));
+            walletInfo.setTip(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD_TIP, PreferencesUtils.VISITOR));
+
+            walletInfo.setEsda_seed(priKey);
+            //walletInfo.setMnem_seed(Utils.bytesToHexString(MnemonicCode.instance().toEntropy(words)));
+            walletInfo.setAddress(firstAddr);
+            //walletInfo.setId(4);
+            SQLiteDatabase db = SqliteUtils.openDataBase(mContext);
+
+            ContentValues cValue = new ContentValues();
+            for (Object key : walletInfo.toMap().keySet()) {
+                cValue.put(key.toString(), walletInfo.toMap().get(key) + "");
+            }
+
+            db.insert("walletinfo", null, cValue);
+            Log.i(TAG, "钱包数据保存成功");
+            startActivity(new Intent(getActivity(), MyWalletActivity.class));
+            getActivity().finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

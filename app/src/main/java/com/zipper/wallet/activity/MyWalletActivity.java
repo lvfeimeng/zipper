@@ -148,7 +148,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         layoutLanguage = (LinearLayout) headerView.findViewById(R.id.layout_language);
         checkboxGesturePassword = (CheckBox) headerView.findViewById(R.id.checkbox_gesture_password);
         layoutTradingRecord.setOnClickListener(v -> {
-            startActivity(new Intent(this,TransactionActivity.class));
+            startActivity(new Intent(this, TransactionActivity.class));
             drawerLayout.closeDrawer(GravityCompat.START);
         });
         textContacts.setOnClickListener(v -> {
@@ -185,18 +185,15 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 );
 
 
-//            List<WalletInfo> list = new ArrayList<>();
-//           SqliteUtils.openDataBase(mContext);
-//           List<Map> maps = SqliteUtils.selecte("walletinfo");
-//           for(Map map : maps){
-//              list.add(new WalletInfo(map));            }
-//
-//        for(WalletInfo walletInfo : list){
-//               if(walletInfo.getName().equals(PreferencesUtils.getString(mContext,KEY_WALLET_NAME,PreferencesUtils.VISITOR))){
-//
-//               }
-//           }
-
+        List<WalletInfo> list = new ArrayList<>();
+        SqliteUtils.openDataBase(this);
+        List<Map> maps = SqliteUtils.selecte("walletinfo");
+        for (Map map : maps) {
+            list.add(new WalletInfo(map));
+        }
+        WalletInfo walletInfo = list.get(0);
+        //if (walletInfo.getName().equals(PreferencesUtils.getString(this, KEY_WALLET_NAME, PreferencesUtils.VISITOR)))
+        textWalletName.setText(walletInfo.getName());
 
     }
 
