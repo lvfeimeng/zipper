@@ -13,7 +13,7 @@
             <gradient
                 android:angle="270"
                 android:endColor="@color/line_input"
-                android:startColor="@color/bg_dialog" />
+                android:startColor="@color/bg_card" />
 
             <corners
                 android:bottomLeftRadius="@dimen/corner_3"
