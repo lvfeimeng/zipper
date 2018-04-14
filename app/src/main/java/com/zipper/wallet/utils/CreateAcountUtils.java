@@ -8,6 +8,7 @@ import junit.framework.Assert;
 import net.bither.bitherj.core.AbstractHD;
 import net.bither.bitherj.core.HDAccount;
 import net.bither.bitherj.crypto.ECKey;
+import net.bither.bitherj.crypto.EncryptedData;
 import net.bither.bitherj.crypto.EncryptedPrivateKey;
 import net.bither.bitherj.crypto.KeyCrypterScrypt;
 import net.bither.bitherj.crypto.hd.DeterministicKey;
@@ -32,9 +33,8 @@ import java.util.List;
 /**
  * Created by Administrator on 2018/4/10.
  */
-
 public class CreateAcountUtils {
-
+    static final String TAG = "CreateAcountUtils";
     static Context mContext;
     static ArrayList<String> wordList = new ArrayList<String>(2048);
 
@@ -75,6 +75,59 @@ public class CreateAcountUtils {
             ToastUtils.showShort(mContext,"");
             Log.e("CreateAcountUtils", e + "");
         }
+    }
+
+
+
+    public static void createAccountTest(Context context){
+
+        try {
+
+            instance(context);//首先实例化助记词类的单例模式
+
+            byte[] randomSeed = createRandomSeed();//生成128位字节流
+
+
+            List<String> words = getMnemonicCode(randomSeed);//一局随机数获取助记词
+
+            byte[] seed = createMnemSeed(words);//由助记词和密码生成种子,方法内含有转换512哈系数方式
+            Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
+            Log.i(TAG,"seed :"+Utils.bytesToHexString(MnemonicCode.toSeed(words,"")));
+            Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(MnemonicCode.instance().toEntropy(words)));//利用助记词反推出随机数种子
+
+
+            DeterministicKey master = CreateRootKey(seed);//生成根公私钥对象
+            DeterministicKey accountKey = getAccount(master);
+
+
+            String mnemonicSeed = Utils.bytesToHexString(seed);//助记词生成的根种子
+            String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
+            String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
+
+            String firstAddr = getAddress(getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()),60);
+
+            EncryptedData encryptedData = new EncryptedData(seed,"abc",false);
+            String encrypt = encryptedData.toEncryptedString();
+            Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
+            Log.i(TAG,"randomSeed Encrypt:"+encrypt);
+            Log.i(TAG,"randomSeed decrypt:"+Utils.bytesToHexString(new EncryptedData(encrypt).decrypt("abc")));//mnemonic
+            for(String str : words){
+                Log.i(TAG,"words :"+str);
+            }
+            Log.i(TAG,"mnemonicSeed :"+mnemonicSeed);
+            Log.i(TAG,"512PrivateKey:"+priKey);
+            Log.i(TAG,"512publicKey:"+pubkey);
+            Log.i(TAG,"firstAddr:"+firstAddr);
+
+
+            for(String str : MnemonicCode.instance().toMnemonic(MnemonicCode.instance().toEntropy(words))){
+                Log.i(TAG,"words :"+str);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e(TAG,e+"");
+        }
+
     }
 
 
@@ -393,7 +446,7 @@ public class CreateAcountUtils {
 
         AbstractDb.hdAccountAddressProvider = new IHDAccountAddressProvider() {
             @Override
-            public void addAddress(List<HDAccount.HDAccountAddress> hdAccountAddresses) {
+            public void addAddress(List<WalletInfo.HDAccountAddress> hdAccountAddresses) {
 
             }
 
@@ -443,7 +496,7 @@ public class CreateAcountUtils {
             }
 
             @Override
-            public HDAccount.HDAccountAddress addressForPath(int hdAccountId, AbstractHD.PathType type, int index) {
+            public WalletInfo.HDAccountAddress addressForPath(int hdAccountId, AbstractHD.PathType type, int index) {
                 return null;
             }
 
@@ -453,12 +506,12 @@ public class CreateAcountUtils {
             }
 
             @Override
-            public List<HDAccount.HDAccountAddress> belongAccount(int hdAccountId, List<String> addresses) {
+            public List<WalletInfo.HDAccountAddress> belongAccount(int hdAccountId, List<String> addresses) {
                 return null;
             }
 
             @Override
-            public void updateSyncdComplete(int hdAccountId, HDAccount.HDAccountAddress address) {
+            public void updateSyncdComplete(int hdAccountId, WalletInfo.HDAccountAddress address) {
 
             }
 
@@ -478,7 +531,7 @@ public class CreateAcountUtils {
             }
 
             @Override
-            public List<HDAccount.HDAccountAddress> getSigningAddressesForInputs(int hdAccountId, List<In> inList) {
+            public List<WalletInfo.HDAccountAddress> getSigningAddressesForInputs(int hdAccountId, List<In> inList) {
                 return null;
             }
 
@@ -548,8 +601,8 @@ public class CreateAcountUtils {
             }
         };
 
-        HDAccount hdAccount = new HDAccount(seed, new SecureCharSequence(pwd.toCharArray()));
-                            *//*HDAccount hdAccount = new HDAccount(new SecureRandom(), new SecureCharSequence(pwd.toCharArray()), new HDAccount.HDAccountGenerationDelegate() {
+        WalletInfo hdAccount = new WalletInfo(seed, new SecureCharSequence(pwd.toCharArray()));
+                            *//*WalletInfo hdAccount = new WalletInfo(new SecureRandom(), new SecureCharSequence(pwd.toCharArray()), new WalletInfo.HDAccountGenerationDelegate() {
                                 @Override
                                 public void onHDAccountGenerationProgress(double progress) {
                                     Log.i(TAG,"progress :"+progress);
@@ -562,7 +615,7 @@ public class CreateAcountUtils {
                             for (int seedId : seeds) {
                                 Log.i(TAG,"seedId :"+seedId);
                             }
-                            new HDAccount(new EncryptedData(encreyptString)
+                            new WalletInfo(new EncryptedData(encreyptString)
                                     , password, false)*/
     }
 

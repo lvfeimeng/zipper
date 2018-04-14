@@ -45,8 +45,8 @@
 //import java.util.List;
 //import java.util.Set;
 //
-//public class HDAccount extends Address {
-//    public static final String HDAccountPlaceHolder = "HDAccount";
+//public class WalletInfo extends Address {
+//    public static final String HDAccountPlaceHolder = "WalletInfo";
 //    public static final String HDAccountMonitoredPlaceHolder = "HDAccountMonitored";
 //    public static final int MaxUnusedNewAddressCount = 20;
 //
@@ -66,14 +66,14 @@
 //    protected boolean isFromXRandom;
 //    private boolean hasSeed;
 //
-//    private static final Logger log = LoggerFactory.getLogger(HDAccount.class);
+//    private static final Logger log = LoggerFactory.getLogger(WalletInfo.class);
 //
-//    public HDAccount(byte[] mnemonicSeed, CharSequence password) throws MnemonicException
+//    public WalletInfo(byte[] mnemonicSeed, CharSequence password) throws MnemonicException
 //            .MnemonicLengthException {
 //        this(mnemonicSeed, password, true);
 //    }
 //
-//    public HDAccount(byte[] mnemonicSeed, CharSequence password, boolean isSyncedComplete) throws
+//    public WalletInfo(byte[] mnemonicSeed, CharSequence password, boolean isSyncedComplete) throws
 //            MnemonicException
 //            .MnemonicLengthException {
 //        super();
@@ -90,7 +90,7 @@
 //    }
 //
 //    // Create With Random
-//    public HDAccount(SecureRandom random, CharSequence password, HDAccountGenerationDelegate generationDelegate) throws MnemonicException.MnemonicLengthException {
+//    public WalletInfo(SecureRandom random, CharSequence password, HDAccountGenerationDelegate generationDelegate) throws MnemonicException.MnemonicLengthException {
 //        isFromXRandom = random.getClass().getCanonicalName().indexOf("XRandom") >= 0;
 //        mnemonicSeed = new byte[16];
 //        random.nextBytes(mnemonicSeed);
@@ -106,7 +106,7 @@
 //    }
 //
 //    //use in import
-//    public HDAccount(EncryptedData encryptedMnemonicSeed, CharSequence password, boolean
+//    public WalletInfo(EncryptedData encryptedMnemonicSeed, CharSequence password, boolean
 //            isSyncedComplete)
 //            throws MnemonicException.MnemonicLengthException {
 //        mnemonicSeed = encryptedMnemonicSeed.decrypt(password);
@@ -120,18 +120,18 @@
 //                isSyncedComplete, null);
 //    }
 //
-//    public HDAccount(byte[] accountExtentedPub) throws MnemonicException.MnemonicLengthException {
+//    public WalletInfo(byte[] accountExtentedPub) throws MnemonicException.MnemonicLengthException {
 //        this(accountExtentedPub, false);
 //    }
 //
-//    public HDAccount(byte[] accountExtentedPub, boolean isFromXRandom) throws MnemonicException
+//    public WalletInfo(byte[] accountExtentedPub, boolean isFromXRandom) throws MnemonicException
 //            .MnemonicLengthException {
 //        this(accountExtentedPub, isFromXRandom, true, null);
 //    }
 //
 //
-//    public HDAccount(byte[] accountExtentedPub, boolean isFromXRandom, boolean isSyncedComplete,
-//                     HDAccount.HDAccountGenerationDelegate generationDelegate) throws
+//    public WalletInfo(byte[] accountExtentedPub, boolean isFromXRandom, boolean isSyncedComplete,
+//                     WalletInfo.HDAccountGenerationDelegate generationDelegate) throws
 //            MnemonicException.MnemonicLengthException {
 //        super();
 //        this.isFromXRandom = isFromXRandom;
@@ -142,7 +142,7 @@
 //
 //    private void initHDAccount(DeterministicKey accountKey, EncryptedData encryptedMnemonicSeed,
 //                               EncryptedData encryptedHDSeed, boolean isFromXRandom, boolean
-//                                       isSyncedComplete, HDAccount.HDAccountGenerationDelegate
+//                                       isSyncedComplete, WalletInfo.HDAccountGenerationDelegate
 //                                       generationDelegate) {
 //        this.isFromXRandom = isFromXRandom;
 //        double progress = 0;
@@ -180,7 +180,7 @@
 //             i < LOOK_AHEAD_SIZE;
 //             i++) {
 //            byte[] subExternalPub = externalKey.deriveSoftened(i).getPubKey();
-//            HDAccount.HDAccountAddress externalAddress = new HDAccount.HDAccountAddress
+//            WalletInfo.HDAccountAddress externalAddress = new WalletInfo.HDAccountAddress
 //                    (subExternalPub, AbstractHD.PathType.EXTERNAL_ROOT_PATH, i, isSyncedComplete,
 //                            hdSeedId);
 //            externalAddresses.add(externalAddress);
@@ -190,7 +190,7 @@
 //            }
 //
 //            byte[] subInternalPub = internalKey.deriveSoftened(i).getPubKey();
-//            HDAccount.HDAccountAddress internalAddress = new HDAccount.HDAccountAddress
+//            WalletInfo.HDAccountAddress internalAddress = new WalletInfo.HDAccountAddress
 //                    (subInternalPub, AbstractHD.PathType.INTERNAL_ROOT_PATH, i, isSyncedComplete,
 //                            hdSeedId);
 //            internalAddresses.add(internalAddress);
@@ -211,10 +211,10 @@
 //                            .getPubKeyExtended());
 //            hasSeed = true;
 //        }
-//        for (HDAccount.HDAccountAddress addr : externalAddresses) {
+//        for (WalletInfo.HDAccountAddress addr : externalAddresses) {
 //            addr.setHdAccountId(hdSeedId);
 //        }
-//        for (HDAccount.HDAccountAddress addr : internalAddresses) {
+//        for (WalletInfo.HDAccountAddress addr : internalAddresses) {
 //            addr.setHdAccountId(hdSeedId);
 //        }
 //        AbstractDb.hdAccountAddressProvider.addAddress(externalAddresses);
@@ -223,7 +223,7 @@
 //        externalKey.wipe();
 //    }
 //
-//    public HDAccount(int seedId) {
+//    public WalletInfo(int seedId) {
 //        this.hdSeedId = seedId;
 //        this.isFromXRandom = AbstractDb.hdAccountProvider.hdAccountIsXRandom(seedId);
 //        hasSeed = AbstractDb.hdAccountProvider.hasMnemonicSeed(this.hdSeedId);

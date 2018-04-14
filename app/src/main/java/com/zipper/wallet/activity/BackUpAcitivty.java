@@ -1,6 +1,8 @@
 package com.zipper.wallet.activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,24 +13,19 @@ import android.view.View;
 import android.widget.Button;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.base.CreateActvity;
-import com.zipper.wallet.bean.WalletBean;
+import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.utils.CreateAcountUtils;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.RuntListSeria;
+import com.zipper.wallet.utils.SqliteUtils;
 
 import net.bither.bitherj.core.AbstractHD;
 import net.bither.bitherj.crypto.hd.DeterministicKey;
 import net.bither.bitherj.utils.Utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +35,6 @@ import java.util.Map;
 
 public class BackUpAcitivty extends CreateActvity {
 
-    public static ArrayList<String> wordList = new ArrayList<String>(2048);
     Button btnBackup;
 
     final int SAVE_PRIVATE = 100;
@@ -122,29 +118,6 @@ public class BackUpAcitivty extends CreateActvity {
                 });
             }
         });
-        try {
-
-            InputStream stream = mContext.getAssets().open("english.txt");
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
-            this.wordList = new ArrayList<String>(2048);
-            MessageDigest md;
-            try {
-                md = MessageDigest.getInstance("SHA-256");
-            } catch (NoSuchAlgorithmException ex) {
-                throw new RuntimeException(ex);        // Can't happen.
-            }
-            String word;
-            while ((word = br.readLine()) != null) {
-                md.update(word.getBytes());
-                this.wordList.add(word);
-            }
-            br.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
 
@@ -170,22 +143,34 @@ public class BackUpAcitivty extends CreateActvity {
             String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
             String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
 
-            String firstAddr = CreateAcountUtils.getFirstAddress(CreateAcountUtils.getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()));
+            String firstAddr = CreateAcountUtils.getAddress(CreateAcountUtils.getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()),60);
 
-            WalletBean.getWalletBean().setMnemSeed(mnemonicSeed);
-            WalletBean.getWalletBean().setRandomSeed(Utils.bytesToHexString(randomSeed));
-            WalletBean.getWalletBean().setPriKey(priKey);
-            WalletBean.getWalletBean().setPubKey(pubkey);
-
-            Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
+            //Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
             for(String str : words){
-                Log.i(TAG,"words :"+str);
+                //Log.i(TAG,"words :"+str);
             }
-            Log.i(TAG,"mnemonicSeed :"+mnemonicSeed);
-            Log.i(TAG,"512PrivateKey:"+priKey);
-            Log.i(TAG,"512publicKey:"+pubkey);
-            Log.i(TAG,"firstAddr:"+firstAddr);
+            //Log.i(TAG,"mnemonicSeed :"+mnemonicSeed);
+            //Log.i(TAG,"512PrivateKey:"+priKey);
+            ///Log.i(TAG,"512publicKey:"+pubkey);
+            //Log.i(TAG,"firstAddr:"+firstAddr);
 
+            WalletInfo walletInfo = new WalletInfo(mContext);
+            walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME,PreferencesUtils.VISITOR));
+            walletInfo.setTip(PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD_TIP,PreferencesUtils.VISITOR));
+
+            walletInfo.setEsda_seed(priKey);
+            walletInfo.setMnem_seed( Utils.bytesToHexString(randomSeed));
+            walletInfo.setAddress(firstAddr);
+            //walletInfo.setId(4);
+            SQLiteDatabase db = SqliteUtils.openDataBase(mContext);
+
+            ContentValues cValue = new ContentValues();
+            for(Object key : walletInfo.toMap().keySet()){
+                cValue.put(key.toString(), walletInfo.toMap().get(key)+"");
+            }
+
+            db.insert("walletinfo",null,cValue);
+            Log.i(TAG,"钱包数据保存成功");
 
             //Log.i(TAG,"publicKey:"+Utils.bytesToHexString(keys.get(1)));
             //Log.i(TAG,"512publicKey:"+Utils.bytesToHexString(keys512.get(1)));

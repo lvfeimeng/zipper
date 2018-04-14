@@ -6,19 +6,27 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018/4/9.
  */
 
 public class SqliteUtils {
+    public static final String DB = "ZipperOne.db";
      static SQLiteDatabase sqlDB;
 
-    public static void openDataBase(Context context){
-        if(sqlDB == null)
-            sqlDB = context.openOrCreateDatabase("zipper.db",Context.MODE_PRIVATE,null);
+     public static SQLiteDatabase openDataBase(Context context){
+         sqlDB = context.openOrCreateDatabase(DB,Context.MODE_PRIVATE,null);
+         return sqlDB;
+     }
 
+
+    public static void test(){
         String sql = "select * from sqlite_master";
         Cursor cursor = sqlDB.rawQuery(sql, null);
 
@@ -41,13 +49,13 @@ public class SqliteUtils {
     }
 
 
-    public void insert(String table , ContentValues cValue){
+    public static  void insert(String table , ContentValues cValue){
         sqlDB.insert(table,null,cValue);
 
     }
 
 
-    public void delete(String table,String whereClause,String[] whereArgs){
+    public static  void delete(String table,String whereClause,String[] whereArgs){
         //删除条件
         //String whereClause = "id=?";
         //删除条件参数
@@ -56,7 +64,14 @@ public class SqliteUtils {
         sqlDB.delete(table,whereClause,whereArgs);
     }
 
-    public void update(String table ,ContentValues cValue,String whereClause,String[] whereArgs){
+    /**
+     *
+     * @param table
+     * @param cValue
+     * @param whereClause   条件的列名 "id=?"
+     * @param whereArgs 条件各个值，列入Id=1，Id=2
+     */
+    public  static void update(String table ,ContentValues cValue,String whereClause,String[] whereArgs){
         //删除条件
         //String whereClause = "id=?";
         //删除条件参数
@@ -65,9 +80,29 @@ public class SqliteUtils {
         sqlDB.update(table,cValue,whereClause,whereArgs);
     }
 
-    public void update(){}
 
-    public void selecte(){}
+    public static List<Map> selecte(String table){
+        List<Map> list = new ArrayList<>();
+        Cursor cursor = sqlDB.query(table,null,null,null,null,null,null);
+        //判断游标是否为空
+        if(cursor.moveToFirst()) {
+            //遍历游标
+            for(int i=0;i<cursor.getCount();i++){
+                cursor.move(i);
+                Map map = new HashMap();
+                for(int p = 0 ; p < cursor.getColumnCount() ; p ++){
+                    try {
+                        map.put(cursor.getColumnName(p), cursor.getString(p));
+                        Log.i("SqliteUtils", cursor.getColumnName(p) + ":" + cursor.getString(p));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                list.add(map);
+            }
+        }
+        return list;
+    }
 
 
     public void execSql(String sql){

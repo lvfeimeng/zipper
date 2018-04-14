@@ -2,21 +2,29 @@ package com.zipper.wallet.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.CoinInfo;
+import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
+import com.zipper.wallet.utils.SqliteUtils;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018/4/8.
@@ -36,11 +44,12 @@ public class StartActivity extends BaseActivity {
         if (true) {
             btnCreate.setVisibility(View.VISIBLE);
             btnImport.setVisibility(View.VISIBLE);
-            /*SQLiteDatabase sqlDB = mContext.openOrCreateDatabase("zipper.db", Context.MODE_PRIVATE,null);
-            sqlDB.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sign_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42));");
-            //sqlDB.execSQL("drop table coininfo");
-            SqliteUtils.openDataBase(mContext);*/
-            /*RuntHTTPApi.toReApi(RuntHTTPApi.URL_GET_COINS,new HashMap<>(),new RuntHTTPApi.MyStringCallBack(mContext,new RuntHTTPApi.ResPonse() {
+            SQLiteDatabase sqlDB =  SqliteUtils.openDataBase(mContext);
+            sqlDB.execSQL("drop table coininfo");
+            sqlDB.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42));");
+
+            SqliteUtils.openDataBase(mContext);
+            RuntHTTPApi.toReApi(RuntHTTPApi.URL_GET_COINS,new HashMap<>(),new RuntHTTPApi.MyStringCallBack(mContext,new RuntHTTPApi.ResPonse() {
                 @Override
                 public void doSuccessThing(Map<String, Object> param) {
                     SQLiteDatabase db = LitePal.getDatabase();
@@ -61,18 +70,26 @@ public class StartActivity extends BaseActivity {
                 public void doErrorThing(Map<String, Object> param) {
 
                 }
-            }));*/
-            List<CoinInfo> list = DataSupport.findAll(CoinInfo.class);
-            for(CoinInfo coinInfo : list){
-                RuntHTTPApi.printMap(coinInfo.toMap(),"");
+            }));
+
+            /*WalletInfo hd = new WalletInfo(mContext);
+            hd.createTable(mContext);*/
+            SqliteUtils.test();
+
+            List<WalletInfo> list = new ArrayList<>();
+            SqliteUtils.openDataBase(mContext);
+            List<Map> maps = SqliteUtils.selecte("walletinfo");
+            for(Map map : maps){
+                list.add(new WalletInfo(map));
             }
 
-            /*try {
-                CreateAcountUtils.instance(mContext);
-                CreateAcountUtils.createADAccount(CreateAcountUtils.createMnemSeed(CreateAcountUtils.getMnemonicCode(CreateAcountUtils.createRandomSeed())),"3421");
-            } catch (MnemonicException.MnemonicLengthException e) {
-                e.printStackTrace();
-            }*/
+            for(WalletInfo walletInfo : list){
+                if(walletInfo.getName().equals(PreferencesUtils.getString(mContext,KEY_WALLET_NAME,PreferencesUtils.VISITOR))){
+                    Log.i(TAG,String.format("name:%s", walletInfo.getName()));
+                }
+                RuntHTTPApi.printMap(walletInfo.toMap(),"");
+            }
+
 
         } else {
             btnCreate.setVisibility(View.GONE);
@@ -94,7 +111,7 @@ public class StartActivity extends BaseActivity {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(mContext, RiskActivity.class));
+                startActivity(new Intent(mContext, CreatePwdAcitivty.class));
 
             }
         });

@@ -168,6 +168,7 @@
                     android:text="@string/read_agree" />
 
                 <TextView
+                    android:id="@+id/txt_agreement"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"

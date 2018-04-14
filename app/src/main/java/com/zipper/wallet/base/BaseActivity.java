@@ -30,6 +30,7 @@ import com.zipper.wallet.utils.KeyBoardUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.ScreenUtils;
 
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,14 +40,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Dialog alertDialog;
     protected TitleBarView titlebar;
     protected String TAG = "";
-    public final String KEY_MNEN_WORDS = "mnemonicwords",
+    public static  final String KEY_MNEN_WORDS = "mnemonicwords",
             KEY_IS_LOGIN = "islogin",
             KEY_WALLET_NAME = "wallet_name",
             KEY_HAND_PWD = "hand_pwd",
             KEY_WALLET_PWD = "wallet_pwd",
             KEY_WALLET_PWD_TIP = "wallet_pwd_tip",
             INPUT_TEXT = "input_text";
-
+    public static final String PARAMS_TITLE = "title";
+    public static  final String PARAMS_URL = "url";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +68,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         TAG = getLocalClassName();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        HttpURLConnection con = null;
+        try {
+            // some code
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                con.disconnect();
+            }
+        }
     }
 
 
@@ -289,6 +302,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         KeyBoardUtils.closeKeybord(mContext);
+
         if (alertDialog != null) {
 
             alertDialog.dismiss();

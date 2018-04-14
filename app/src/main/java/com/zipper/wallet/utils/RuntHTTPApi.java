@@ -35,11 +35,10 @@ import okhttp3.Call;
 public class RuntHTTPApi {
 
     private static final String TAG = "uploadFile";
-    private static final int TIME_OUT = 10 * 1000; // 超时时间http://120.131.8.14:8088/coin/getcoininfos
-
-	public final static String IP = "120.131.8.14",//http://app.qitong.shop/index.php/
+    private static final int TIME_OUT = 10 * 1000; // 超时时间
+	public final static String IP = "172.16.4.76",//  http://172.16.4.76:8080/coin/getcoininfos
 	// www.soarsan.com
-	PORT = ":8088",
+	PORT = ":8080",
 			CHARSET = "utf-8",
 			PROJECT_URL = "http://" + IP + PORT +"/",
             SERVER_URL = "http://" + IP + PORT+"/",
