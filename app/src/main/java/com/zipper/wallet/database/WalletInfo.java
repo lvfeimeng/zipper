@@ -9,6 +9,7 @@ import com.zipper.wallet.utils.SqliteUtils;
 import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
