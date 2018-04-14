@@ -1,7 +1,10 @@
 package com.zipper.wallet.fragment;
 
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -18,11 +21,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.WebBrowserActivity;
 import com.zipper.wallet.activity.BackUpAcitivty;
 import com.zipper.wallet.activity.MyWalletActivity;
+import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.base.BaseFragment;
+import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.utils.AddrUtils;
+import com.zipper.wallet.utils.CreateAcountUtils;
+import com.zipper.wallet.utils.PreferencesUtils;
+import com.zipper.wallet.utils.SqliteUtils;
 
+import net.bither.bitherj.core.AbstractHD;
 import net.bither.bitherj.crypto.hd.DeterministicKey;
 import net.bither.bitherj.crypto.hd.HDKeyDerivation;
 import net.bither.bitherj.crypto.mnemonic.MnemonicCode;
@@ -43,6 +53,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static com.zipper.wallet.base.BaseActivity.PARAMS_TITLE;
+import static com.zipper.wallet.base.BaseActivity.PARAMS_URL;
+
 /**
  * 助记词.
  */
@@ -60,6 +73,8 @@ public class MnemonicWordFragment extends BaseFragment {
     protected Button btnImport;
     protected TextView textWord;
 
+    private Context mContext;
+
     public MnemonicWordFragment() {
         // Required empty public constructor
     }
@@ -71,6 +86,7 @@ public class MnemonicWordFragment extends BaseFragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_mnemonic_word, container, false);
         initView(rootView);
+        mContext = getActivity();
         return rootView;
     }
 
@@ -87,6 +103,10 @@ public class MnemonicWordFragment extends BaseFragment {
         addTextChangedListener(editPassword);
         addTextChangedListener(editConfirmPassword);
         textAgreement.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), WebBrowserActivity.class);
+            intent.putExtra(PARAMS_TITLE, "服务协议");
+            intent.putExtra(PARAMS_URL, "file:///android_asset/agreement.html");
+            startActivity(intent);
         });
         btnImport.setOnClickListener(v -> submit());
     }
@@ -118,11 +138,59 @@ public class MnemonicWordFragment extends BaseFragment {
 
             List<String> words = new ArrayList<>();
             words.addAll(Arrays.asList(wordStr.split(" ")));
-            String address= AddrUtils.mnemonicWordToAddress(words);
-            Log.d(TAG, "address: " + address);
+
+            generateWalletAddress(words);
+
+//            String address= AddrUtils.mnemonicWordToAddress(words);
+//            Log.d(TAG, "address: " + address);
             startActivity(new Intent(getActivity(), MyWalletActivity.class));
             getActivity().finish();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void generateWalletAddress(List<String> words) {
+        try {
+            CreateAcountUtils.instance(mContext);
+            byte[] seed = CreateAcountUtils.createMnemSeed(words);//由助记词和密码生成种子,方法内含有转换512哈系数方式
+
+            DeterministicKey master = CreateAcountUtils.CreateRootKey(seed);//生成根公私钥对象
+            //DeterministicKey accountKey = CreateAcountUtils.getAccount(master);
+
+            //String mnemonicSeed = Utils.bytesToHexString(seed);//助记词生成的根种子
+            String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
+            //String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
+
+            String firstAddr = CreateAcountUtils.getAddress(CreateAcountUtils.getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()), 60);
+
+            //Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
+            for (String str : words) {
+                //Log.i(TAG,"words :"+str);
+            }
+            //Log.i(TAG,"mnemonicSeed :"+mnemonicSeed);
+            //Log.i(TAG,"512PrivateKey:"+priKey);
+            ///Log.i(TAG,"512publicKey:"+pubkey);
+            //Log.i(TAG,"firstAddr:"+firstAddr);
+
+            WalletInfo walletInfo = new WalletInfo(mContext);
+            walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME, PreferencesUtils.VISITOR));
+            walletInfo.setTip(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD_TIP, PreferencesUtils.VISITOR));
+
+            walletInfo.setEsda_seed(priKey);
+            walletInfo.setMnem_seed(Utils.bytesToHexString(MnemonicCode.instance().toEntropy(words)));
+            walletInfo.setAddress(firstAddr);
+            //walletInfo.setId(4);
+            SQLiteDatabase db = SqliteUtils.openDataBase(mContext);
+
+            ContentValues cValue = new ContentValues();
+            for (Object key : walletInfo.toMap().keySet()) {
+                cValue.put(key.toString(), walletInfo.toMap().get(key) + "");
+            }
+
+            db.insert("walletinfo", null, cValue);
+            Log.i(TAG, "钱包数据保存成功");
+        }  catch (Exception e) {
             e.printStackTrace();
         }
     }

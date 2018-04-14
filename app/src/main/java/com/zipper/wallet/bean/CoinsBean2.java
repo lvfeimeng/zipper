@@ -1,6 +1,8 @@
 package com.zipper.wallet.bean;
 
-public class CoinsBean2 {
+import java.io.Serializable;
+
+public class CoinsBean2 implements Serializable{
 
     private String id;
     private String shortName;

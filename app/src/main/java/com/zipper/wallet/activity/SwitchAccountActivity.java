@@ -29,10 +29,13 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.bean.CoinsBean2;
 import com.zipper.wallet.bean.SwitchAccountBean;
 import com.zipper.wallet.dialog.ConfirmSwitchAccountDialog;
 import com.zipper.wallet.dialog.MinerCostTypeDialog;
 import com.zipper.wallet.utils.ToastUtils;
+
+import java.text.DecimalFormat;
 
 public class SwitchAccountActivity extends BaseActivity {
 
@@ -118,6 +121,23 @@ public class SwitchAccountActivity extends BaseActivity {
         btnNext.setOnClickListener(v -> {
             submit();
         });
+        seekBar.setProgress(0);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textMinerCost.setText(new DecimalFormat("0.00000").format(1.0 * progress / seekBar.getMax()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     //    private String payerAddress, payeeName, payeeAddress, unit, totalAmount, realAmount, minerCost, remark;
@@ -145,7 +165,6 @@ public class SwitchAccountActivity extends BaseActivity {
             remark = "无";
         }
         minerCost = textMinerCost.getText().toString().trim();
-        minerCost = "0.00001";
         if (TextUtils.isEmpty(minerCost)) {
             toast("请选择需要支付的矿工费用");
             return;
@@ -226,6 +245,8 @@ public class SwitchAccountActivity extends BaseActivity {
                 }
                 break;
             case 100://选择币种
+                CoinsBean2 item = (CoinsBean2) data.getSerializableExtra("coin_type");
+                toast("name=" + item.getShortName());
                 break;
             case 200://选择联系人
                 break;

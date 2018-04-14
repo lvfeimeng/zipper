@@ -97,7 +97,7 @@ public class ExportWalletFragment extends BaseFragment {
         }
     }
 
-    private String getMnemonicWord() {
+    private void getMnemonicWord() {
         StringBuilder words = new StringBuilder();
         try {
             CreateAcountUtils.instance(getActivity());//首先实例化助记词类的单例模式
@@ -114,15 +114,16 @@ public class ExportWalletFragment extends BaseFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return words.toString();
+        Message msg = handler.obtainMessage();
+        msg.what = 0;
+        msg.obj = words.toString();
+        handler.sendMessage(msg);
     }
 
-    private String getCiphertextKey() {
-        String key = getCleartextKey();
-        return new EncryptedData(key.getBytes(), "123456").toEncryptedString();
-    }
+    String cleartextKey = "";
+    String ciphertext = "";
 
-    private String getCleartextKey() {
+    private void getCleartextKey() {
         try {
             CreateAcountUtils.instance(getActivity());//首先实例化助记词类的单例模式
 
@@ -138,11 +139,21 @@ public class ExportWalletFragment extends BaseFragment {
             //String mnemonicSeed = Utils.bytesToHexString(seed);//助记词生成的根种子
             String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
             //String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
-            return priKey;
+            cleartextKey = "902E82B8843B9385C7B51C41B7F929E1B44B576A8106EDA98E1A1957E75D150F";
+            ciphertext = new EncryptedData(priKey.getBytes(), "123456", false).toEncryptedString();
+            if (type == 1) {
+                Message msg = handler.obtainMessage();
+                msg.obj = cleartextKey;
+                handler.sendMessage(msg);
+            }
+            if (type == 2) {
+                Message msg = handler.obtainMessage();
+                msg.obj = ciphertext;
+                handler.sendMessage(msg);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
     }
 
     public static void copyToClipboard(Context context, String text) {
@@ -165,22 +176,18 @@ public class ExportWalletFragment extends BaseFragment {
     class InfoThread implements Runnable {
         @Override
         public void run() {
-            Message msg = handler.obtainMessage();
-            msg.what = type;
+
             switch (type) {
                 case 0:
-                    msg.obj = getMnemonicWord();
+                    getMnemonicWord();
                     break;
                 case 1:
-                    msg.obj = getCleartextKey();
-                    break;
                 case 2:
-                    msg.obj = getCiphertextKey();
+                    getCleartextKey();
                     break;
                 default:
                     break;
             }
-            handler.sendMessage(msg);
         }
     }
 

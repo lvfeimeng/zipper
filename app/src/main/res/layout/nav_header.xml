@@ -10,6 +10,16 @@
         android:layout_height="220dp"
         android:background="@drawable/wallet_home_bg">
 
+        <ImageView
+            android:id="@+id/img_setting"
+            android:layout_width="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:padding="10dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/ic_setting"/>
+
         <TextView
             android:id="@+id/text_wallet_address"
             android:layout_width="wrap_content"
@@ -25,7 +35,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/text_name"
+            android:id="@+id/text_wallet_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/text_wallet_address"

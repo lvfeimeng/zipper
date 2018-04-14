@@ -124,6 +124,7 @@
                 android:hint="输入钱包名称"
                 android:maxLines="1"
                 android:focusable="false"
+                android:cursorVisible="false"
                 android:focusableInTouchMode="false"
                 android:text="Zipper One"
                 android:textColor="@color/text_major"

@@ -88,7 +88,7 @@ public class AddPropertyActivity extends BaseActivity {
         recyclerView.setAdapter(adapter);
         headerView.setOnClickListener(v -> {
             isHeaderViewClicked = true;
-            startActivityForResult(new Intent(this, SearchCoinsActivity.class)
+            startActivityForResult(new Intent(this, SearchPropertyActivity.class)
                     .putExtra("isShowCheckBox", true), 100);
         });
         testData();
