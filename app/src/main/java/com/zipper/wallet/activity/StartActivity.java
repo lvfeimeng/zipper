@@ -13,13 +13,14 @@ import android.widget.Button;
 import com.gyf.barlibrary.ImmersionBar;
 import com.zipper.wallet.R;
 import com.zipper.wallet.animations.MyAnimations;
+import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.utils.PreferencesUtils;
 
 /**
  * Created by Administrator on 2018/4/8.
  */
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends BaseActivity {
 
     private Button btnCreate, btnImport,btnHome;
 
@@ -116,22 +117,8 @@ public class StartActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mImmersionBar != null) {
-            mImmersionBar.destroy();
-        }
-    }
-
-    private ImmersionBar mImmersionBar = null;
-
-    public void setTransparentStatusBar() {
-        if (mImmersionBar == null) {
-            mImmersionBar = ImmersionBar.with(this);
-        }
-        mImmersionBar.fitsSystemWindows(false)
-                .keyboardEnable(true)
-                .init();
+    public void statusBarSetting() {
+        setTransparentStatusBar();
     }
 
 

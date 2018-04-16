@@ -18,9 +18,17 @@ public class CoinInfo extends DataSupport {
     private int id;
 
     private int type;
-    private String name,full_name,addr_algorithm,addr_algorithm_param,sign_algorithm,sing_algorithm_param,token_type,token_addr;
+    private String name,full_name,addr_algorithm,addr_algorithm_param,sign_algorithm,sing_algorithm_param,token_type,token_addr,addr;
 
     public CoinInfo() {
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
     }
 
     public CoinInfo(Map map){
@@ -54,6 +62,7 @@ public class CoinInfo extends DataSupport {
         map.put("sing_algorithm_param",getSing_algorithm_param());
         map.put("token_type",getToken_type());
         map.put("token_addr",getToken_addr());
+        map.put("addr",getAddr());
         return map;
     }
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,9 +59,15 @@ public class WalletInfoActivity extends BaseActivity {
                 list.add(new WalletInfo(map));
             }
             walletInfo = list.get(0);
-            if (walletInfo != null) {
-                editWalletName.setText(walletInfo.getName());
+            if (walletInfo == null) {
+                return;
             }
+            if (!TextUtils.isEmpty(walletInfo.getName()) && !"null".equalsIgnoreCase(walletInfo.getName())) {
+                editWalletName.setText(walletInfo.getName());
+            } else {
+                editWalletName.setText("我的钱包");
+            }
+            textAddr.setText("zp"+walletInfo.getAddress());
         } catch (Exception e) {
             e.printStackTrace();
         }

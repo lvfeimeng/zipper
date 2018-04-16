@@ -358,6 +358,40 @@ public class Utils {
         }
     }
 
+    public static byte[] sha256hash1601(byte[] input) {
+        try {
+            byte[] bytes = new byte[input.length-1];
+            for(int i = 1 ; i < input.length ; i ++ ){
+                bytes[i-1] = input[i];
+            }
+
+            byte[] sha256 = MessageDigest.getInstance("SHA-256").digest(bytes);
+            byte[] bytes2 = new byte[20];
+            for(int i = 0 ; i < bytes2.length ; i ++ ){
+                bytes2[i] = sha256[i+sha256.length-20-1];
+            }
+            return bytes2;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);  // Cannot happen.
+        }
+    }
+
+    /**
+     * Calculates RIPEMD160(SHA256(input)). This is used in Address calculations.
+     */
+    public static byte[] sha256hash160T(byte[] input) {
+        try {
+            byte[] sha256 = MessageDigest.getInstance("SHA-256").digest(input);
+            RIPEMD160Digest digest = new RIPEMD160Digest();
+            digest.update(sha256, 1, sha256.length);
+            byte[] out = new byte[20];
+            digest.doFinal(out, 0);
+            return out;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);  // Cannot happen.
+        }
+    }
+
     /**
      * Returns the given value in nanocoins as a 0.12 type string. More digits after the decimal
      * place will be used

@@ -21,7 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.activity.ImportWalletActivity;
 import com.zipper.wallet.activity.MyWalletActivity;
+import com.zipper.wallet.activity.StartActivity;
+import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.base.BaseFragment;
 import com.zipper.wallet.database.WalletInfo;
@@ -34,6 +37,8 @@ import net.bither.bitherj.crypto.EncryptedData;
 import net.bither.bitherj.utils.Utils;
 
 import java.math.BigInteger;
+
+import static com.zipper.wallet.base.BaseActivity.KEY_IS_LOGIN;
 
 /**
  * 明文私钥、密文私钥共用页面
@@ -220,8 +225,11 @@ public class SubPrivateKeyFragment extends BaseFragment {
 
             db.insert("walletinfo", null, cValue);
             Log.i(TAG, "钱包数据保存成功");
+
+            PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
             startActivity(new Intent(getActivity(), MyWalletActivity.class));
             getActivity().finish();
+            ActivityManager.getInstance().finishActivity(StartActivity.class);
         } catch (Exception e) {
             e.printStackTrace();
         }

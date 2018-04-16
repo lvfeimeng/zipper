@@ -303,13 +303,35 @@ public class CreateAcountUtils {
             throw new NullPointerException();
         }
         DeterministicKey purpose = master.deriveHardened(44);
-        DeterministicKey coinType = purpose.deriveHardened(0);
-        DeterministicKey account = coinType.deriveHardened(0);
+        DeterministicKey coinType = purpose.deriveHardened(coin_type);
+        DeterministicKey account = coinType.deriveHardened(1);
+        DeterministicKey account1 = account.deriveHardened(0);
         purpose.wipe();
         coinType.wipe();
-        return account;
+        account.wipe();
+        return account1;
     }
 
+
+    /**
+     *  获取内外部钥对象
+     * @param master
+     * @return
+     */
+    public static String getWalletAddr(DeterministicKey master,int coin_type) {
+        if(!isInstanced()){
+            Log.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+            throw new NullPointerException();
+        }
+        DeterministicKey purpose = master.deriveHardened(44);
+        DeterministicKey coinType = purpose.deriveHardened(coin_type);
+        DeterministicKey account = coinType.deriveHardened(1);
+        DeterministicKey account1 = account.deriveHardened(0);
+        purpose.wipe();
+        coinType.wipe();
+        account.wipe();
+        return account1.toAddress1();
+    }
 
     /**
      * 读取词库

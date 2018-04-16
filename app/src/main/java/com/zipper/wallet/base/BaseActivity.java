@@ -3,12 +3,10 @@ package com.zipper.wallet.base;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -17,22 +15,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.zipper.wallet.R;
 import com.zipper.wallet.definecontrol.TitleBarView;
+import com.zipper.wallet.dialog.InputDialog;
 import com.zipper.wallet.dialog.TipDialog;
-import com.zipper.wallet.listenear.OnClickListenearAndDo;
 import com.zipper.wallet.utils.KeyBoardUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.ScreenUtils;
 
 import java.net.HttpURLConnection;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -53,6 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.ActivityNotTransparent);
         statusBarSetting();
         ActivityManager.getInstance().addActivity(this);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -117,117 +113,80 @@ public abstract class BaseActivity extends AppCompatActivity {
         return super.onTouchEvent(event);
     }
 
-    /**
-     * 提示框
-     *
-     * @param tip 提示信息
-     * @param rp  确定按钮执行的方法
-     */
-    protected void showTipDialog(final String tip, final RuntHTTPApi.ResPonse rp) {
-        new TipDialog(mContext, tip, rp).show();
+    protected void showTipDialog( String tip, RuntHTTPApi.ResPonse rp) {
+        showTipDialog(tip,"OK",rp);
+    }
+    protected void showTipDialog( String tip,String right,  RuntHTTPApi.ResPonse rp) {
+        showTipDialog(tip,null,right,rp);
+    }
+    protected void showTipDialog(String title, String tip,int img,  RuntHTTPApi.ResPonse rp) {
+        showTipDialog(title,tip,"","OK",img,rp);
+    }
+    protected void showTipDialog( String tip,String left,String right,  RuntHTTPApi.ResPonse rp) {
+        showTipDialog(null,tip,left,right, rp);
 
     }
-
-    /**
-     * 提示框
-     *
-     * @param title 标题
-     * @param tip   提示信息
-     * @param rp    确定按钮执行的方法
-     */
-    protected void showTipDialog(final String title, final String tip, final RuntHTTPApi.ResPonse rp) {
-        new TipDialog(mContext, title, tip, rp).show();
-
+    protected void showTipDialog(String title,String tip,String left,String right,  RuntHTTPApi.ResPonse rp) {
+        showTipDialog(null,tip,left,right,0, rp);
+    }
+    protected void showTipDialog(String title,String tip,String left,String right,int img,  RuntHTTPApi.ResPonse rp) {
+        showTipDialog(title,tip,left,right,img, TipDialog.TipType.TIP, rp);
     }
 
-    /**
-     * 提示框
-     *
-     * @param title 标题
-     * @param tip   提示信息
-     * @param rp    确定按钮执行的方法
-     */
-    protected void showTipDialog(final String title, final String tip, final int image, final RuntHTTPApi.ResPonse rp) {
-        new TipDialog(mContext, title, tip, TipDialog.TipType.TIP, image, rp).show();
-
+    protected void showTipDialog( String title,  String tip,String left, String right,  int image, TipDialog.TipType tipType,  RuntHTTPApi.ResPonse rp) {
+        alertDialog = new TipDialog(mContext, title, tip,left,right, image,tipType, rp);
+        alertDialog.show();
     }
 
     /**
      * 显示输入型弹框
      *
-     * @param title     标题
-     * @param hint      默认提示文字
-     * @param text      文本
-     * @param inputType 输入类型
      * @param Rp        按钮执行的方法
      */
-    protected void showInputDialog(String title, String hint, String text, int inputType, final RuntHTTPApi.ResPonse Rp) {
+    protected void showInputDialog( String tip, final RuntHTTPApi.ResPonse Rp) {
+        showInputDialog("",tip, Rp);
+    }
+    protected void showInputDialog(String tip,  int inputType, final RuntHTTPApi.ResPonse Rp) {
+        showInputDialog("",tip,inputType,Rp);
 
-        View dialogView = getLayoutInflater().inflate(R.layout.layout_edittext, null);
-        final EditText et = (EditText) dialogView.findViewById(R.id.edit_input);
-        et.setHint(hint);
-        if (inputType == InputType.TYPE_TEXT_VARIATION_PASSWORD) {
-            et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        }
-        et.setText(text);
-        alertDialog = new AlertDialog.Builder(mContext).setTitle(title)
-                .setView(dialogView)
-                .setCancelable(false)
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        alertDialog.dismiss();
-                        if (Rp != null) {
-                            Rp.doErrorThing(null);
-                        }
-                    }
-                })
-                .setPositiveButton("确定", null).create();
-        alertDialog.show();
-        ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListenearAndDo() {
-            @Override
-            public void doClick(View view) {
-                Map map = new HashMap();
-                map.put(INPUT_TEXT, et.getText());
-                if (Rp != null) {
-                    Rp.doSuccessThing(map);
-                }
-            }
-        });
+    }
+    protected void showInputDialog(String title,String tip,  final RuntHTTPApi.ResPonse Rp) {
+        showInputDialog(title,tip,"",Rp);
+
+    }
+    protected void showInputDialog(String title,String tip, int inputType, final RuntHTTPApi.ResPonse Rp) {
+        showInputDialog(title,tip,"",inputType,Rp);
+
+    }
+    protected void showInputDialog(String title,String tip, String hint,  final RuntHTTPApi.ResPonse Rp) {
+        showInputDialog(title,tip,hint,"",Rp);
+
+    }
+    protected void showInputDialog(String title,String tip, String hint, int inputType,  final RuntHTTPApi.ResPonse Rp) {
+        showInputDialog(title,tip,hint,"",inputType,Rp);
+
+    }
+    protected void showInputDialog(String title,String tip, String hint, String text,  final RuntHTTPApi.ResPonse Rp) {
+        showInputDialog(title,tip,hint,text,"OK",Rp);
+
+    }
+    protected void showInputDialog(String title,String tip, String hint, String text, int inputType, final RuntHTTPApi.ResPonse Rp) {
+        showInputDialog(title,tip,hint,text,"OK",inputType,Rp);
     }
 
 
-    /**
-     * 显示输入型弹框
-     *
-     * @param title 标题
-     * @param tip   文本
-     */
-    protected void showDoubleButtonDialog(String title, String tip, final RuntHTTPApi.ResPonse Rp, String leftBtnName, String rightBtnName) {
-
-        alertDialog = new AlertDialog.Builder(mContext).setTitle(title).setMessage(tip)
-                .setCancelable(false)
-                .setNegativeButton((leftBtnName.equals("") ? getString(R.string.cancel) : leftBtnName), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        alertDialog.dismiss();
-                        ;
-                        if (Rp != null) {
-                            Rp.doErrorThing(null);
-                        }
-                    }
-                })
-                .setPositiveButton(rightBtnName.equals("") ? getString(R.string.ok) : rightBtnName, null).create();
+    protected void showInputDialog(String title,String tip, String hint, String text,String right,  final RuntHTTPApi.ResPonse Rp) {
+        showInputDialog(title,tip,hint,text,"",right,Rp);
+    }
+    protected void showInputDialog(String title,String tip, String hint, String text,String right, int inputType, final RuntHTTPApi.ResPonse Rp) {
+        showInputDialog(title,tip,hint,text,"",right,inputType,Rp);
+    }
+    protected void showInputDialog(String title,String tip, String hint, String text,String left,String right, final RuntHTTPApi.ResPonse Rp) {
+        showInputDialog(title,tip,hint,text,left,right,InputType.TYPE_TEXT_VARIATION_NORMAL,Rp);
+    }
+    protected void showInputDialog(String title,String tip, String hint, String text,String left,String right, int inputType, final RuntHTTPApi.ResPonse Rp) {
+        alertDialog = new InputDialog(mContext,title,tip,hint,text,left,right,inputType,Rp);
         alertDialog.show();
-        ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListenearAndDo() {
-            @Override
-            public void doClick(View view) {
-                Map map = new HashMap();
-                if (Rp != null) {
-                    Rp.doSuccessThing(map);
-                }
-            }
-        });
     }
 
     public static boolean isNull(TextView view) {

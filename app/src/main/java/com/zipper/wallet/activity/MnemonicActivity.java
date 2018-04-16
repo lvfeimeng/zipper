@@ -74,7 +74,7 @@ public class MnemonicActivity extends CreateActvity {
                     @Override
                     public void onClick(View view) {
                         if(check()){
-                            showDoubleButtonDialog("", "助记词验证数序正确，是否移除该助记词？", new RuntHTTPApi.ResPonse() {
+                            showTipDialog("", "助记词验证数序正确，是否移除该助记词？", getString(R.string.not_remove), getString(R.string.remove), new RuntHTTPApi.ResPonse() {
                                 @Override
                                 public void doSuccessThing(Map<String, Object> param) {
                                     PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
@@ -100,7 +100,7 @@ public class MnemonicActivity extends CreateActvity {
                                     finish();
                                     alertDialog.dismiss();
                                 }
-                            }, getString(R.string.not_remove), getString(R.string.remove));
+                            });
                         }else{
                             showTipDialog("备份失败，请检查你的助记词",null);
                         }

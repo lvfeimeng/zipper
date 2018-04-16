@@ -40,6 +40,7 @@ public class SearchPropertyActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.ActivityTransparent);
         setContentView(R.layout.activity_search_property);
         if (getIntent() != null) {
             isShowCheckBox = getIntent().getBooleanExtra("isShowCheckBox", false);
@@ -173,9 +174,11 @@ public class SearchPropertyActivity extends BaseActivity {
     private void setPageBg(int type) {
         if (type == 0) {
             getWindow().setBackgroundDrawableResource(R.color.transparent);
+            //setTheme(R.style.ActivityTransparent);
             frameLayout.setBackgroundColor(0x76000000);
         } else {
             getWindow().setBackgroundDrawableResource(R.color.white);
+            //setTheme(R.style.ActivityNotTransparent);
             frameLayout.setBackgroundColor(0xffffff);
         }
     }
