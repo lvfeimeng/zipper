@@ -349,6 +349,9 @@ public class ECKey implements Serializable {
     public String toAddress() {
         return Utils.toAddress(Utils.sha256hash160(pub));
     }
+    public String toAddress1() {
+        return Utils.toAddress(Utils.sha256hash1601(pub));
+    }
 
     /**
      * Clears all the ECKey private key contents from memory.

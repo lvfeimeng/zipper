@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -23,16 +24,23 @@ import android.widget.Toast;
 import com.zipper.wallet.R;
 import com.zipper.wallet.WebBrowserActivity;
 import com.zipper.wallet.activity.BackUpAcitivty;
+import com.zipper.wallet.activity.ImportWalletActivity;
 import com.zipper.wallet.activity.MyWalletActivity;
+import com.zipper.wallet.activity.StartActivity;
+import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.base.BaseFragment;
+import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.utils.AddrUtils;
 import com.zipper.wallet.utils.CreateAcountUtils;
 import com.zipper.wallet.utils.PreferencesUtils;
+import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.SqliteUtils;
+import com.zipper.wallet.utils.ToastUtils;
 
 import net.bither.bitherj.core.AbstractHD;
+import net.bither.bitherj.crypto.EncryptedData;
 import net.bither.bitherj.crypto.hd.DeterministicKey;
 import net.bither.bitherj.crypto.hd.HDKeyDerivation;
 import net.bither.bitherj.crypto.mnemonic.MnemonicCode;
@@ -40,6 +48,9 @@ import net.bither.bitherj.crypto.mnemonic.MnemonicException;
 import net.bither.bitherj.utils.Base58;
 import net.bither.bitherj.utils.Sha256Hash;
 import net.bither.bitherj.utils.Utils;
+
+import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -51,8 +62,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.zipper.wallet.base.BaseActivity.KEY_IS_LOGIN;
 import static com.zipper.wallet.base.BaseActivity.PARAMS_TITLE;
 import static com.zipper.wallet.base.BaseActivity.PARAMS_URL;
 
@@ -117,80 +131,113 @@ public class MnemonicWordFragment extends BaseFragment {
     private String passwordHint = "";
 
     private void submit() {
-        try {
-            wordStr = editWord.getText().toString().trim();
-            password = editPassword.getText().toString().trim();
-            passwordConfirm = editConfirmPassword.getText().toString().trim();
-            passwordHint = editPasswordHint.getText().toString().trim();
-            if (!checkBox.isChecked()) {
-                Toast.makeText(getActivity(), "请同意服务及隐私条款", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (TextUtils.isEmpty(wordStr) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passwordConfirm)) {
-                Toast.makeText(getActivity(), "助记词及密码不能为空", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (!password.equals(passwordConfirm)) {
-                Toast.makeText(getActivity(), "两次密码不一致", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            List<String> words = new ArrayList<>();
-            words.addAll(Arrays.asList(wordStr.split(" ")));
-
-            generateWalletAddress(words);
-
-            startActivity(new Intent(getActivity(), MyWalletActivity.class));
-            getActivity().finish();
-        } catch (Exception e) {
-            e.printStackTrace();
+        wordStr = editWord.getText().toString().trim();
+        password = editPassword.getText().toString().trim();
+        passwordConfirm = editConfirmPassword.getText().toString().trim();
+        passwordHint = editPasswordHint.getText().toString().trim();
+        if (!checkBox.isChecked()) {
+            Toast.makeText(getActivity(), "请同意服务及隐私条款", Toast.LENGTH_SHORT).show();
+            return;
         }
+        if (TextUtils.isEmpty(wordStr) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passwordConfirm)) {
+            Toast.makeText(getActivity(), "助记词及密码不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!password.equals(passwordConfirm)) {
+            Toast.makeText(getActivity(), "两次密码不一致", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        List<String> words = new ArrayList<>();
+        words.addAll(Arrays.asList(wordStr.split(" ")));
+
+//        if (words.size()!=12) {
+//            toast("请输入12个助记单词");
+//            return;
+//        }
+        generateWalletAddress(words);
+
     }
 
     private void generateWalletAddress(List<String> words) {
-        try {
-            CreateAcountUtils.instance(mContext);
-            byte[] seed = CreateAcountUtils.createMnemSeed(words);//由助记词和密码生成种子,方法内含有转换512哈系数方式
+        CreateAcountUtils.instance(mContext);
+        byte[] seed = CreateAcountUtils.createMnemSeed(words);//由助记词和密码生成种子,方法内含有转换512哈系数方式
+        DeterministicKey master = CreateAcountUtils.CreateRootKey(seed);//生成根公私钥对象
+        String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
 
-            DeterministicKey master = CreateAcountUtils.CreateRootKey(seed);//生成根公私钥对象
-            //DeterministicKey accountKey = CreateAcountUtils.getAccount(master);
+        RuntHTTPApi.toReApi(RuntHTTPApi.URL_GET_COINS, new HashMap<>(), new RuntHTTPApi.MyStringCallBack(mContext, new RuntHTTPApi.ResPonse() {
+            @Override
+            public void doSuccessThing(Map<String, Object> param) {
+                //SQLiteDatabase db = LitePal.getDatabase();
+                RuntHTTPApi.printMap(param, "");
+                if (param.get("data") instanceof Collection) {
+                    for (Map map : (List<Map>) param.get("data")) {
+                        CoinInfo coinInfo = new CoinInfo(map);
+                        Log.i(TAG, coinInfo.getName() + "信息正在保存");
+                        if (coinInfo.getName().equals("BTC")) {
+                            String addr = CreateAcountUtils.getAccount(master, coinInfo.getType()).toAddress();
+                            Log.i(TAG, "addr:" + addr);
+                            coinInfo.setAddr(addr);
+                        } else {
+                            String addr = CreateAcountUtils.getAccount(master, coinInfo.getType()).toAddress();
+                            Log.i(TAG, "addr:" + addr);
+                            coinInfo.setAddr(addr);
 
-            //String mnemonicSeed = Utils.bytesToHexString(seed);//助记词生成的根种子
-            String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
-            //String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
+                            try {
+                                String firstAddr = CreateAcountUtils.getWalletAddr(master, coinInfo.getType());
 
-            String firstAddr = CreateAcountUtils.getAddress(CreateAcountUtils.getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()), 60);
+                                String mnem_seed = Utils.bytesToHexString(MnemonicCode.instance().toEntropy(words));
+                                if (TextUtils.isEmpty(mnem_seed)) {
+                                    return;
+                                }
+                                WalletInfo walletInfo = new WalletInfo(mContext);
+                                walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME, PreferencesUtils.VISITOR));
+                                walletInfo.setTip(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD_TIP, PreferencesUtils.VISITOR));
 
-            //Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
-            for (String str : words) {
-                //Log.i(TAG,"words :"+str);
+                                walletInfo.setEsda_seed(priKey);
+                                walletInfo.setMnem_seed(mnem_seed);
+
+                                walletInfo.setAddress(firstAddr);
+                                //walletInfo.setId(4);
+                                SQLiteDatabase db = SqliteUtils.openDataBase(mContext);
+
+                                ContentValues cValue = new ContentValues();
+                                for (Object key : walletInfo.toMap().keySet()) {
+                                    cValue.put(key.toString(), walletInfo.toMap().get(key) + "");
+                                }
+
+                                db.insert("walletinfo", null, cValue);
+                                Log.i(TAG, "钱包数据保存成功");
+
+                                PreferencesUtils.putBoolean(mContext, KEY_IS_LOGIN, true, PreferencesUtils.USER);
+                                startActivity(new Intent(getActivity(), MyWalletActivity.class));
+                                getActivity().finish();
+                                ActivityManager.getInstance().finishActivity(StartActivity.class);
+                            } catch (MnemonicException.MnemonicChecksumException e) {
+                                toast("助记词有误，请重新输入");
+                                e.printStackTrace();
+                            } catch (MnemonicException.MnemonicLengthException e) {
+                                toast("助记词有误，请重新输入");
+                                e.printStackTrace();
+                            } catch (MnemonicException.MnemonicWordException e) {
+                                toast("助记词有误，请重新输入");
+                                e.printStackTrace();
+                            }
+                        }
+                        coinInfo.save();
+                        Log.i(TAG, "信息保存成功");
+
+                    }
+                }
             }
-            //Log.i(TAG,"mnemonicSeed :"+mnemonicSeed);
-            //Log.i(TAG,"512PrivateKey:"+priKey);
-            ///Log.i(TAG,"512publicKey:"+pubkey);
-            //Log.i(TAG,"firstAddr:"+firstAddr);
 
-            WalletInfo walletInfo = new WalletInfo(mContext);
-            walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME, PreferencesUtils.VISITOR));
-            walletInfo.setTip(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD_TIP, PreferencesUtils.VISITOR));
+            @Override
+            public void doErrorThing(Map<String, Object> param) {
 
-            walletInfo.setEsda_seed(priKey);
-            walletInfo.setMnem_seed(Utils.bytesToHexString(MnemonicCode.instance().toEntropy(words)));
-            walletInfo.setAddress(firstAddr);
-            //walletInfo.setId(4);
-            SQLiteDatabase db = SqliteUtils.openDataBase(mContext);
-
-            ContentValues cValue = new ContentValues();
-            for (Object key : walletInfo.toMap().keySet()) {
-                cValue.put(key.toString(), walletInfo.toMap().get(key) + "");
             }
+        }));
 
-            db.insert("walletinfo", null, cValue);
-            Log.i(TAG, "钱包数据保存成功");
-        }  catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void addTextChangedListener(EditText editText) {

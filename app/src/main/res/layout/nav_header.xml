@@ -30,7 +30,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:maxLines="1"
-            android:text="1234567890"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="14sp" />
 

@@ -1,6 +1,7 @@
 package com.zipper.wallet.activity;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.base.CreateActvity;
+import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.utils.CreateAcountUtils;
 import com.zipper.wallet.utils.PreferencesUtils;
@@ -27,6 +29,11 @@ import net.bither.bitherj.crypto.EncryptedData;
 import net.bither.bitherj.crypto.hd.DeterministicKey;
 import net.bither.bitherj.utils.Utils;
 
+import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
+
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -137,54 +144,89 @@ public class BackUpAcitivty extends CreateActvity {
 
 
             DeterministicKey master = CreateAcountUtils.CreateRootKey(seed);//生成根公私钥对象
-            DeterministicKey accountKey = CreateAcountUtils.getAccount(master);
+            //DeterministicKey accountKey = CreateAcountUtils.getAccount(master);
 
 
             String mnemonicSeed = Utils.bytesToHexString(seed);//助记词生成的根种子
             String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
             String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
 
-            String firstAddr = CreateAcountUtils.getAddress(CreateAcountUtils.getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()),60);
 
-            //Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
-            for(String str : words){
-                //Log.i(TAG,"words :"+str);
-            }
-            //Log.i(TAG,"mnemonicSeed :"+mnemonicSeed);
-            //Log.i(TAG,"512PrivateKey:"+priKey);
-            ///Log.i(TAG,"512publicKey:"+pubkey);
-            //Log.i(TAG,"firstAddr:"+firstAddr);
+            SQLiteDatabase sqlDB = mContext.openOrCreateDatabase("zipper.db", Context.MODE_PRIVATE,null);
+            sqlDB.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sign_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42),addr VARCHAR(42));");
+            //sqlDB.execSQL("drop table coininfo");
+            SqliteUtils.openDataBase(mContext);
+            RuntHTTPApi.toReApi(RuntHTTPApi.URL_GET_COINS,new HashMap<>(),new RuntHTTPApi.MyStringCallBack(mContext,new RuntHTTPApi.ResPonse() {
+                @Override
+                public void doSuccessThing(Map<String, Object> param) {
+                    SQLiteDatabase db = LitePal.getDatabase();
+                    RuntHTTPApi.printMap(param,"");
+                    Log.i("StartActivity",(param.get("data") instanceof Collection)+"");
+                    if(param.get("data") instanceof Collection){
+                        for(Map map :(List<Map>)param.get("data") ){
+                            CoinInfo coinInfo = new CoinInfo(map);
+                            Log.i(TAG,coinInfo.getName()+"信息正在保存");
+                            if(coinInfo.getName().equals("BTC")){
+                               String addr =  CreateAcountUtils.getAccount(master,coinInfo.getType()).toAddress();
+                                Log.i(TAG,"addr:"+addr);
+                                coinInfo.setAddr(addr);
+                            }else{
+                                String addr =  CreateAcountUtils.getWalletAddr(master,coinInfo.getType());
+                                Log.i(TAG,"addr:"+addr);
+                                coinInfo.setAddr(addr);
+                            }
+                            coinInfo.save();
+                            Log.i(TAG,"信息保存成功");
 
-            WalletInfo walletInfo = new WalletInfo(mContext);
-            walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME,PreferencesUtils.VISITOR));
-            walletInfo.setTip(PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD_TIP,PreferencesUtils.VISITOR));
+                        }
+                        List<CoinInfo> coins = DataSupport.findAll(CoinInfo.class);
 
-            walletInfo.setEsda_seed(new EncryptedData(Utils.hexStringToByteArray(priKey),
-                    PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD,PreferencesUtils.VISITOR),
-                    false)
-                    .toEncryptedString());
-            walletInfo.setMnem_seed( new EncryptedData(Utils.hexStringToByteArray(Utils.bytesToHexString(randomSeed)),
-                    PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD,PreferencesUtils.VISITOR),
-                    false)
-                    .toEncryptedString());
-            walletInfo.setAddress(firstAddr);
-            //walletInfo.setId(4);
-            SQLiteDatabase db = SqliteUtils.openDataBase(mContext);
+                        String firstAddr = CreateAcountUtils.getAddress(CreateAcountUtils.getAccount(master,60).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()),coins.get(0).getId());
 
-            ContentValues cValue = new ContentValues();
-            for(Object key : walletInfo.toMap().keySet()){
-                cValue.put(key.toString(), walletInfo.toMap().get(key)+"");
-            }
+                        //Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
+                        for(String str : words){
+                            //Log.i(TAG,"words :"+str);
+                        }
+                        //Log.i(TAG,"mnemonicSeed :"+mnemonicSeed);
+                        //Log.i(TAG,"512PrivateKey:"+priKey);
+                        ///Log.i(TAG,"512publicKey:"+pubkey);
+                        //Log.i(TAG,"firstAddr:"+firstAddr);
+                        WalletInfo walletInfo = new WalletInfo(mContext);
+                        walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME,PreferencesUtils.VISITOR));
+                        walletInfo.setTip(PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD_TIP,PreferencesUtils.VISITOR));
+                        walletInfo.setEsda_seed(new EncryptedData(Utils.hexStringToByteArray(priKey),
+                                PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD,PreferencesUtils.VISITOR),
+                                false)
+                                .toEncryptedString());
+                        walletInfo.setMnem_seed( new EncryptedData(Utils.hexStringToByteArray(Utils.bytesToHexString(randomSeed)),
+                                PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD,PreferencesUtils.VISITOR),
+                                false)
+                                .toEncryptedString());
+                        walletInfo.setAddress(firstAddr);
+                        //walletInfo.setId(4);
 
-            db.insert("walletinfo",null,cValue);
-            Log.i(TAG,"钱包数据保存成功");
+                        ContentValues cValue = new ContentValues();
+                        for(Object key : walletInfo.toMap().keySet()){
+                            cValue.put(key.toString(), walletInfo.toMap().get(key)+"");
+                        }
 
-            //Log.i(TAG,"publicKey:"+Utils.bytesToHexString(keys.get(1)));
-            //Log.i(TAG,"512publicKey:"+Utils.bytesToHexString(keys512.get(1)));
-            Message msg = new Message();
-            msg.what = TRANSMIT_WORDS;
-            msg.obj = words;
-            mHandler.sendMessage(msg);
+                        db.insert("walletinfo",null,cValue);
+                        Log.i(TAG,"钱包数据保存成功");
+
+                        //Log.i(TAG,"publicKey:"+Utils.bytesToHexString(keys.get(1)));
+                        //Log.i(TAG,"512publicKey:"+Utils.bytesToHexString(keys512.get(1)));
+                        Message msg = new Message();
+                        msg.what = TRANSMIT_WORDS;
+                        msg.obj = words;
+                        mHandler.sendMessage(msg);
+                    }
+                }
+
+                @Override
+                public void doErrorThing(Map<String, Object> param) {
+
+                }
+            }));
         }catch (Exception e){
             e.printStackTrace();
             Log.e(TAG,e+"");

@@ -97,14 +97,14 @@ public class CreateAcountUtils {
 
 
             DeterministicKey master = CreateRootKey(seed);//生成根公私钥对象
-            DeterministicKey accountKey = getAccount(master);
+            //DeterministicKey accountKey = getAccount(master);
 
 
             String mnemonicSeed = Utils.bytesToHexString(seed);//助记词生成的根种子
             String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
             String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
 
-            String firstAddr = getAddress(getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()),60);
+            //String firstAddr = getAddress(getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()),60);
 
             EncryptedData encryptedData = new EncryptedData(seed,"abc",false);
             String encrypt = encryptedData.toEncryptedString();
@@ -117,7 +117,7 @@ public class CreateAcountUtils {
             Log.i(TAG,"mnemonicSeed :"+mnemonicSeed);
             Log.i(TAG,"512PrivateKey:"+priKey);
             Log.i(TAG,"512publicKey:"+pubkey);
-            Log.i(TAG,"firstAddr:"+firstAddr);
+            //Log.i(TAG,"firstAddr:"+firstAddr);
 
 
             for(String str : MnemonicCode.instance().toMnemonic(MnemonicCode.instance().toEntropy(words))){
@@ -297,19 +297,41 @@ public class CreateAcountUtils {
      * @param master
      * @return
      */
-    public static DeterministicKey getAccount(DeterministicKey master) {
+    public static DeterministicKey getAccount(DeterministicKey master,int coin_type) {
         if(!isInstanced()){
             Log.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }
         DeterministicKey purpose = master.deriveHardened(44);
-        DeterministicKey coinType = purpose.deriveHardened(0);
-        DeterministicKey account = coinType.deriveHardened(0);
+        DeterministicKey coinType = purpose.deriveHardened(coin_type);
+        DeterministicKey account = coinType.deriveHardened(1);
+        DeterministicKey account1 = account.deriveHardened(0);
         purpose.wipe();
         coinType.wipe();
-        return account;
+        account.wipe();
+        return account1;
     }
 
+
+    /**
+     *  获取内外部钥对象
+     * @param master
+     * @return
+     */
+    public static String getWalletAddr(DeterministicKey master,int coin_type) {
+        if(!isInstanced()){
+            Log.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+            throw new NullPointerException();
+        }
+        DeterministicKey purpose = master.deriveHardened(44);
+        DeterministicKey coinType = purpose.deriveHardened(coin_type);
+        DeterministicKey account = coinType.deriveHardened(1);
+        DeterministicKey account1 = account.deriveHardened(0);
+        purpose.wipe();
+        coinType.wipe();
+        account.wipe();
+        return account1.toAddress1();
+    }
 
     /**
      * 读取词库
