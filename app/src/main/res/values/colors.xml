@@ -12,6 +12,7 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="transparent">#00ffffff</color>
+    <color name="black_alpha30">#76000000</color>
 
     <color name="default_status_bar">#747475</color>
 

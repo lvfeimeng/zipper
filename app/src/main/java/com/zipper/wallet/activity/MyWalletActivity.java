@@ -47,6 +47,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     protected ImageView imgHome;
     protected ImageView imgQrCode;
     protected ImageView imgSwitch;
+    protected TextView textName;
 
     //headerview控件
     protected TextView textWalletAddress;
@@ -86,6 +87,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
+        textName = (TextView) findViewById(R.id.text_name);
         textSwitchAccount = (TextView) findViewById(R.id.text_switch_account);
         textSwitchAccount.setOnClickListener(MyWalletActivity.this);
         textCollectBill = (TextView) findViewById(R.id.text_collect_bill);
@@ -193,8 +195,20 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         }
         WalletInfo walletInfo = list.get(0);
         //if (walletInfo.getName().equals(PreferencesUtils.getString(this, KEY_WALLET_NAME, PreferencesUtils.VISITOR)))
-        textWalletName.setText(walletInfo.getName());
-
+        if (!TextUtils.isEmpty(walletInfo.getName()) && !"null".equalsIgnoreCase(walletInfo.getName())) {
+            textWalletName.setText(walletInfo.getName());
+            textName.setText(walletInfo.getName());
+        } else {
+            textWalletName.setText("我的钱包");
+            textName.setText("我的钱包");
+        }
+        if (!TextUtils.isEmpty(walletInfo.getAddress())) {
+            textWallet.setText("zp"+walletInfo.getAddress());
+            textWalletAddress.setText("zp"+walletInfo.getAddress());
+        } else {
+            textWallet.setText("");
+            textWalletAddress.setText("");
+        }
     }
 
 

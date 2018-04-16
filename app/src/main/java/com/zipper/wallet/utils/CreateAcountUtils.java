@@ -3,8 +3,6 @@ package com.zipper.wallet.utils;
 import android.content.Context;
 import android.util.Log;
 
-import com.zipper.wallet.database.WalletInfo;
-
 import junit.framework.Assert;
 
 import net.bither.bitherj.core.AbstractHD;
@@ -31,7 +29,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2018/4/10.
@@ -306,42 +303,35 @@ public class CreateAcountUtils {
             throw new NullPointerException();
         }
         DeterministicKey purpose = master.deriveHardened(44);
-        DeterministicKey coinType = purpose.deriveHardened(0);
-        DeterministicKey account = coinType.deriveHardened(0);
-
+        DeterministicKey coinType = purpose.deriveHardened(coin_type);
+        DeterministicKey account = coinType.deriveHardened(1);
+        DeterministicKey account1 = account.deriveHardened(0);
         purpose.wipe();
         coinType.wipe();
-        return account;
+        account.wipe();
+        return account1;
     }
+
 
     /**
      *  获取内外部钥对象
      * @param master
      * @return
      */
-    public static DeterministicKey getAccountNext(DeterministicKey master,int id ,Context context) {
+    public static String getWalletAddr(DeterministicKey master,int coin_type) {
         if(!isInstanced()){
             Log.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }
         DeterministicKey purpose = master.deriveHardened(44);
-
-        List<WalletInfo> list = new ArrayList<>();
-        SqliteUtils.openDataBase(context);
-        List<Map> maps = SqliteUtils.selecte("walletinfo");
-        for (Map map : maps) {
-            list.add(new WalletInfo(map));
-        }
-        WalletInfo walletInfo = list.get(0);
-        DeterministicKey coinType = purpose.deriveHardened(walletInfo.getId());
-        DeterministicKey account = coinType.deriveHardened(id);
-        DeterministicKey newCount = account.deriveHardened(1);
+        DeterministicKey coinType = purpose.deriveHardened(coin_type);
+        DeterministicKey account = coinType.deriveHardened(1);
+        DeterministicKey account1 = account.deriveHardened(0);
         purpose.wipe();
         coinType.wipe();
         account.wipe();
-        return newCount;
+        return account1.toAddress1();
     }
-
 
     /**
      * 读取词库

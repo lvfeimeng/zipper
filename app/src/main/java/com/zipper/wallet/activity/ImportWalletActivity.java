@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.ViewGroup;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.definecontrol.WrapContentHeightViewPager;
 import com.zipper.wallet.fragment.MnemonicWordFragment;
