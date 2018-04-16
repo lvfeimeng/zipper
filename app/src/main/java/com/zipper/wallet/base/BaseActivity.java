@@ -47,12 +47,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setTheme(R.style.ActivityNotTransparent);
+        super.onCreate(savedInstanceState);
         statusBarSetting();
         ActivityManager.getInstance().addActivity(this);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = this;
+
         titlebar = (TitleBarView) findViewById(R.id.title_bar);
         if (titlebar != null) {
             titlebar.setLeftOnclickListener(new View.OnClickListener() {
