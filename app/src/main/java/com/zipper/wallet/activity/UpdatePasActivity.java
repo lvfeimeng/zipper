@@ -70,7 +70,7 @@ public class UpdatePasActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.textImmediatelyIn:
-                startActivity(new Intent(mContext, MnemonicActivity.class));
+                startActivity(new Intent(mContext, ImportWalletActivity.class));
                 break;
 
             case R.id.image_display:
