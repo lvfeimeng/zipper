@@ -237,6 +237,7 @@ public class ExportWalletFragment extends BaseFragment {
             case 2:
                 textContent.setText(info);
                 setPriKeyInfo();
+                textPrimaryKeyExplain.setVisibility(View.GONE);
                 break;
             default:
                 break;

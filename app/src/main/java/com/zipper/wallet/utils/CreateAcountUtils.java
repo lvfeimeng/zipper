@@ -79,56 +79,56 @@ public class CreateAcountUtils {
 
 
 
-    public static void createAccountTest(Context context){
-
-        try {
-
-            instance(context);//首先实例化助记词类的单例模式
-
-            byte[] randomSeed = createRandomSeed();//生成128位字节流
-
-
-            List<String> words = getMnemonicCode(randomSeed);//一局随机数获取助记词
-
-            byte[] seed = createMnemSeed(words);//由助记词和密码生成种子,方法内含有转换512哈系数方式
-            Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
-            Log.i(TAG,"seed :"+Utils.bytesToHexString(MnemonicCode.toSeed(words,"")));
-            Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(MnemonicCode.instance().toEntropy(words)));//利用助记词反推出随机数种子
-
-
-            DeterministicKey master = CreateRootKey(seed);//生成根公私钥对象
-            DeterministicKey accountKey = getAccount(master);
-
-
-            String mnemonicSeed = Utils.bytesToHexString(seed);//助记词生成的根种子
-            String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
-            String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
-
-            String firstAddr = getAddress(getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()),60);
-
-            EncryptedData encryptedData = new EncryptedData(seed,"abc",false);
-            String encrypt = encryptedData.toEncryptedString();
-            Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
-            Log.i(TAG,"randomSeed Encrypt:"+encrypt);
-            Log.i(TAG,"randomSeed decrypt:"+Utils.bytesToHexString(new EncryptedData(encrypt).decrypt("abc")));//mnemonic
-            for(String str : words){
-                Log.i(TAG,"words :"+str);
-            }
-            Log.i(TAG,"mnemonicSeed :"+mnemonicSeed);
-            Log.i(TAG,"512PrivateKey:"+priKey);
-            Log.i(TAG,"512publicKey:"+pubkey);
-            Log.i(TAG,"firstAddr:"+firstAddr);
-
-
-            for(String str : MnemonicCode.instance().toMnemonic(MnemonicCode.instance().toEntropy(words))){
-                Log.i(TAG,"words :"+str);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e(TAG,e+"");
-        }
-
-    }
+//    public static void createAccountTest(Context context){
+//
+//        try {
+//
+//            instance(context);//首先实例化助记词类的单例模式
+//
+//            byte[] randomSeed = createRandomSeed();//生成128位字节流
+//
+//
+//            List<String> words = getMnemonicCode(randomSeed);//一局随机数获取助记词
+//
+//            byte[] seed = createMnemSeed(words);//由助记词和密码生成种子,方法内含有转换512哈系数方式
+//            Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
+//            Log.i(TAG,"seed :"+Utils.bytesToHexString(MnemonicCode.toSeed(words,"")));
+//            Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(MnemonicCode.instance().toEntropy(words)));//利用助记词反推出随机数种子
+//
+//
+//            DeterministicKey master = CreateRootKey(seed);//生成根公私钥对象
+//            DeterministicKey accountKey = getAccount(master);
+//
+//
+//            String mnemonicSeed = Utils.bytesToHexString(seed);//助记词生成的根种子
+//            String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
+//            String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
+//
+//            String firstAddr = getAddress(getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()),60);
+//
+//            EncryptedData encryptedData = new EncryptedData(seed,"abc",false);
+//            String encrypt = encryptedData.toEncryptedString();
+//            Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
+//            Log.i(TAG,"randomSeed Encrypt:"+encrypt);
+//            Log.i(TAG,"randomSeed decrypt:"+Utils.bytesToHexString(new EncryptedData(encrypt).decrypt("abc")));//mnemonic
+//            for(String str : words){
+//                Log.i(TAG,"words :"+str);
+//            }
+//            Log.i(TAG,"mnemonicSeed :"+mnemonicSeed);
+//            Log.i(TAG,"512PrivateKey:"+priKey);
+//            Log.i(TAG,"512publicKey:"+pubkey);
+//            Log.i(TAG,"firstAddr:"+firstAddr);
+//
+//
+//            for(String str : MnemonicCode.instance().toMnemonic(MnemonicCode.instance().toEntropy(words))){
+//                Log.i(TAG,"words :"+str);
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            Log.e(TAG,e+"");
+//        }
+//
+//    }
 
 
     /**
@@ -297,7 +297,7 @@ public class CreateAcountUtils {
      * @param master
      * @return
      */
-    public static DeterministicKey getAccount(DeterministicKey master) {
+    public static DeterministicKey getAccount(DeterministicKey master,int coin_type) {
         if(!isInstanced()){
             Log.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
