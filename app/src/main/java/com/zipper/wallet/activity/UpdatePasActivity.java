@@ -1,5 +1,6 @@
 package com.zipper.wallet.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -9,7 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
@@ -70,7 +70,7 @@ public class UpdatePasActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.textImmediatelyIn:
-                Toast.makeText(mContext, "跳转导入界面", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(mContext, MnemonicActivity.class));
                 break;
 
             case R.id.image_display:
