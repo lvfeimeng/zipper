@@ -6,6 +6,7 @@
     <dimen name="corner_5">5dp</dimen>
     <dimen name="corner_3">3dp</dimen>
     <dimen name="item_lin_height">50dp</dimen>
+    <dimen name="item_lin_height_small">40dp</dimen>
     <dimen name="circle_radius_30">15dp</dimen>
     <dimen name="circle_big_radius">100dp</dimen>
     <dimen name="circle_height">30dp</dimen>

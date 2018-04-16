@@ -36,9 +36,9 @@ public class RuntHTTPApi {
 
     private static final String TAG = "uploadFile";
     private static final int TIME_OUT = 10 * 1000; // 超时时间
-	public final static String IP = "172.16.4.76",//  http://172.16.4.76:8080/coin/getcoininfos
+	public final static String IP = "120.92.34.88",//  http://172.16.4.76:8080/coin/getcoininfos
 	// www.soarsan.com
-	PORT = ":8080",
+	PORT = ":8801",
 			CHARSET = "utf-8",
 			PROJECT_URL = "http://" + IP + PORT +"/",
             SERVER_URL = "http://" + IP + PORT+"/",

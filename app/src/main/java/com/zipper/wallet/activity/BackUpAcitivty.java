@@ -92,7 +92,7 @@ public class BackUpAcitivty extends CreateActvity {
         btnBackup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showInputDialog("请输入密码","","", InputType.TYPE_TEXT_VARIATION_PASSWORD,new RuntHTTPApi.ResPonse(){
+                showInputDialog("请输入密码","", InputType.TYPE_TEXT_VARIATION_PASSWORD,new RuntHTTPApi.ResPonse(){
 
                     @Override
                     public void doSuccessThing(final Map<String, Object> param) {

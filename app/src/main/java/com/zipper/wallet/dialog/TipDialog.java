@@ -3,7 +3,6 @@ package com.zipper.wallet.dialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseDialog;
@@ -15,49 +14,63 @@ import com.zipper.wallet.utils.RuntHTTPApi;
  */
 
 public class TipDialog extends BaseDialog {
-    String tip,title;
-    TipType type;
-    private TextView txtTip,txtTitle;
     private ImageView imgView;
-    private RuntHTTPApi.ResPonse rp;
     private int img;
-    public TipDialog(Context context, String title, String tip, TipType type,int img, RuntHTTPApi.ResPonse rp) {
-        super(context,title,rp);
-        this.tip =tip;
+
+    /**
+     *
+     * @param context
+     * @param title
+     * @param tip
+     * @param type
+     * @param left
+     * @param right
+     * @param img
+     * @param rp
+     */
+    public TipDialog(Context context, String title, String tip, String left,String right,int img,TipType type, RuntHTTPApi.ResPonse rp) {
+        super(context,title,tip,left,right,rp);
         this.type = type;
-        this.rp = rp;
-        this.title = title;
         this.img = img;
         setContentViewId(R.layout.dialog_tip);
     }
-    public TipDialog(Context context, String title, String tip, TipType type, RuntHTTPApi.ResPonse rp) {
-        this(context,title,tip,type,0,rp);
+    public TipDialog(Context context, String title, String tip,String left,String right,int img, RuntHTTPApi.ResPonse rp) {
+        this(context,title,tip,left,right,img,TipType.TIP,rp);
+    }
+    public TipDialog(Context context, String title, String tip,String left,String right, TipType type, RuntHTTPApi.ResPonse rp) {
+        this(context,title,tip,left,right,0,type,rp);
+    }
+    public TipDialog(Context context, String title, String tip,String right, TipType type, RuntHTTPApi.ResPonse rp) {
+        this(context,title,tip,null,right,type,rp);
+    }
+    public TipDialog(Context context, String tip,String right, TipType type, RuntHTTPApi.ResPonse rp) {
+        this(context,null,tip,null,right,type,rp);
     }
 
-    public TipDialog(Context context, String title, String tip, RuntHTTPApi.ResPonse rp) {
-        this(context,title,tip,TipType.TIP,rp);
+    public TipDialog(Context context, String title, String tip,String right, RuntHTTPApi.ResPonse rp) {
+        this(context,title,tip,right,TipType.TIP,rp);
     }
 
-    public TipDialog(Context context, String tip, RuntHTTPApi.ResPonse rp) {
-        this(context,"提示",tip,rp);
+
+    public TipDialog(Context context, String tip,String right, RuntHTTPApi.ResPonse rp) {
+        this(context,null,tip,right,rp);
     }
 
-    public TipDialog(Context context, String tip) {
-        this(context,tip,null);
+    public TipDialog(Context context, String tip,String right) {
+        this(context,tip,right,null);
     }
 
     @Override
     public void initComponent() {
-        txtTip = (TextView)findViewById(R.id.txt_tip);
-        txtTitle = (TextView)findViewById(R.id.txt_title);
+        super.initComponent();
         imgView =(ImageView) findViewById(R.id.img);
+
         if(img == 0){
             imgView.setVisibility(View.GONE);
         }else{
             imgView.setVisibility(View.VISIBLE);
             imgView.setImageResource(img);
         }
-        super.initComponent();
         switch (type){
             case TIP:
                 break;
@@ -66,11 +79,6 @@ public class TipDialog extends BaseDialog {
             case ERROR:
                 break;
         }
-        txtTip.setText(tip);
-        txtTitle.setText(title);
-    }
-    public enum TipType {
-        WORNING,TIP,ERROR
     }
 
 
