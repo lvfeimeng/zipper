@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ public class MnemonicActivity extends CreateActvity {
         setContentView(R.layout.activity_mnemonic);
         super.onCreate(savedInstanceState);
         flowLayout = (FlowLayout)findViewById(R.id.flowlayout);
+        setFlowLayoutHeight();
         flowLayoutBottom = (FlowLayout)findViewById(R.id.flowlayout_bottom);
         btnOk = (Button)findViewById(R.id.btn_ok);
         linCopy = (LinearLayout)findViewById(R.id.lin_copy);
@@ -202,6 +205,10 @@ public class MnemonicActivity extends CreateActvity {
                     residueWords.add (((MnemWordsView)flowLayoutBottom.getChildAt(i)).getText());
                 }
                 randomCreateViews(residueWords);
+
+                if(flowLayout.getChildCount() > 0 ){
+                    setFlowLayoutWrapHeight();
+                }
             }
         }
     };
@@ -228,7 +235,9 @@ public class MnemonicActivity extends CreateActvity {
                 ((MnemWordsView)view).setOnClickListener(itemClick);*/
                 btnOk.setEnabled(false);
                 selectWords.remove(((MnemWordsView)view));
-
+                if(flowLayout.getChildCount() ==0 ){
+                    setFlowLayoutHeight();
+                }
             }
         }
     };
@@ -262,6 +271,19 @@ public class MnemonicActivity extends CreateActvity {
                 }
             },50*i);
         }
+    }
+
+
+    private void setFlowLayoutHeight(){
+
+        LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) ((LinearLayout)flowLayout.getParent()).getLayoutParams();
+        linearParams.height=((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, getResources().getDisplayMetrics()));
+        ((LinearLayout)flowLayout.getParent()).setLayoutParams(linearParams);
+    }
+    private void setFlowLayoutWrapHeight(){
+        LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) ((LinearLayout)flowLayout.getParent()).getLayoutParams();
+        linearParams.height= ViewGroup.LayoutParams.WRAP_CONTENT;
+        ((LinearLayout)flowLayout.getParent()).setLayoutParams(linearParams);
     }
 
 }

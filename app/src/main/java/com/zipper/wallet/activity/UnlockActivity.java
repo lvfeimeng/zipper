@@ -1,5 +1,6 @@
 package com.zipper.wallet.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -28,13 +29,12 @@ public class UnlockActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_lock);
         super.onCreate(savedInstanceState);
-
         mUnlockView = (UnlockView) findViewById(R.id.unlock);
         mode = getIntent().getIntExtra("mode", 0);
         txtTitle = (TextView) findViewById(R.id.txt_hand_title);
         txtTip = (TextView) findViewById(R.id.txt_tip);
         txtWarning = (TextView) findViewById(R.id.txt_warning);
-        pwd = PreferencesUtils.getString(mContext,KEY_HAND_PWD,PreferencesUtils.PROJECT);
+        pwd = PreferencesUtils.getString(mContext,KEY_HAND_PWD,PreferencesUtils.USER);
         if(mode ==0 && pwd !=null && !pwd.equals("")){
             mode =1;
         }
@@ -45,6 +45,15 @@ public class UnlockActivity extends BaseActivity {
                 mUnlockView.setMode(UnlockView.CREATE_MODE);
                 break;
             case 1://验证
+                titlebar.setRightText("修改");
+                titlebar.setRightOnclickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(mContext, UnlockActivity.class);
+                        intent.putExtra("mode", 2);
+                        startActivity(intent);
+                    }
+                });
             case 2://修改
             case 3://删除
             default:
@@ -87,7 +96,7 @@ public class UnlockActivity extends BaseActivity {
                 switch (mode) {
                     case 0://创建
                         Toast.makeText(mContext, getString(R.string.set_hand_pwd), Toast.LENGTH_SHORT).show();
-                        PreferencesUtils.putString(mContext,KEY_HAND_PWD,pwd,PreferencesUtils.PROJECT);
+                        PreferencesUtils.putString(mContext,KEY_HAND_PWD,pwd,PreferencesUtils.USER);
                         finish();
                         break;
                     case 1://验证
@@ -103,7 +112,7 @@ public class UnlockActivity extends BaseActivity {
                         break;
                     case 3://删除
                         Toast.makeText(mContext, getString(R.string.success_hand_pwd), Toast.LENGTH_SHORT).show();
-                        PreferencesUtils.removeKey(mContext,KEY_HAND_PWD,PreferencesUtils.PROJECT);
+                        PreferencesUtils.removeKey(mContext,KEY_HAND_PWD,PreferencesUtils.USER);
                         finish();
                         break;
                     default:

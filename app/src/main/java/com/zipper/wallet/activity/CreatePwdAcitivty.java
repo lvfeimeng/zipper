@@ -143,7 +143,7 @@ public class CreatePwdAcitivty extends CreateActvity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if(edPwd.getText().equals("")|| edPwdRe.getText().equals("")){
+            if(edPwd.getText().equals("") || edPwdRe.getText().equals("")){
                 btnCreate.setEnabled(false);
             }else{
                 if(checkBox.isChecked()) {
@@ -172,7 +172,6 @@ public class CreatePwdAcitivty extends CreateActvity {
                 linSign.setVisibility(View.INVISIBLE);
                 txtStrong.setText("");
                 linWarining.setVisibility(View.INVISIBLE);
-                btnCreate.setEnabled(false);
             }else{
                 String pwd = edPwd.getText().toString();
                 boolean flag = false;
@@ -219,6 +218,15 @@ public class CreatePwdAcitivty extends CreateActvity {
                     ((View)txtStrong.getParent()).setVisibility(View.VISIBLE);
                     linWarining.setVisibility(View.VISIBLE);
                     txtStrong.setText("弱");
+                }
+            }
+
+
+            if(edPwd.getText().equals("") || edPwdRe.getText().equals("")){
+                btnCreate.setEnabled(false);
+            }else{
+                if(checkBox.isChecked()) {
+                    btnCreate.setEnabled(true);
                 }
             }
 
