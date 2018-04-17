@@ -6,11 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,45 +20,31 @@ import android.widget.Toast;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.WebBrowserActivity;
-import com.zipper.wallet.activity.BackUpAcitivty;
-import com.zipper.wallet.activity.ImportWalletActivity;
 import com.zipper.wallet.activity.MyWalletActivity;
-import com.zipper.wallet.activity.StartActivity;
-import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.base.BaseFragment;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
-import com.zipper.wallet.utils.AddrUtils;
 import com.zipper.wallet.utils.CreateAcountUtils;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.SqliteUtils;
-import com.zipper.wallet.utils.ToastUtils;
 
-import net.bither.bitherj.core.AbstractHD;
 import net.bither.bitherj.crypto.EncryptedData;
 import net.bither.bitherj.crypto.hd.DeterministicKey;
 import net.bither.bitherj.crypto.hd.HDKeyDerivation;
 import net.bither.bitherj.crypto.mnemonic.MnemonicCode;
 import net.bither.bitherj.crypto.mnemonic.MnemonicException;
-import net.bither.bitherj.utils.Base58;
 import net.bither.bitherj.utils.Sha256Hash;
 import net.bither.bitherj.utils.Utils;
-
-import org.litepal.LitePal;
-import org.litepal.crud.DataSupport;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,7 +145,12 @@ public class MnemonicWordFragment extends BaseFragment {
 
     private void generateWalletAddress(List<String> words) {
         CreateAcountUtils.instance(mContext);
-        byte[] seed = CreateAcountUtils.createMnemSeed(words);//由助记词和密码生成种子,方法内含有转换512哈系数方式
+        byte[] seed = new byte[0];//由助记词和密码生成种子,方法内含有转换512哈系数方式
+        try {
+            seed = CreateAcountUtils.createMnemSeed(words);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         DeterministicKey master = CreateAcountUtils.CreateRootKey(seed);//生成根公私钥对象
         String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
 

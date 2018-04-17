@@ -1,12 +1,22 @@
 package com.zipper.wallet.utils;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+
+import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.database.CoinInfo;
+import com.zipper.wallet.database.WalletInfo;
 
 import junit.framework.Assert;
 
 import net.bither.bitherj.core.AbstractHD;
 import net.bither.bitherj.core.HDAccount;
+import net.bither.bitherj.crypto.DumpedPrivateKey;
 import net.bither.bitherj.crypto.ECKey;
 import net.bither.bitherj.crypto.EncryptedData;
 import net.bither.bitherj.crypto.EncryptedPrivateKey;
@@ -15,8 +25,11 @@ import net.bither.bitherj.crypto.hd.DeterministicKey;
 import net.bither.bitherj.crypto.hd.HDKeyDerivation;
 import net.bither.bitherj.crypto.mnemonic.MnemonicCode;
 import net.bither.bitherj.crypto.mnemonic.MnemonicException;
+import net.bither.bitherj.exception.AddressFormatException;
 import net.bither.bitherj.utils.Sha256Hash;
 import net.bither.bitherj.utils.Utils;
+
+import org.litepal.LitePal;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -28,7 +41,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.zipper.wallet.base.BaseActivity.KEY_IS_LOGIN;
 
 /**
  * Created by Administrator on 2018/4/10.
@@ -235,13 +253,24 @@ public class CreateAcountUtils {
     }
 
 
-    public static byte[] createMnemSeed(List<String> words){
+    public static byte[] createMnemSeed(List<String> words) throws MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException, MnemonicException.MnemonicWordException {
         if(!isInstanced()){
             Log.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }
+        //MnemonicCode.instance().toMnemonic()
+        //return MnemonicCode.toSeed(words,"");//由助记词和密码生成种子,方法内含有转换512哈系数方式
+        return MnemonicCode.instance().toEntropy(words);//由助记词和密码生成种子,方法内含有转换512哈系数方式
 
-        return MnemonicCode.toSeed(words,"");//由助记词和密码生成种子,方法内含有转换512哈系数方式
+    }
+    public static List<String> detropyMnemSeed(byte[] mnemSeed) throws MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException, MnemonicException.MnemonicWordException {
+        if(!isInstanced()){
+            Log.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+            throw new NullPointerException();
+        }
+        //MnemonicCode.instance().toMnemonic()
+        //return MnemonicCode.toSeed(words,"");//由助记词和密码生成种子,方法内含有转换512哈系数方式
+        return MnemonicCode.instance().toMnemonic(mnemSeed);//由助记词和密码生成种子,方法内含有转换512哈系数方式
 
     }
 
@@ -332,6 +361,102 @@ public class CreateAcountUtils {
         account.wipe();
         return account1.toAddress1();
     }
+
+
+    public static void saveInfo(final String prikey, final String password, final Handler mHandler,int what) throws AddressFormatException {
+        if(!isInstanced()){
+            Log.e("CreateAcountUtils","Doesn't new this class, please use the method 'instance()' first");
+            throw new NullPointerException();
+        }
+
+        RuntHTTPApi.toReApi(RuntHTTPApi.URL_GET_COINS,new HashMap<>(),new RuntHTTPApi.MyStringCallBack(mContext,new RuntHTTPApi.ResPonse() {
+            @Override
+            public void doSuccessThing(final Map<String, Object> param) {
+                new Thread(){
+                    @Override
+                    public void run() {
+                        try {
+                            Log.i(TAG,"prikey:"+prikey);
+                            ECKey ecKey = new DumpedPrivateKey(Utils.hexStringToByteArray(prikey),false).getKey();
+                            String pubkey = Utils.bytesToHexString(ecKey.getPubKey());//根公钥
+                            String firstAddr = "";
+                            //HDKeyDerivation.createMasterPrivateKey()
+                            //DeterministicKey master = new DeterministicKey(Utils.hexStringToByteArray(prikey),ecKey.co)
+                            //master.clearChainCode();
+                            SQLiteDatabase sqlDB = SqliteUtils.openDataBase(mContext);
+                            try{
+                                sqlDB.execSQL("drop table coininfo");
+                                sqlDB.execSQL("drop table walletinfo");
+                            }catch (SQLiteException e){
+                                e.printStackTrace();
+                            }
+                            sqlDB.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42),addr VARCHAR(42));");
+
+                            SqliteUtils.test();
+                            SQLiteDatabase db = LitePal.getDatabase();
+                            Log.i("StartActivity",(param.get("data") instanceof Collection)+"");
+                            if(param.get("data") instanceof Collection){
+                                for(Map map :(List<Map>)param.get("data") ){
+                                    CoinInfo coinInfo = new CoinInfo(map);
+                                    Log.i(TAG,coinInfo.getName()+"信息正在保存");
+                                    if(coinInfo.getName().toLowerCase().equals("btc")){
+                                        String addr =  getAccount((DeterministicKey) ecKey,coinInfo.getType()).toAddress();
+                                        Log.i(TAG,"addr:"+addr);
+                                        coinInfo.setAddr(addr);
+                                    }else if(coinInfo.getName().toLowerCase().equals("eth")){
+                                        String addr =  getWalletAddr((DeterministicKey) ecKey,coinInfo.getType());
+                                        Log.i(TAG,"addr:"+addr);
+                                        coinInfo.setAddr(addr);
+                                        firstAddr = addr;
+                                    }
+                                    coinInfo.save();
+                                    Log.i(TAG,"信息保存成功");
+
+                                }
+
+                                WalletInfo walletInfo = new WalletInfo(mContext);
+                                walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME, PreferencesUtils.VISITOR));
+                                walletInfo.setTip(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD_TIP, PreferencesUtils.VISITOR));
+
+                                walletInfo.setEsda_seed(new EncryptedData(Utils.hexStringToByteArray(prikey),password,false).toEncryptedString());
+                                walletInfo.setAddress(firstAddr);
+
+                                ContentValues cValue = new ContentValues();
+                                for (Object key : walletInfo.toMap().keySet()) {
+                                    if(key.toString().indexOf("id")==-1) {
+                                        cValue.put(key.toString(), walletInfo.toMap().get(key) + "");
+                                    }
+                                }
+
+                                Log.i(TAG,"512PrivateKey:"+prikey);
+                                Log.i(TAG,"512publicKey:"+pubkey);
+                                Log.i(TAG,"firstAddr:"+firstAddr);
+                                db.insert("walletinfo", null, cValue);
+                                Log.i(TAG, "钱包数据保存成功");
+
+                                PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
+                                Log.i(TAG,"钱包数据保存成功");
+
+                                Message msg = new Message();
+                                msg.what = what;
+                                mHandler.sendMessage(msg);
+                            }
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
+            }
+
+            @Override
+            public void doErrorThing(Map<String, Object> param) {
+            }
+        }));
+
+    }
+
 
     /**
      * 读取词库
@@ -648,5 +773,8 @@ public class CreateAcountUtils {
         }
         return true;
     }
+
+
+
 
 }

@@ -193,18 +193,34 @@ public class BackUpAcitivty extends CreateActvity {
 
         byte[] randomSeed = CreateAcountUtils.createRandomSeed();//生成128位字节流
 
-        //randomSeed = Utils.hexStringToByteArray("9810b3ef579678d91a5addca28373d11");
+        //randomSeed = Utils.hexStringToByteArray("937b52d8e571ed26f32c71dcaff6d57a");
 
         List<String> words = CreateAcountUtils.getMnemonicCode(randomSeed);//一局随机数获取助记词
+        for(String str : words){
+            Log.i(TAG,"words :"+str);
+        }
+        byte[] mnemonicSeed = new byte[0];//由助记词和密码生成种子,方法内含有转换512哈系数方式
+        try {
+            mnemonicSeed = CreateAcountUtils.createMnemSeed(words);
+        } catch (MnemonicException.MnemonicChecksumException e) {
+            e.printStackTrace();
+        } catch (MnemonicException.MnemonicWordException e) {
+            e.printStackTrace();
+        }
+        try {
+            for(String str : CreateAcountUtils.detropyMnemSeed(mnemonicSeed)){
+                Log.i(TAG,"words :"+str);
+            }
+        } catch (MnemonicException.MnemonicChecksumException e) {
+            e.printStackTrace();
+        } catch (MnemonicException.MnemonicWordException e) {
+            e.printStackTrace();
+        }
 
-        byte[] seed = CreateAcountUtils.createMnemSeed(words);//由助记词和密码生成种子,方法内含有转换512哈系数方式
-
-
-        DeterministicKey master = CreateAcountUtils.CreateRootKey(seed);//生成根公私钥对象
+        DeterministicKey master = CreateAcountUtils.CreateRootKey(mnemonicSeed);//生成根公私钥对象
         //DeterministicKey accountKey = CreateAcountUtils.getAccount(master);
 
 
-        String mnemonicSeed = Utils.bytesToHexString(seed);//助记词生成的根种子
         String priKey = Utils.bytesToHexString(master.getPrivKeyBytes());//根私钥
         String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
 
@@ -221,7 +237,7 @@ public class BackUpAcitivty extends CreateActvity {
         SqliteUtils.openDataBase(mContext);
         SqliteUtils.test();
         SQLiteDatabase db = LitePal.getDatabase();
-        RuntHTTPApi.printMap(param,"");
+        //RuntHTTPApi.printMap(param,"");
         Log.i("StartActivity",(param.get("data") instanceof Collection)+"");
         String firstAddr = "";
         if(param.get("data") instanceof Collection){
@@ -247,10 +263,8 @@ public class BackUpAcitivty extends CreateActvity {
              //firstAddr = CreateAcountUtils.getAddress(CreateAcountUtils.getAccount(master,60).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()),coins.get(0).getId());
 
             Log.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
-            for(String str : words){
-                //Log.i(TAG,"words :"+str);
-            }
-            Log.i(TAG,"mnemonicSeed :"+mnemonicSeed);
+
+            Log.i(TAG,"mnemonicSeed :"+Utils.bytesToHexString(mnemonicSeed));
             Log.i(TAG,"512PrivateKey:"+priKey);
             Log.i(TAG,"512publicKey:"+pubkey);
             Log.i(TAG,"firstAddr:"+firstAddr);
@@ -261,7 +275,7 @@ public class BackUpAcitivty extends CreateActvity {
                     PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD,PreferencesUtils.VISITOR),
                     false)
                     .toEncryptedString());
-            walletInfo.setMnem_seed( new EncryptedData(Utils.hexStringToByteArray(Utils.bytesToHexString(randomSeed)),
+            walletInfo.setMnem_seed( new EncryptedData(Utils.hexStringToByteArray(Utils.bytesToHexString(mnemonicSeed)),
                     PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD,PreferencesUtils.VISITOR),
                     false)
                     .toEncryptedString());

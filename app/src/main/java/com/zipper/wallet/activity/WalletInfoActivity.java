@@ -25,7 +25,6 @@ import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.SqliteUtils;
 
 import net.bither.bitherj.crypto.EncryptedData;
-import net.bither.bitherj.crypto.mnemonic.MnemonicException;
 import net.bither.bitherj.utils.Utils;
 
 import java.util.ArrayList;
@@ -190,14 +189,14 @@ public class WalletInfoActivity extends BaseActivity {
     }
 
 
-    private String getMnemonicWord(WalletInfo walletInfo, String pwd) throws MnemonicException.MnemonicLengthException {
+    private String getMnemonicWord(WalletInfo walletInfo, String pwd) throws Exception {
         CreateAcountUtils.instance(this);
         if (walletInfo.getMnem_seed() == null || walletInfo.getMnem_seed().trim().equals("") || walletInfo.getMnem_seed().trim().indexOf("null") > -1) {
             return "";
         }
         byte[] mnem_bytes = new EncryptedData(walletInfo.getMnem_seed()).decrypt(pwd);
         CreateAcountUtils.instance(this);
-        List<String> words = CreateAcountUtils.getMnemonicCode(mnem_bytes);
+        List<String> words = CreateAcountUtils.detropyMnemSeed(mnem_bytes);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < words.size(); i++) {
             sb.append(words.get(i));

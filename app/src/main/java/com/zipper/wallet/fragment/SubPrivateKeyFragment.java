@@ -1,15 +1,14 @@
 package com.zipper.wallet.fragment;
 
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,21 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.activity.ImportWalletActivity;
 import com.zipper.wallet.activity.MyWalletActivity;
-import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.base.BaseFragment;
-import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.utils.CreateAcountUtils;
 import com.zipper.wallet.utils.PreferencesUtils;
-import com.zipper.wallet.utils.SqliteUtils;
 
-import net.bither.bitherj.crypto.ECKey;
 import net.bither.bitherj.crypto.EncryptedData;
 import net.bither.bitherj.utils.Utils;
-
-import java.math.BigInteger;
-
-import static com.zipper.wallet.base.BaseActivity.KEY_IS_LOGIN;
 
 /**
  * 明文私钥、密文私钥共用页面
@@ -59,12 +51,33 @@ public class SubPrivateKeyFragment extends BaseFragment {
     private int type = 0;//0---明文，1--密文
 
     private Context mContext;
+    final int SAVE_PRIVATE = 100;
+    final int TRANSMIT_WORDS = 101;
 
     public SubPrivateKeyFragment() {
         // Required empty public constructor
     }
 
 
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case SAVE_PRIVATE:
+                    break;
+
+                case TRANSMIT_WORDS:
+                    ((ImportWalletActivity)getActivity()).hideProgressDialog();
+                    PreferencesUtils.putBoolean(mContext,((ImportWalletActivity)getActivity()).KEY_IS_LOGIN,true,PreferencesUtils.USER);
+                    PreferencesUtils.clearData(mContext,PreferencesUtils.VISITOR);
+                    startActivity(new Intent(getActivity(), MyWalletActivity.class)
+                            .putExtra("isFromImportPage", true));
+                    break;
+
+            }
+        }
+    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -146,7 +159,7 @@ public class SubPrivateKeyFragment extends BaseFragment {
                 return;
             }
             if (type == 0) {//0---明文，1--密文
-                generateWalletAddress(Utils.hexStringToByteArray(key));
+                generateWalletAddress(key);
             } else {
                 byte[] bytes = null;
                 try {
@@ -155,7 +168,7 @@ public class SubPrivateKeyFragment extends BaseFragment {
                     toast("密钥或密码错误");
                     return;
                 }
-                generateWalletAddress(bytes);
+                generateWalletAddress(Utils.bytesToHexString(bytes));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -195,54 +208,14 @@ public class SubPrivateKeyFragment extends BaseFragment {
         });
     }
 
-    private void generateWalletAddress(byte[] bytes) {
-
+    private void generateWalletAddress(String prikey) {
+        ((ImportWalletActivity)getActivity()).showProgressDialog("正在导入。。。");
         new Thread(){
             @Override
             public void run() {
                 try {
                     CreateAcountUtils.instance(mContext);
-
-                    BigInteger privKey = new BigInteger(1, bytes);
-                    ECKey ecKey = new ECKey(privKey);
-
-                    //DeterministicKey master =null;//生成根公私钥对象
-
-                    String priKey = Utils.bytesToHexString(ecKey.getPrivKeyBytes());//根私钥
-                    //String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
-
-                    String firstAddr = ecKey.toAddress1();
-                    //String firstAddr = CreateAcountUtils.getAddress(CreateAcountUtils.getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()), 60);
-
-                    WalletInfo walletInfo = new WalletInfo(mContext);
-                    walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME, PreferencesUtils.VISITOR));
-                    walletInfo.setTip(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD_TIP, PreferencesUtils.VISITOR));
-
-                    walletInfo.setEsda_seed(new EncryptedData(bytes,password,false).toEncryptedString());
-                    //walletInfo.setMnem_seed(Utils.bytesToHexString(MnemonicCode.instance().toEntropy(words)));
-                    walletInfo.setAddress(firstAddr);
-                    //walletInfo.setId(4);
-                    SQLiteDatabase db = SqliteUtils.openDataBase(mContext);
-
-                    ContentValues cValue = new ContentValues();
-                    for (Object key : walletInfo.toMap().keySet()) {
-                        if(key.toString().indexOf("id")==-1) {
-                            cValue.put(key.toString(), walletInfo.toMap().get(key) + "");
-                        }
-                    }
-
-                    db.insert("walletinfo", null, cValue);
-                    Log.i(TAG, "钱包数据保存成功");
-
-                    PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            startActivity(new Intent(getActivity(), MyWalletActivity.class)
-                                    .putExtra("isFromImportPage", true));
-                        }
-                    });
-
+                    CreateAcountUtils.saveInfo(prikey,password,mHandler,TRANSMIT_WORDS);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -198,13 +198,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     ProgressDialog progressDialog;
 
-    protected void showProgressDialog(String tip) {
+    public void showProgressDialog(String tip) {
         progressDialog = new ProgressDialog(mContext);
         progressDialog.setTitle(tip);
         progressDialog.show();
     }
 
-    protected void hideProgressDialog() {
+    public void hideProgressDialog() {
         progressDialog.cancel();
     }
 
