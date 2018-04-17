@@ -114,6 +114,8 @@ public class WalletInfoActivity extends BaseActivity {
                 } catch (SQLiteException e) {
                     e.printStackTrace();
                 }
+                SqliteUtils.openDataBase(mContext);
+                SqliteUtils.test();
                 PreferencesUtils.clearData(this, PreferencesUtils.USER);
                 startActivity(new Intent(this, StartActivity.class));
                 ActivityManager.getInstance().finishAllActivity();

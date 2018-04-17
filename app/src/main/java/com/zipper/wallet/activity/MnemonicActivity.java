@@ -86,7 +86,7 @@ public class MnemonicActivity extends BaseActivity {
                                     //在values中添加内容
                                     values.put("mnem_seed","");
                                     SqliteUtils.update("walletinfo",values,"name=?",new String[]{PreferencesUtils.getString(mContext,KEY_WALLET_NAME,PreferencesUtils.VISITOR)});
-                                    PreferencesUtils.clearData(mContext,PreferencesUtils.VISITOR);
+
                                     startActivity(new Intent(mContext,
                                             MyWalletActivity.class));
                                     ActivityManager.getInstance().finishAllActivity();

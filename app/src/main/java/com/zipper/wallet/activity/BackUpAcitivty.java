@@ -65,6 +65,7 @@ public class BackUpAcitivty extends CreateActvity {
                         if(obj instanceof  List){
                             hideProgressDialog();
                             PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
+                            PreferencesUtils.clearData(mContext,PreferencesUtils.VISITOR);
                             Intent intent = new Intent(mContext,MnemonicActivity.class);
                             intent.putExtra("list",new RuntListSeria<String>((List<String>) obj));
                             startActivity(intent);
@@ -213,11 +214,12 @@ public class BackUpAcitivty extends CreateActvity {
             sqlDB.execSQL("drop table coininfo");
             sqlDB.execSQL("drop table walletinfo");
         }catch (SQLiteException e){
-
+            e.printStackTrace();
         }
         sqlDB.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42),addr VARCHAR(42));");
 
         SqliteUtils.openDataBase(mContext);
+        SqliteUtils.test();
         SQLiteDatabase db = LitePal.getDatabase();
         RuntHTTPApi.printMap(param,"");
         Log.i("StartActivity",(param.get("data") instanceof Collection)+"");
