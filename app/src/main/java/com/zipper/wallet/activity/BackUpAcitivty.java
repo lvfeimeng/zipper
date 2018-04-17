@@ -267,7 +267,9 @@ public class BackUpAcitivty extends CreateActvity {
 
             ContentValues cValue = new ContentValues();
             for(Object key : walletInfo.toMap().keySet()){
-                cValue.put(key.toString(), walletInfo.toMap().get(key)+"");
+                if(key.toString().indexOf("id")==-1) {
+                    cValue.put(key.toString(), walletInfo.toMap().get(key) + "");
+                }
             }
 
             db.insert("walletinfo",null,cValue);

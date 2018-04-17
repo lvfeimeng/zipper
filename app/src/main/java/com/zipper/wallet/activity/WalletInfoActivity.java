@@ -1,12 +1,15 @@
 package com.zipper.wallet.activity;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,7 +31,6 @@ import net.bither.bitherj.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 public class WalletInfoActivity extends BaseActivity {
 
@@ -109,7 +111,12 @@ public class WalletInfoActivity extends BaseActivity {
                 if (walletInfo == null) {
                     return;
                 }
-                walletInfo.delete();
+                SQLiteDatabase sqlDB = mContext.openOrCreateDatabase(SqliteUtils.DB, Context.MODE_PRIVATE,null);
+                try{
+                    sqlDB.execSQL("drop table walletinfo");
+                }catch (SQLiteException e){
+
+                }
                 PreferencesUtils.clearData(this, PreferencesUtils.USER);
                 startActivity(new Intent(this, StartActivity.class));
                 ActivityManager.getInstance().finishAllActivity();
@@ -146,6 +153,7 @@ public class WalletInfoActivity extends BaseActivity {
                     public void run() {
                         try {
                             String pwd = param.get(INPUT_TEXT).toString().trim();
+                            Log.i(TAG,walletInfo.getEsda_seed()+" "+pwd);
                             byte[] bytes = new EncryptedData(walletInfo.getEsda_seed()).decrypt(pwd);
                             if (bytes == null) {
                                 return;
@@ -164,6 +172,7 @@ public class WalletInfoActivity extends BaseActivity {
                                     }
                             );
                         } catch (Exception e) {
+                            e.printStackTrace();
                             runOnUiThread(() -> {
                                 hideProgressDialog();
                                 toast("密码错误");
@@ -184,6 +193,9 @@ public class WalletInfoActivity extends BaseActivity {
 
     private String getMnemonicWord(WalletInfo walletInfo, String pwd) throws MnemonicException.MnemonicLengthException {
         CreateAcountUtils.instance(this);
+        if(walletInfo.getMnem_seed() == null || walletInfo.getMnem_seed().trim().equals("") ||  walletInfo.getMnem_seed().trim().indexOf("null")>-1){
+            return "";
+        }
         byte[] mnem_bytes = new EncryptedData(walletInfo.getMnem_seed()).decrypt(pwd);
         CreateAcountUtils.instance(this);
         List<String> words = CreateAcountUtils.getMnemonicCode(mnem_bytes);

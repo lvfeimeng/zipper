@@ -69,15 +69,25 @@ public class ExportWalletActivity extends BaseActivity {
     private void initViewPager() {
         list = new ArrayList<>();
         //0-备份助记词,1-导出明文私钥，20-导出加密私钥
-        list.add(ExportWalletFragment.newInstance(0,mnemonicWord));
-        list.add(ExportWalletFragment.newInstance(1,cleartext));
-        list.add(ExportWalletFragment.newInstance(2,ciphertext));
+        int i = 0 ;
+        if(mnemonicWord != null && !mnemonicWord.equals("")){
+            list.add(ExportWalletFragment.newInstance(i,mnemonicWord));
+            i++;
+        }
+        list.add(ExportWalletFragment.newInstance(i,cleartext));
+        i++;
+        list.add(ExportWalletFragment.newInstance(i,ciphertext));
         viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), list));
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(i+1);
     }
 
     private void initMagicIndicator() {
-        tabs = new String[]{"导出助记词", "导出明文私钥", "导出加密私钥"};
+
+        if(mnemonicWord != null && !mnemonicWord.equals("")){
+            tabs = new String[]{"导出助记词", "导出明文私钥", "导出加密私钥"};
+        }else{
+            tabs = new String[]{"导出明文私钥", "导出加密私钥"};
+        }
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
 

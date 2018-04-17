@@ -21,10 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zipper.wallet.R;
-import com.zipper.wallet.activity.ImportWalletActivity;
 import com.zipper.wallet.activity.MyWalletActivity;
-import com.zipper.wallet.activity.StartActivity;
-import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.base.BaseFragment;
 import com.zipper.wallet.database.WalletInfo;
@@ -148,11 +145,16 @@ public class SubPrivateKeyFragment extends BaseFragment {
                 Toast.makeText(getActivity(), "两次密码不一致", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             if (type == 0) {//0---明文，1--密文
-                generateWalletAddress(key.getBytes());
+                generateWalletAddress(Utils.hexStringToByteArray(key));
             } else {
-                byte[] bytes = new EncryptedData(key).decrypt(password);
+                byte[] bytes = null;
+                try {
+                     bytes = new EncryptedData(key).decrypt(keyPassword);
+                }catch (Exception e){
+                    toast("密钥或密码错误");
+                    return;
+                }
                 generateWalletAddress(bytes);
             }
         } catch (Exception e) {
@@ -194,43 +196,58 @@ public class SubPrivateKeyFragment extends BaseFragment {
     }
 
     private void generateWalletAddress(byte[] bytes) {
-        try {
-            CreateAcountUtils.instance(mContext);
 
-            BigInteger privKey = new BigInteger(1, bytes);
-            ECKey ecKey = new ECKey(privKey);
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    CreateAcountUtils.instance(mContext);
 
-            //DeterministicKey master =null;//生成根公私钥对象
+                    BigInteger privKey = new BigInteger(1, bytes);
+                    ECKey ecKey = new ECKey(privKey);
 
-            String priKey = Utils.bytesToHexString(ecKey.getPrivKeyBytes());//根私钥
-            //String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
+                    //DeterministicKey master =null;//生成根公私钥对象
 
-            String firstAddr = ecKey.toAddress();
-            //String firstAddr = CreateAcountUtils.getAddress(CreateAcountUtils.getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()), 60);
+                    String priKey = Utils.bytesToHexString(ecKey.getPrivKeyBytes());//根私钥
+                    //String pubkey = Utils.bytesToHexString(master.getPubKey());//根公钥
 
-            WalletInfo walletInfo = new WalletInfo(mContext);
-            walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME, PreferencesUtils.VISITOR));
-            walletInfo.setTip(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD_TIP, PreferencesUtils.VISITOR));
+                    String firstAddr = ecKey.toAddress1();
+                    //String firstAddr = CreateAcountUtils.getAddress(CreateAcountUtils.getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()), 60);
 
-            walletInfo.setEsda_seed(priKey);
-            //walletInfo.setMnem_seed(Utils.bytesToHexString(MnemonicCode.instance().toEntropy(words)));
-            walletInfo.setAddress(firstAddr);
-            //walletInfo.setId(4);
-            SQLiteDatabase db = SqliteUtils.openDataBase(mContext);
+                    WalletInfo walletInfo = new WalletInfo(mContext);
+                    walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME, PreferencesUtils.VISITOR));
+                    walletInfo.setTip(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD_TIP, PreferencesUtils.VISITOR));
 
-            ContentValues cValue = new ContentValues();
-            for (Object key : walletInfo.toMap().keySet()) {
-                cValue.put(key.toString(), walletInfo.toMap().get(key) + "");
+                    walletInfo.setEsda_seed(new EncryptedData(bytes,password,false).toEncryptedString());
+                    //walletInfo.setMnem_seed(Utils.bytesToHexString(MnemonicCode.instance().toEntropy(words)));
+                    walletInfo.setAddress(firstAddr);
+                    //walletInfo.setId(4);
+                    SQLiteDatabase db = SqliteUtils.openDataBase(mContext);
+
+                    ContentValues cValue = new ContentValues();
+                    for (Object key : walletInfo.toMap().keySet()) {
+                        if(key.toString().indexOf("id")==-1) {
+                            cValue.put(key.toString(), walletInfo.toMap().get(key) + "");
+                        }
+                    }
+
+                    db.insert("walletinfo", null, cValue);
+                    Log.i(TAG, "钱包数据保存成功");
+
+                    PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            startActivity(new Intent(getActivity(), MyWalletActivity.class)
+                                    .putExtra("isFromImportPage", true));
+                        }
+                    });
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-
-            db.insert("walletinfo", null, cValue);
-            Log.i(TAG, "钱包数据保存成功");
-
-            PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        }.start();
     }
 
 }
