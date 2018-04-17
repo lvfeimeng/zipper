@@ -40,7 +40,6 @@ public class SearchPropertyActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.ActivityTransparent);
         setContentView(R.layout.activity_search_property);
         if (getIntent() != null) {
             isShowCheckBox = getIntent().getBooleanExtra("isShowCheckBox", false);

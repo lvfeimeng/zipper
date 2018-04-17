@@ -52,21 +52,10 @@ public class CreatePwdAcitivty extends CreateActvity {
         txtAgree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(mContext , WebBrowserActivity.class);
                 intent.putExtra(PARAMS_TITLE,"服务协议");
                 intent.putExtra(PARAMS_URL,"file:///android_asset/agreement.html");
                 startActivity(intent);
-
-                /*AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                LinearLayout dialogView = (LinearLayout)getLayoutInflater().inflate(R.layout.layout_web, null);
-                WebView webView = (WebView) dialogView.findViewById(R.id.web_view);
-                dialogView.removeView(webView);
-                webView.setWebViewClient(new WebViewClient());
-                webView.loadUrl("file:///android_asset/agreement.html");
-                builder.setView(webView);
-                builder.show();*/
-
             }
         });
 
@@ -91,6 +80,10 @@ public class CreatePwdAcitivty extends CreateActvity {
                 }
                 if(isNull(edPwdRe)){
                     showTipDialog("请再填写一次密码",null);
+                    return;
+                }
+                if(edPwd.getText().toString().trim().length()<8){
+                    showTipDialog("密码不能小于8位数",null);
                     return;
                 }
                 if(!edPwd.getText().toString().trim().equals(edPwdRe.getText().toString().trim())){
@@ -143,13 +136,7 @@ public class CreatePwdAcitivty extends CreateActvity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if(edPwd.getText().equals("") || edPwdRe.getText().equals("")){
-                btnCreate.setEnabled(false);
-            }else{
-                if(checkBox.isChecked()) {
-                    btnCreate.setEnabled(true);
-                }
-            }
+            setBtnCreateEnable();
 
         }
     };
@@ -221,16 +208,20 @@ public class CreatePwdAcitivty extends CreateActvity {
                 }
             }
 
-
-            if(edPwd.getText().equals("") || edPwdRe.getText().equals("")){
-                btnCreate.setEnabled(false);
-            }else{
-                if(checkBox.isChecked()) {
-                    btnCreate.setEnabled(true);
-                }
-            }
+            setBtnCreateEnable();
 
         }
     };
+
+    private void setBtnCreateEnable(){
+        Log.i(TAG,String.format("edPwd:%s,edPwdRe:%s,check:%s",edPwd.getText(),edPwdRe.getText(),checkBox.isChecked()));
+        if(edPwd.getText().toString().trim().equals("") || edPwdRe.getText().toString().trim().equals("") ||edPwd.getText().toString().trim().length()<8){
+            btnCreate.setEnabled(false);
+        }else{
+            if(checkBox.isChecked()) {
+                btnCreate.setEnabled(true);
+            }
+        }
+    }
 
 }

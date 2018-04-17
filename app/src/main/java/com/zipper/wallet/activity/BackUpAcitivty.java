@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -207,8 +208,12 @@ public class BackUpAcitivty extends CreateActvity {
 
 
         SQLiteDatabase sqlDB = mContext.openOrCreateDatabase(SqliteUtils.DB, Context.MODE_PRIVATE,null);
-        sqlDB.execSQL("drop table coininfo");
-        sqlDB.execSQL("drop table walletinfo");
+        try{
+            sqlDB.execSQL("drop table coininfo");
+            sqlDB.execSQL("drop table walletinfo");
+        }catch (SQLiteException e){
+
+        }
         sqlDB.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42),addr VARCHAR(42));");
 
         SqliteUtils.openDataBase(mContext);

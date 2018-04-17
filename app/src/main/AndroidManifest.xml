@@ -50,6 +50,7 @@
         <activity android:name=".activity.AddPropertyActivity" />
         <activity
             android:name=".activity.SearchCoinsActivity"
+            android:theme="@style/ActivityTransparent"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.PayeeAddressActivity" />
         <activity android:name=".activity.PropertyDetailActivity" />
@@ -62,7 +63,8 @@
         <activity android:name=".activity.WalletInfoActivity" />
         <activity android:name=".activity.UpdatePasActivity" />
         <activity android:name=".activity.ExportWalletActivity" />
-        <activity android:name=".activity.SearchPropertyActivity" />
+        <activity android:name=".activity.SearchPropertyActivity"
+            android:theme="@style/ActivityTransparent"/>
     </application>
 
 </manifest>

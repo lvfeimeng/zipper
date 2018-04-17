@@ -22,6 +22,7 @@ import com.readystatesoftware.viewbadger.BadgeView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.WalletAdapter;
+import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.bean.CoinsBean;
 import com.zipper.wallet.database.WalletInfo;
@@ -66,6 +67,12 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_wallet);
+        if (getIntent()!=null) {
+            if (getIntent().getBooleanExtra("isFromImportPage",false)) {
+                ActivityManager.getInstance().finishActivity(StartActivity.class);
+                ActivityManager.getInstance().finishActivity(ImportWalletActivity.class);
+            }
+        }
         initView();
         gesturePwdSetting();
     }
