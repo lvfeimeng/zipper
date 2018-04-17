@@ -71,7 +71,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void gesturePwdSetting() {
-        String pwd = PreferencesUtils.getString(mContext, KEY_HAND_PWD, PreferencesUtils.PROJECT);
+        String pwd = PreferencesUtils.getString(mContext, KEY_HAND_PWD, PreferencesUtils.USER);
         if (pwd != null && !pwd.equals("")) {
             Intent intent = new Intent(mContext, UnlockActivity.class);
             intent.putExtra("mode", 1);
@@ -161,13 +161,13 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             startActivityForResult(new Intent(this, LanguageSettingActivity.class), 99);
             //drawerLayout.closeDrawer(GravityCompat.START);
         });
-        if (!TextUtils.isEmpty(PreferencesUtils.getString(mContext, "hand_pwd", PreferencesUtils.PROJECT))) {
+        if (!TextUtils.isEmpty(PreferencesUtils.getString(mContext, "hand_pwd", PreferencesUtils.USER))) {
             checkboxGesturePassword.setChecked(true);
         } else {
             checkboxGesturePassword.setChecked(false);
         }
         checkboxGesturePassword.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            String pwd = PreferencesUtils.getString(mContext, "hand_pwd", PreferencesUtils.PROJECT);
+            String pwd = PreferencesUtils.getString(mContext, "hand_pwd", PreferencesUtils.USER);
             int mode = 0;
             if (!TextUtils.isEmpty(pwd)) {
                 mode = 3;

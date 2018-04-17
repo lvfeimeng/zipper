@@ -9,11 +9,21 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.HttpURLConnection;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.Date;
@@ -38,7 +48,7 @@ public class RuntHTTPApi {
     private static final int TIME_OUT = 10 * 1000; // 超时时间
 	public final static String IP = "120.92.34.88",//  http://172.16.4.76:8080/coin/getcoininfos
 	// www.soarsan.com
-	PORT = ":8801",
+	PORT = ":8081",
 			CHARSET = "utf-8",
 			PROJECT_URL = "http://" + IP + PORT +"/",
             SERVER_URL = "http://" + IP + PORT+"/",
@@ -79,7 +89,6 @@ public class RuntHTTPApi {
      * @param stringCallback
      */
     public static void toReApi(String lastUrl, Map<String, Object> params, MyStringCallBack stringCallback) {
-        params.put("submit", "1");
         String url = SERVER_URL + lastUrl;
         System.out.println("---------------传输的数据-------------------");
         System.out.println("url:" + url);
@@ -101,6 +110,57 @@ public class RuntHTTPApi {
         if (stringCallback != null) {
             pfBuilder.build().execute(stringCallback);
         }
+    }
+
+
+
+
+    /**
+     * MultipartEntity 多文件加参数传递
+     * @param lastUrl
+     * @param params
+     * @return
+     */
+    public static Map<String, Object> toReApi(String lastUrl,Map<String, Object>params) {
+        params.put("submit", "1");
+        String targetURL = SERVER_URL+lastUrl;
+        System.out.println("---------------传输的数据-------------------");
+        System.out.println("url:"+targetURL);
+        printMap(params, "");
+        org.apache.http.client.HttpClient client=new DefaultHttpClient();// 开启一个客户端 HTTP 请求
+        HttpPost post = new HttpPost(targetURL);//创建 HTTP POST 请求
+        MultipartEntity multipart = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,null, Charset.forName("UTF-8"));
+        try {
+            for (String key : params.keySet()) {
+                if (params.get(key) instanceof Collection) {
+                    for(File file : (Collection<File>)params.get(key)){
+                        multipart.addPart(key, new FileBody(file));
+                    }
+                } else if(params.get(key) instanceof File) {
+                    multipart.addPart(key, new FileBody((File) params.get(key)));
+                } else {
+                    multipart.addPart(key, new StringBody(params.get(key).toString(), Charset.forName("UTF-8")));
+                }
+            }
+            post.setEntity(multipart);
+            HttpResponse response = client.execute(post);
+            int status = response.getStatusLine().getStatusCode();
+            System.out.println("网络请求状态:"+status);
+            if (status == HttpURLConnection.HTTP_OK) {
+                String resultStr = EntityUtils.toString(response.getEntity()).toString();
+                return parseJsonToMap(resultStr);
+            }else if(status == HttpURLConnection.HTTP_CLIENT_TIMEOUT){
+                System.out.println("链接超时。。。。。。");
+            }else if(status == HttpURLConnection.HTTP_SERVER_ERROR){
+                System.out.println("网络服务错误。。。。。。");
+            }else if(status == HttpURLConnection.HTTP_NOT_FOUND){
+                System.out.println("链接不到服务器。。。。。。");
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

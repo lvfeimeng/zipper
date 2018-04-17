@@ -105,17 +105,20 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/bg_border_gray">
                 <com.zipper.wallet.definecontrol.FlowLayout
                     android:id="@+id/flowlayout"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/bg_border_gray">
+                    android:layout_height="100dp">
 
 
                 </com.zipper.wallet.definecontrol.FlowLayout>
 
-
+            </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/rel_words"
