@@ -53,12 +53,12 @@ public class TransactionActivity extends BaseActivity {
         mList.add(new TransactionBean("ETH", "3月16日", "确认次数：333", "+ 1999.999 ETH"));
         mList.add(new TransactionBean("SMT", "2月06日", "确认次数：222", "+ 2999.999 SMT"));
         mList.add(new TransactionBean("SMT", "2月06日", "确认次数：222", "+ 2999.999 SMT"));
-        mList.add(new TransactionBean("SMT", "2月06日", "确认次数：222", "+ 2999.999 SMT"));
+        mList.add(new TransactionBean("SMT", "2月06日", "确认次数：222", "- 2999.999 SMT"));
+        mList.add(new TransactionBean("BTC", "1月26日", "确认次数：111", "- 3999.999 BTC"));
         mList.add(new TransactionBean("BTC", "1月26日", "确认次数：111", "+ 3999.999 BTC"));
         mList.add(new TransactionBean("BTC", "1月26日", "确认次数：111", "+ 3999.999 BTC"));
-        mList.add(new TransactionBean("BTC", "1月26日", "确认次数：111", "+ 3999.999 BTC"));
-        mList.add(new TransactionBean("SMT", "12月06日", "确认次数：000", "+ 4999.999 SMT"));
-        mList.add(new TransactionBean("ZIP", "11月16日", "确认次数：111", "+ 5999.999 ZIP"));
+        mList.add(new TransactionBean("SMT", "12月06日", "确认次数：000", "- 4999.999 SMT"));
+        mList.add(new TransactionBean("ZIP", "11月16日", "确认次数：111", "- 5999.999 ZIP"));
 
     }
 
