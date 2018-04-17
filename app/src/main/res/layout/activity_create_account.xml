@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <com.zipper.wallet.definecontrol.TitleBarView
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title_text="@string/create_wallet"
-        app:right_text="@string/import_wallet"
         app:left_icon_visible="visible"
+        app:right_text="@string/import_wallet"
+        app:title_text="@string/create_wallet"
         >
 
     </com.zipper.wallet.definecontrol.TitleBarView>
@@ -20,36 +20,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
+        android:orientation="vertical"
         android:paddingLeft="20dp"
-        android:orientation="vertical">
+        android:paddingTop="20dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="@string/wallet_name"/>
+            android:text="@string/wallet_name"
+            android:textColor="@color/black"/>
 
         <EditText
             android:id="@+id/ed_name"
-            android:hint="@string/wallet_hint"
-            android:layout_marginRight="30dp"
             style="@style/EditText_register"
+            android:layout_marginRight="30dp"
+            android:hint="@string/wallet_hint"
+            android:maxLines="1"
             />
 
         <Button
             android:id="@+id/btn_next"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/btn_ripple_blue_corner"
+            android:enabled="false"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginBottom="10dp"
-            android:enabled="false"
-            android:background="@drawable/btn_ripple_blue_corner"
-            android:textColor="@color/white"
-            android:text="@string/next"/>
+            android:text="@string/next"
+            android:textColor="@color/white"/>
     </LinearLayout>
 
-    
-    
+
 </LinearLayout>

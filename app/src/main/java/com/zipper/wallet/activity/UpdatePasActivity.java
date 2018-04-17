@@ -1,5 +1,6 @@
 package com.zipper.wallet.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -9,10 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.bean.WalletBean;
+import com.zipper.wallet.utils.PreferencesUtils;
 
 public class UpdatePasActivity extends BaseActivity implements View.OnClickListener {
 
@@ -68,7 +70,7 @@ public class UpdatePasActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.textImmediatelyIn:
-                Toast.makeText(mContext, "跳转导入界面", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(mContext, ImportWalletActivity.class));
                 break;
 
             case R.id.image_display:
@@ -92,24 +94,30 @@ public class UpdatePasActivity extends BaseActivity implements View.OnClickListe
         if (newPas.length() < 8) {
             showTipDialog("密码不少于8位字符", null);
             return;
-        }
-        if (oldPas.equals(newPas)) {
+        } else if (oldPas.equals(newPas)) {
             showTipDialog("新旧密码不能相同", null);
             return;
-        }
-        if (!newPas.equals(repeatPas)) {
+        } else if (!newPas.equals(repeatPas)) {
             showTipDialog("重复密码不一致", null);
             return;
-        }
-
-        //条件全部符合之后所调用的方法
-        possInternet();
+        } else
+            //简单条件全部符合之后所调用possInternet方法，更改密码
+            possInternet(oldPas, newPas);
 
     }
 
-    private void possInternet() {
+    private void possInternet(String oldPas, String newPas) {
 
-        showTipDialog("符合", null);
+        String walletpwd = PreferencesUtils.getString(mContext, KEY_WALLET_PWD, PreferencesUtils.VISITOR);
+        if (oldPas.equals(walletpwd)) {
+            PreferencesUtils.putString(mContext, KEY_WALLET_PWD, newPas, PreferencesUtils.VISITOR);
+            WalletBean.getWalletBean().setPwd(newPas);
+            showTipDialog("更改成功", null);
+            finish();
+        } else {
+            showTipDialog("原密码不正确", null);
+            return;
+        }
 
     }
 

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:left_icon_visible="visible"
         app:bottom_visible="gone"
-        app:title_text="">
+        app:title_text="备份钱包">
 
     </com.zipper.wallet.definecontrol.TitleBarView>
 
