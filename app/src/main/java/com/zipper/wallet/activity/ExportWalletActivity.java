@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
@@ -69,19 +68,22 @@ public class ExportWalletActivity extends BaseActivity {
 
     private void initViewPager() {
         list = new ArrayList<>();
-        //0-备份助记词,1-导出明文私钥，2-导出加密私钥
-        if(!TextUtils.isEmpty(mnemonicWord)){
-            list.add(ExportWalletFragment.newInstance(0,mnemonicWord));
+        //0-备份助记词,1-导出明文私钥，20-导出加密私钥
+        int i = 0 ;
+        if(mnemonicWord != null && !mnemonicWord.equals("")){
+            list.add(ExportWalletFragment.newInstance(i,mnemonicWord));
+            i++;
         }
-        list.add(ExportWalletFragment.newInstance(1,cleartext));
-        list.add(ExportWalletFragment.newInstance(2,ciphertext));
+        list.add(ExportWalletFragment.newInstance(i,cleartext));
+        i++;
+        list.add(ExportWalletFragment.newInstance(i,ciphertext));
         viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), list));
-        viewPager.setOffscreenPageLimit(list.size());
+        viewPager.setOffscreenPageLimit(i+1);
     }
 
     private void initMagicIndicator() {
 
-        if(!TextUtils.isEmpty(mnemonicWord)){
+        if(mnemonicWord != null && !mnemonicWord.equals("")){
             tabs = new String[]{"导出助记词", "导出明文私钥", "导出加密私钥"};
         }else{
             tabs = new String[]{"导出明文私钥", "导出加密私钥"};

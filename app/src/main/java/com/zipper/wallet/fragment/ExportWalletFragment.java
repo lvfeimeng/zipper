@@ -12,15 +12,6 @@ import android.widget.TextView;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseFragment;
-import com.zipper.wallet.database.WalletInfo;
-import com.zipper.wallet.utils.CreateAcountUtils;
-import com.zipper.wallet.utils.SqliteUtils;
-
-import net.bither.bitherj.crypto.EncryptedData;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 导出钱包
@@ -44,7 +35,7 @@ public class ExportWalletFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    //0-备份助记词,1-导出明文私钥，2-导出加密私钥
+    //0-备份助记词,1-导出明文私钥，20-导出加密私钥
     public static ExportWalletFragment newInstance(int type,String text) {
         ExportWalletFragment fragment = new ExportWalletFragment();
         Bundle args = new Bundle();

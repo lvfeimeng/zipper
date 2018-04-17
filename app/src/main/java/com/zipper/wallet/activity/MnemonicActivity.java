@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.zipper.wallet.R;
 import com.zipper.wallet.animations.MyAnimations;
 import com.zipper.wallet.base.ActivityManager;
-import com.zipper.wallet.base.CreateActvity;
+import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.definecontrol.FlowLayout;
 import com.zipper.wallet.definecontrol.MnemWordsView;
@@ -36,7 +36,7 @@ import java.util.Set;
  * Created by Administrator on 2018/3/29.
  */
 
-public class MnemonicActivity extends CreateActvity {
+public class MnemonicActivity extends BaseActivity {
     FlowLayout flowLayout,flowLayoutBottom;
     LinearLayout linCopy,linVerify;
     TextView txtMnem;
@@ -96,7 +96,6 @@ public class MnemonicActivity extends CreateActvity {
 
                                 @Override
                                 public void doErrorThing(Map<String, Object> param) {
-                                    PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
                                     startActivity(new Intent(mContext,
                                             MyWalletActivity.class));
                                     ActivityManager.getInstance().finishAllActivity();
@@ -284,6 +283,17 @@ public class MnemonicActivity extends CreateActvity {
         LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) ((LinearLayout)flowLayout.getParent()).getLayoutParams();
         linearParams.height= ViewGroup.LayoutParams.WRAP_CONTENT;
         ((LinearLayout)flowLayout.getParent()).setLayoutParams(linearParams);
+    }
+
+
+    @Override
+    protected boolean onBackKeyDown() {
+        startActivity(new Intent(mContext,
+                MyWalletActivity.class));
+        ActivityManager.getInstance().finishAllActivity();
+        finish();
+
+        return true;
     }
 
 }

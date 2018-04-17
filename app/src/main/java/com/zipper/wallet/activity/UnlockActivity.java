@@ -111,8 +111,8 @@ public class UnlockActivity extends BaseActivity {
                         mode = 0;
                         break;
                     case 3://删除
-                        Toast.makeText(mContext, getString(R.string.success_hand_pwd), Toast.LENGTH_SHORT).show();
-                        PreferencesUtils.removeKey(mContext,KEY_HAND_PWD,PreferencesUtils.USER);
+                        Toast.makeText(mContext, getString(R.string.success_del_hand_pwd), Toast.LENGTH_SHORT).show();
+                        PreferencesUtils.putString(mContext,KEY_HAND_PWD,"",PreferencesUtils.USER);
                         finish();
                         break;
                     default:

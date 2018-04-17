@@ -29,7 +29,6 @@ public class Test {
     private void t() {
         Album album = new Album();
         album=DataSupport.find(Album.class,1);
-
     }
 
     public static void main(String[] args) {

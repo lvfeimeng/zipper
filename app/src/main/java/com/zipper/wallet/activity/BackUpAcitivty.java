@@ -64,6 +64,7 @@ public class BackUpAcitivty extends CreateActvity {
                     if(obj!=null){
                         if(obj instanceof  List){
                             hideProgressDialog();
+                            PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
                             Intent intent = new Intent(mContext,MnemonicActivity.class);
                             intent.putExtra("list",new RuntListSeria<String>((List<String>) obj));
                             startActivity(intent);
