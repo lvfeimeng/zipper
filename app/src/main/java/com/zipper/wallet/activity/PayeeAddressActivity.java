@@ -1,5 +1,8 @@
 package com.zipper.wallet.activity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -35,6 +38,11 @@ public class PayeeAddressActivity extends BaseActivity {
         imgShare.setOnClickListener(v -> toast("分享"));
         textFullName.setOnClickListener(v -> {
             requestList();
+        });
+        btnCopy.setOnClickListener(v->{
+            copyToClipboard(this,textWalletAddress.getText().toString().trim());
+            btnCopy.setEnabled(false);
+            btnCopy.setText("已复制");
         });
     }
 
@@ -87,5 +95,11 @@ public class PayeeAddressActivity extends BaseActivity {
         btnCopy = (Button) findViewById(R.id.btn_copy);
     }
 
+    public static void copyToClipboard(Context context, String text) {
+        ClipboardManager systemService = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        if (systemService != null) {
+            systemService.setPrimaryClip(ClipData.newPlainText("text", text));
+        }
+    }
 
 }
