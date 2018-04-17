@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -79,6 +80,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
 
     private void gesturePwdSetting() {
         String pwd = PreferencesUtils.getString(mContext, KEY_HAND_PWD, PreferencesUtils.USER);
+        Log.i(TAG,"HAND_PWD:"+pwd);
         if (pwd != null && !pwd.equals("")) {
             Intent intent = new Intent(mContext, UnlockActivity.class);
             intent.putExtra("mode", 1);
@@ -168,13 +170,8 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             startActivityForResult(new Intent(this, LanguageSettingActivity.class), 99);
             //drawerLayout.closeDrawer(GravityCompat.START);
         });
-        if (!TextUtils.isEmpty(PreferencesUtils.getString(mContext, "hand_pwd", PreferencesUtils.USER))) {
-            checkboxGesturePassword.setChecked(true);
-        } else {
-            checkboxGesturePassword.setChecked(false);
-        }
-        checkboxGesturePassword.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            String pwd = PreferencesUtils.getString(mContext, "hand_pwd", PreferencesUtils.USER);
+        checkboxGesturePassword.setOnClickListener((view) -> {
+            String pwd = PreferencesUtils.getString(mContext, KEY_HAND_PWD, PreferencesUtils.USER);
             int mode = 0;
             if (!TextUtils.isEmpty(pwd)) {
                 mode = 3;
@@ -218,6 +215,16 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!TextUtils.isEmpty(PreferencesUtils.getString(mContext, KEY_HAND_PWD, PreferencesUtils.USER))) {
+            checkboxGesturePassword.setChecked(true);
+        } else {
+            checkboxGesturePassword.setChecked(false);
+        }
+    }
 
     private void testData() {
         String icon = "http://upload.news.cecb2b.com/2013/1211/1386729783853.jpg";
