@@ -68,8 +68,8 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_wallet);
-        if (getIntent()!=null) {
-            if (getIntent().getBooleanExtra("isFromImportPage",false)) {
+        if (getIntent() != null) {
+            if (getIntent().getBooleanExtra("isFromImportPage", false)) {
                 ActivityManager.getInstance().finishActivity(StartActivity.class);
                 ActivityManager.getInstance().finishActivity(ImportWalletActivity.class);
             }
@@ -198,20 +198,25 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             list.add(new WalletInfo(map));
         }
         WalletInfo walletInfo = list.get(0);
-        //if (walletInfo.getName().equals(PreferencesUtils.getString(this, KEY_WALLET_NAME, PreferencesUtils.VISITOR)))
-        if (!TextUtils.isEmpty(walletInfo.getName()) && !"null".equalsIgnoreCase(walletInfo.getName())) {
-            textWalletName.setText(walletInfo.getName());
-            textName.setText(walletInfo.getName());
-        } else {
-            textWalletName.setText("我的钱包");
-            textName.setText("我的钱包");
-        }
-        if (!TextUtils.isEmpty(walletInfo.getAddress())) {
-            textWallet.setText("zp"+walletInfo.getAddress());
-            textWalletAddress.setText("zp"+walletInfo.getAddress());
-        } else {
-            textWallet.setText("");
-            textWalletAddress.setText("");
+        try {
+            if (!TextUtils.isEmpty(walletInfo.getName()) && !"null".equalsIgnoreCase(walletInfo.getName())) {
+                textWalletName.setText(walletInfo.getName());
+                textName.setText(walletInfo.getName());
+            } else {
+                textWalletName.setText("我的钱包");
+                textName.setText("我的钱包");
+            }
+            String address = walletInfo.getAddress();
+            if (!TextUtils.isEmpty(address)) {
+                String result = "zp" + address.substring(0, 5) + "..." + address.substring(address.length() - 7);
+                textWallet.setText(result);
+                textWalletAddress.setText("zp" + address);
+            } else {
+                textWallet.setText("");
+                textWalletAddress.setText("");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -141,6 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/pwd_tip"
+                android:visibility="gone"
                 android:textColor="@color/black" />
 
             <EditText
@@ -148,7 +149,7 @@
                 style="@style/EditText_register"
                 android:layout_marginTop="20dp"
                 android:hint="@string/not_must"
-
+                android:visibility="gone"
                 />
 
             <LinearLayout
@@ -160,12 +161,15 @@
                 <CheckBox
                     android:id="@+id/check"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="@string/read_agree"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/read_agree" />
+                    android:text="@string/read_agree"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/txt_agreement"

@@ -1,13 +1,16 @@
 package com.zipper.wallet.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.activity.TransactionDefailsActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +19,7 @@ import java.util.Map;
  * Created by Administrator on 2018/4/9.
  */
 
-public class DealRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class DealRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
     private List<Map> mList;
@@ -37,8 +40,8 @@ public class DealRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         View view = null;
         DealViewHolder viewHolder = null;
-                view = inflate(R.layout.item_deal_record);
-                viewHolder = new DealViewHolder(view);
+        view = inflate(R.layout.item_deal_record);
+        viewHolder = new DealViewHolder(view);
 
         return viewHolder;
     }
@@ -49,13 +52,19 @@ public class DealRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        DealViewHolder dHolder = (DealViewHolder)holder;
-        dHolder.txtAddr.setText(mList.get(position).get("addr")+"");
-        String str = mList.get(position).get("date")+" | 确认次数："+mList.get(position).get("times");
+        DealViewHolder dHolder = (DealViewHolder) holder;
+        dHolder.txtAddr.setText(mList.get(position).get("addr") + "");
+        String str = mList.get(position).get("date") + " | 确认次数：" + mList.get(position).get("times");
         //Log.i("DealRecordAdapter","str:"+str);
         dHolder.txtDetail.setText(str);
-        dHolder.txtCount.setText(mList.get(position).get("count")+"");
-        dHolder.txtName.setText(mList.get(position).get("name")+"");
+        dHolder.txtCount.setText(mList.get(position).get("count") + "");
+        dHolder.txtName.setText(mList.get(position).get("name") + "");
+        dHolder.mRelativeClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, TransactionDefailsActivity.class).putExtra("currency",mList.get(position).get("count")+""));
+            }
+        });
     }
 
     @Override
@@ -64,14 +73,17 @@ public class DealRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     static class DealViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtAddr,txtDetail,txtCount,txtName;
+        public TextView txtAddr, txtDetail, txtCount, txtName;
+        private RelativeLayout mRelativeClick;
 
         public DealViewHolder(View itemView) {
             super(itemView);
-            txtAddr = (TextView)itemView.findViewById(R.id.txt_addr);
-            txtName = (TextView)itemView.findViewById(R.id.txt_name);
-            txtDetail = (TextView)itemView.findViewById(R.id.txt_detail);
-            txtCount = (TextView)itemView.findViewById(R.id.txt_count);
+            txtAddr = (TextView) itemView.findViewById(R.id.txt_addr);
+            txtName = (TextView) itemView.findViewById(R.id.txt_name);
+            txtDetail = (TextView) itemView.findViewById(R.id.txt_detail);
+            txtCount = (TextView) itemView.findViewById(R.id.txt_count);
+            mRelativeClick = itemView.findViewById(R.id.relative_click);
+
         }
     }
 

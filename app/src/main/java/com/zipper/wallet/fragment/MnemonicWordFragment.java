@@ -195,8 +195,8 @@ public class MnemonicWordFragment extends BaseFragment {
                                 walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME, PreferencesUtils.VISITOR));
                                 walletInfo.setTip(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD_TIP, PreferencesUtils.VISITOR));
 
-                                walletInfo.setEsda_seed(priKey);
-                                walletInfo.setMnem_seed(mnem_seed);
+                                walletInfo.setEsda_seed(new EncryptedData(Utils.hexStringToByteArray(priKey),password).toEncryptedString());
+                                walletInfo.setMnem_seed(new EncryptedData(Utils.hexStringToByteArray(mnem_seed),password).toEncryptedString());
 
                                 walletInfo.setAddress(firstAddr);
                                 //walletInfo.setId(4);
