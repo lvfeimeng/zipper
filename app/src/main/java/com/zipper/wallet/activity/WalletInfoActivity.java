@@ -1,5 +1,6 @@
 package com.zipper.wallet.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -11,10 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.dialog.DeleteWalletDialog;
 import com.zipper.wallet.utils.CreateAcountUtils;
+import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.SqliteUtils;
 
@@ -25,6 +28,7 @@ import net.bither.bitherj.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class WalletInfoActivity extends BaseActivity {
 
@@ -67,7 +71,7 @@ public class WalletInfoActivity extends BaseActivity {
             } else {
                 editWalletName.setText("我的钱包");
             }
-            textAddr.setText("zp"+walletInfo.getAddress());
+            textAddr.setText("zp" + walletInfo.getAddress());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,7 +106,14 @@ public class WalletInfoActivity extends BaseActivity {
         if (dialog == null) {
             dialog = new DeleteWalletDialog(this);
             dialog.setCallback(() -> {
-                toast("删除钱包");
+                if (walletInfo == null) {
+                    return;
+                }
+                walletInfo.delete();
+                PreferencesUtils.clearData(this, PreferencesUtils.USER);
+                startActivity(new Intent(this, StartActivity.class));
+                ActivityManager.getInstance().finishAllActivity();
+                finish();
             });
         }
         dialog.show();

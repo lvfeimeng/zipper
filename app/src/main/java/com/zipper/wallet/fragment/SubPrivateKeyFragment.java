@@ -227,9 +227,7 @@ public class SubPrivateKeyFragment extends BaseFragment {
             Log.i(TAG, "钱包数据保存成功");
 
             PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
-            startActivity(new Intent(getActivity(), MyWalletActivity.class));
-            getActivity().finish();
-            ActivityManager.getInstance().finishActivity(StartActivity.class);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
