@@ -58,7 +58,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             titlebar.setLeftOnclickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onBackKeyDown();
+                    //onBackKeyDown();
+                    onBackPressed();
                 }
             });
         }

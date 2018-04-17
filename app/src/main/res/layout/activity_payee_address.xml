@@ -127,10 +127,11 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/bg_blue_corners"
+                android:background="@drawable/btn_ripple_blue_corner"
                 android:text="复制收款地址"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
+            <!--bg_blue_corners-->
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
