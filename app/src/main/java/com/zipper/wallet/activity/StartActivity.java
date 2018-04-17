@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.zipper.wallet.R;
 import com.zipper.wallet.animations.MyAnimations;
 import com.zipper.wallet.base.BaseActivity;
@@ -22,11 +20,11 @@ import com.zipper.wallet.utils.PreferencesUtils;
 
 public class StartActivity extends BaseActivity {
 
-    private Button btnCreate, btnImport,btnHome;
+    private Button btnCreate, btnImport, btnHome;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         btnCreate = (Button) findViewById(R.id.btn_create);
@@ -37,7 +35,7 @@ public class StartActivity extends BaseActivity {
         btnHome.setVisibility(View.GONE);
         boolean isfirst = PreferencesUtils.getBoolean(this, "is_first", true, PreferencesUtils.PROJECT);
         setTransparentStatusBar();
-        if(isfirst){
+        if (isfirst) {
             startActivity(new Intent(this,
                     WelcomActivity.class));
             finish();

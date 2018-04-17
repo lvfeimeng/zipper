@@ -175,11 +175,11 @@ public class MnemonicWordFragment extends BaseFragment {
                     for (Map map : (List<Map>) param.get("data")) {
                         CoinInfo coinInfo = new CoinInfo(map);
                         Log.i(TAG, coinInfo.getName() + "信息正在保存");
-                        if (coinInfo.getName().equals("BTC")) {
+                        if (coinInfo.getName().equalsIgnoreCase("BTC")) {
                             String addr = CreateAcountUtils.getAccount(master, coinInfo.getType()).toAddress();
                             Log.i(TAG, "addr:" + addr);
                             coinInfo.setAddr(addr);
-                        } else {
+                        } else if (coinInfo.getName().equalsIgnoreCase("eth")) {
                             String addr = CreateAcountUtils.getAccount(master, coinInfo.getType()).toAddress();
                             Log.i(TAG, "addr:" + addr);
                             coinInfo.setAddr(addr);
@@ -211,9 +211,8 @@ public class MnemonicWordFragment extends BaseFragment {
                                 Log.i(TAG, "钱包数据保存成功");
 
                                 PreferencesUtils.putBoolean(mContext, KEY_IS_LOGIN, true, PreferencesUtils.USER);
-                                startActivity(new Intent(getActivity(), MyWalletActivity.class));
-                                getActivity().finish();
-                                ActivityManager.getInstance().finishActivity(StartActivity.class);
+                                startActivity(new Intent(getActivity(), MyWalletActivity.class)
+                                        .putExtra("isFromImportPage", true));
                             } catch (MnemonicException.MnemonicChecksumException e) {
                                 toast("助记词有误，请重新输入");
                                 e.printStackTrace();

@@ -47,7 +47,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(R.style.ActivityNotTransparent);
         super.onCreate(savedInstanceState);
         statusBarSetting();
         ActivityManager.getInstance().addActivity(this);
@@ -262,7 +261,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         KeyBoardUtils.closeKeybord(mContext);
-
         if (alertDialog != null) {
 
             alertDialog.dismiss();

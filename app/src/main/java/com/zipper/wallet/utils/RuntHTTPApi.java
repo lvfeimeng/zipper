@@ -46,39 +46,40 @@ public class RuntHTTPApi {
 
     private static final String TAG = "uploadFile";
     private static final int TIME_OUT = 10 * 1000; // 超时时间
-	public final static String IP = "120.92.34.88",//  http://172.16.4.76:8080/coin/getcoininfos
-	// www.soarsan.com
-	PORT = ":8081",
-			CHARSET = "utf-8",
-			PROJECT_URL = "http://" + IP + PORT +"/",
-            SERVER_URL = "http://" + IP + PORT+"/",
+
+    public final static String IP = "120.92.34.88",//  http://172.16.4.76:8080/coin/getcoininfos
+    // www.soarsan.com
+    PORT = ":8081",
+            CHARSET = "utf-8",
+            PROJECT_URL = "http://" + IP + PORT + "/",
+            SERVER_URL = "http://" + IP + PORT + "/",
             URL_GET_COINS = "coin/getcoininfos",//获取币种列表信息
             URL_ADD_ADDRESS = "appapi/user/add_address",  //添加收货地址
-			URL_DEL_ADDRESS = "appapi/user/delete_address/", 	//删除收货地址
-			URL_EDIT_ADDRESS = "appapi/user/change_address/", 	//修改收货地址
-			URL_ADDRESS_LIST = "appapi/user/address_list",//获取收货地址列表
-			URL_VERIFYCODE = "Appapi/user/verify_mobile_code", // 验证手机号
-			URL_PHONE_SET_PWD = "Appapi/user/mobile_find_pwd", // 手机号修改密码
-			URL_GETCODE = "Appapi/user/send_message", // 获取手机验证码
-			URL_EDITPWD = "Appapi/user/old_new_login_pwd", // 修改密码
-			URL_EDITPHONE= "Appapi/user/modify_bind_mobile", // 修改手机
-			URL_IS_IDENTIFY= "Appapi/user/is_identify_certification",//是否实名认证
-			URL_DO_IDENTIFY= "Appapi/user/apply_identify_certification",//提交实名认证
-			URL_GET_BANKCARDS= "appapi/user/bank_list",//获取绑定的银行卡列表
-			URL_ADD_BACKCARD= "appapi/user/add_bank_card",//添加银行卡
-			URL_GET_CARD_BANK_INFO= "appapi/user/bank_card_info",//查询卡号所属银行
-			URL_UNBIND_CARD= "Appapi/user/remove_bind_bank",//解除绑定银行卡
-			URL_GET_CASH= "Appapi/pay/withdraw_cash",//提现
-			URL_SET_PAY_PWD= "Appapi/pay/set_pwd",//设置支付密码
-			URL_GET_INTEGRAL_EXPENSE_RECORD= "appapi/integration/points_record/",//积分兑换记录
-			URL_GET_BALANCE= "Appapi/user/get_account_balance",//获取余额
-			URL_GET_INTEGRAL= "appapi/integration/index",//获取积分
-			URL_CREATE_ORDER= "Appapi/pay/create_order",//创建订单
-			URL_WALLETPAY= "Appapi/pay/coinspay",//创建订单
-			URL_CATEGORY= "Appapi/shop/category_list",//获取经营类目
-			URL_APPLY_STORE= "Appapi/shop/apply_shop",//申请店铺
-			URL_APPLY_STORE_STATUS= "Appapi/shop/is_audit_pass",//店铺审核状态
-			 URL_QUIT_ROOM = "quit_room";
+            URL_DEL_ADDRESS = "appapi/user/delete_address/",    //删除收货地址
+            URL_EDIT_ADDRESS = "appapi/user/change_address/",    //修改收货地址
+            URL_ADDRESS_LIST = "appapi/user/address_list",//获取收货地址列表
+            URL_VERIFYCODE = "Appapi/user/verify_mobile_code", // 验证手机号
+            URL_PHONE_SET_PWD = "Appapi/user/mobile_find_pwd", // 手机号修改密码
+            URL_GETCODE = "Appapi/user/send_message", // 获取手机验证码
+            URL_EDITPWD = "Appapi/user/old_new_login_pwd", // 修改密码
+            URL_EDITPHONE = "Appapi/user/modify_bind_mobile", // 修改手机
+            URL_IS_IDENTIFY = "Appapi/user/is_identify_certification",//是否实名认证
+            URL_DO_IDENTIFY = "Appapi/user/apply_identify_certification",//提交实名认证
+            URL_GET_BANKCARDS = "appapi/user/bank_list",//获取绑定的银行卡列表
+            URL_ADD_BACKCARD = "appapi/user/add_bank_card",//添加银行卡
+            URL_GET_CARD_BANK_INFO = "appapi/user/bank_card_info",//查询卡号所属银行
+            URL_UNBIND_CARD = "Appapi/user/remove_bind_bank",//解除绑定银行卡
+            URL_GET_CASH = "Appapi/pay/withdraw_cash",//提现
+            URL_SET_PAY_PWD = "Appapi/pay/set_pwd",//设置支付密码
+            URL_GET_INTEGRAL_EXPENSE_RECORD = "appapi/integration/points_record/",//积分兑换记录
+            URL_GET_BALANCE = "Appapi/user/get_account_balance",//获取余额
+            URL_GET_INTEGRAL = "appapi/integration/index",//获取积分
+            URL_CREATE_ORDER = "Appapi/pay/create_order",//创建订单
+            URL_WALLETPAY = "Appapi/pay/coinspay",//创建订单
+            URL_CATEGORY = "Appapi/shop/category_list",//获取经营类目
+            URL_APPLY_STORE = "Appapi/shop/apply_shop",//申请店铺
+            URL_APPLY_STORE_STATUS = "Appapi/shop/is_audit_pass",//店铺审核状态
+            URL_QUIT_ROOM = "quit_room";
 
 
     /**
@@ -89,6 +90,7 @@ public class RuntHTTPApi {
      * @param stringCallback
      */
     public static void toReApi(String lastUrl, Map<String, Object> params, MyStringCallBack stringCallback) {
+        params.put("submit", "1");
         String url = SERVER_URL + lastUrl;
         System.out.println("---------------传输的数据-------------------");
         System.out.println("url:" + url);
@@ -110,57 +112,6 @@ public class RuntHTTPApi {
         if (stringCallback != null) {
             pfBuilder.build().execute(stringCallback);
         }
-    }
-
-
-
-
-    /**
-     * MultipartEntity 多文件加参数传递
-     * @param lastUrl
-     * @param params
-     * @return
-     */
-    public static Map<String, Object> toReApi(String lastUrl,Map<String, Object>params) {
-        params.put("submit", "1");
-        String targetURL = SERVER_URL+lastUrl;
-        System.out.println("---------------传输的数据-------------------");
-        System.out.println("url:"+targetURL);
-        printMap(params, "");
-        org.apache.http.client.HttpClient client=new DefaultHttpClient();// 开启一个客户端 HTTP 请求
-        HttpPost post = new HttpPost(targetURL);//创建 HTTP POST 请求
-        MultipartEntity multipart = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,null, Charset.forName("UTF-8"));
-        try {
-            for (String key : params.keySet()) {
-                if (params.get(key) instanceof Collection) {
-                    for(File file : (Collection<File>)params.get(key)){
-                        multipart.addPart(key, new FileBody(file));
-                    }
-                } else if(params.get(key) instanceof File) {
-                    multipart.addPart(key, new FileBody((File) params.get(key)));
-                } else {
-                    multipart.addPart(key, new StringBody(params.get(key).toString(), Charset.forName("UTF-8")));
-                }
-            }
-            post.setEntity(multipart);
-            HttpResponse response = client.execute(post);
-            int status = response.getStatusLine().getStatusCode();
-            System.out.println("网络请求状态:"+status);
-            if (status == HttpURLConnection.HTTP_OK) {
-                String resultStr = EntityUtils.toString(response.getEntity()).toString();
-                return parseJsonToMap(resultStr);
-            }else if(status == HttpURLConnection.HTTP_CLIENT_TIMEOUT){
-                System.out.println("链接超时。。。。。。");
-            }else if(status == HttpURLConnection.HTTP_SERVER_ERROR){
-                System.out.println("网络服务错误。。。。。。");
-            }else if(status == HttpURLConnection.HTTP_NOT_FOUND){
-                System.out.println("链接不到服务器。。。。。。");
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
     }
 
 

@@ -37,13 +37,13 @@ public class ActivityManager {
         if (activityStack == null) {
             activityStack = new Stack<Activity>();
         }
-        activityStack.add(activity);
+        activityStack.push(activity);
     }
 
     /**
      * 获取当前Activity（堆栈中最后一个压入的）
      */
-    public Activity currentActivity() {
+    public Activity getCurrentActivity() {
         Activity activity = activityStack.lastElement();
         return activity;
     }
@@ -70,11 +70,14 @@ public class ActivityManager {
      * 结束指定类名的Activity
      */
     public void finishActivity(Class<?> cls) {
-        for (Activity activity : activityStack) {
-            if (activity.getClass().equals(cls)) {
-                finishActivity(activity);
+        int flag = -1;
+        for (int i = 0; i < activityStack.size(); i++) {
+            if (activityStack.get(i).getClass().equals(cls)) {
+                flag = i;
+                break;
             }
         }
+        finishActivity(activityStack.get(flag));
     }
 
     /**
@@ -111,11 +114,6 @@ public class ActivityManager {
         return false;
     }
 
-    public void printLog() {
-        for (int i = 0; i < activityStack.size(); i++) {
-            //Loger.d(activityStack.get(i));
-        }
-    }
 
 //        /**
 //         * 退出应用程序
