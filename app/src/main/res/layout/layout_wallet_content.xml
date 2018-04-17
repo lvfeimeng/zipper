@@ -129,7 +129,7 @@
                         android:layout_width="50dp"
                         android:layout_height="match_parent"
                         android:padding="12dp"
-                        android:src="@mipmap/ic_home" />
+                        android:src="@mipmap/ic_drawer" />
 
                     <ImageView
                         android:id="@+id/img_qr_code"
