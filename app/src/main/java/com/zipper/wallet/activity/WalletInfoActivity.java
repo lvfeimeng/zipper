@@ -108,14 +108,12 @@ public class WalletInfoActivity extends BaseActivity {
         if (dialog == null) {
             dialog = new DeleteWalletDialog(this);
             dialog.setCallback(() -> {
-                if (walletInfo == null) {
-                    return;
-                }
-                SQLiteDatabase sqlDB = mContext.openOrCreateDatabase(SqliteUtils.DB, Context.MODE_PRIVATE,null);
-                try{
-                    sqlDB.execSQL("drop table walletinfo");
-                }catch (SQLiteException e){
 
+                SQLiteDatabase sqlDB = mContext.openOrCreateDatabase(SqliteUtils.DB, Context.MODE_PRIVATE, null);
+                try {
+                    sqlDB.execSQL("drop table walletinfo");
+                } catch (SQLiteException e) {
+                    e.printStackTrace();
                 }
                 PreferencesUtils.clearData(this, PreferencesUtils.USER);
                 startActivity(new Intent(this, StartActivity.class));
@@ -153,7 +151,7 @@ public class WalletInfoActivity extends BaseActivity {
                     public void run() {
                         try {
                             String pwd = param.get(INPUT_TEXT).toString().trim();
-                            Log.i(TAG,walletInfo.getEsda_seed()+" "+pwd);
+                            Log.i(TAG, walletInfo.getEsda_seed() + " " + pwd);
                             byte[] bytes = new EncryptedData(walletInfo.getEsda_seed()).decrypt(pwd);
                             if (bytes == null) {
                                 return;
@@ -193,7 +191,7 @@ public class WalletInfoActivity extends BaseActivity {
 
     private String getMnemonicWord(WalletInfo walletInfo, String pwd) throws MnemonicException.MnemonicLengthException {
         CreateAcountUtils.instance(this);
-        if(walletInfo.getMnem_seed() == null || walletInfo.getMnem_seed().trim().equals("") ||  walletInfo.getMnem_seed().trim().indexOf("null")>-1){
+        if (walletInfo.getMnem_seed() == null || walletInfo.getMnem_seed().trim().equals("") || walletInfo.getMnem_seed().trim().indexOf("null") > -1) {
             return "";
         }
         byte[] mnem_bytes = new EncryptedData(walletInfo.getMnem_seed()).decrypt(pwd);

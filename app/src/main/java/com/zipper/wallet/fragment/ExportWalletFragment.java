@@ -44,7 +44,7 @@ public class ExportWalletFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    //0-备份助记词,1-导出明文私钥，20-导出加密私钥
+    //0-备份助记词,1-导出明文私钥，2-导出加密私钥
     public static ExportWalletFragment newInstance(int type,String text) {
         ExportWalletFragment fragment = new ExportWalletFragment();
         Bundle args = new Bundle();

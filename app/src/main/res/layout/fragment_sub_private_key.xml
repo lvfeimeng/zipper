@@ -123,6 +123,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
                 android:text="密码提示"
+                android:visibility="gone"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -136,6 +137,7 @@
                 android:background="@drawable/bg_line"
                 android:gravity="center_vertical"
                 android:hint="选填"
+                android:visibility="gone"
                 android:maxLines="1"
                 android:padding="5dp"
                 android:textColor="@color/black"

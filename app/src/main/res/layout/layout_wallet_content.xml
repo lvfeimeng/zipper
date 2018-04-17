@@ -14,8 +14,8 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
             app:contentScrim="@drawable/wallet_home_bg"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
             app:titleEnabled="false">
             <!--app:statusBarScrim="?attr/colorPrimary"-->
             <!--app:contentScrim="?attr/colorPrimary"-->
@@ -33,30 +33,31 @@
                     android:id="@+id/text_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="用户名"
+                    android:text="我的钱包"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/text_wallet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="ada123dad...dfsdfsd2344"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="1"
+                    android:text=""
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="6dp"
                     android:text="（支持全币种交易）"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp">
+                    android:layout_height="55dp">
 
                     <View
                         android:id="@+id/line_divider"
@@ -79,8 +80,8 @@
                             android:layout_height="wrap_content"
                             android:drawableLeft="@mipmap/home_switch_big"
                             android:drawablePadding="10dp"
-                            android:padding="10dp"
                             android:gravity="center_vertical"
+                            android:padding="10dp"
                             android:text="转账"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
@@ -137,8 +138,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
                         android:padding="12dp"
-                        android:visibility="gone"
-                        android:src="@mipmap/home_qr_code" />
+                        android:src="@mipmap/home_qr_code"
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/img_switch"
@@ -147,8 +148,8 @@
                         android:layout_marginRight="5dp"
                         android:layout_toLeftOf="@+id/img_qr_code"
                         android:padding="12dp"
-                        android:visibility="gone"
-                        android:src="@mipmap/home_switch" />
+                        android:src="@mipmap/home_switch"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/text_title"
@@ -177,7 +178,7 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"/>
+            android:scrollbars="none" />
 
     </LinearLayout>
     <!--<android.support.v4.widget.NestedScrollView-->
