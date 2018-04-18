@@ -18,12 +18,12 @@
             android:textColor="@color/white"
             android:textSize="25sp"
             android:layout_marginBottom="10dp"
-            android:text="专设安全技术"/>
+            android:text="点对点直接划转"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/color_gray"
-            android:text="升级加密技术，私钥安全保护"/>
+            android:text="无需交易所双方直接划转"/>
 
     </LinearLayout>
 

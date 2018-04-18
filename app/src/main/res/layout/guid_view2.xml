@@ -19,12 +19,12 @@
             android:textColor="@color/white"
             android:textSize="25sp"
             android:layout_marginBottom="10dp"
-            android:text="专设安全技术"/>
+            android:text="跨链资产掌握"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/color_gray"
-            android:text="升级加密技术，私钥安全保护"/>
+            android:text="BTC、ETH、LTC ……放到一起"/>
 
     </LinearLayout>
 

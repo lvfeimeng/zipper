@@ -3,14 +3,13 @@ package com.zipper.wallet.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 import com.zipper.wallet.R;
 import com.zipper.wallet.bean.ContactBean;
-import com.zipper.wallet.utils.ImgUtil;
 
 import java.util.List;
 
@@ -25,11 +24,17 @@ public class ContactAdapter extends CommonAdapter<ContactBean> {
         ContactViewHolder vh = new ContactViewHolder(holder.getConvertView());
 //        ImgUtil.loadCircleImage(bean.getPhoto(), vh.imageView);
         vh.textName.setText(bean.getName());
+        vh.textName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "点击跳转" + vh.textName.getText() + "的联系详情", Toast.LENGTH_SHORT).show();
+            }
+        });
 //        vh.textKey.setText(bean.getKey());
     }
 
     static class ContactViewHolder extends RecyclerView.ViewHolder {
-//        private ImageView imageView;
+        //        private ImageView imageView;
         private TextView textName;
 //        private TextView textKey;
 
