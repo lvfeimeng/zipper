@@ -105,7 +105,6 @@ public class MnemonicActivity extends BaseActivity {
         List<WalletInfo> list = new ArrayList<>();
         WalletInfo hd = null;
 
-        SqliteUtils.openDataBase(mContext);
         List<Map> maps = SqliteUtils.selecte("walletinfo");
             for(Map map : maps){
                 list.add(new WalletInfo(map));
@@ -284,7 +283,6 @@ public class MnemonicActivity extends BaseActivity {
 
     private  void delMnemCode(){
         PreferencesUtils.putBoolean(mContext, KEY_IS_LOGIN, true, PreferencesUtils.USER);
-        SqliteUtils.openDataBase(mContext);
         ContentValues values = new ContentValues();
         //在values中添加内容
         values.put("mnem_seed", "");

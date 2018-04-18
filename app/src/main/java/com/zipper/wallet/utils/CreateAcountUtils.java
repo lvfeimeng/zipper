@@ -2,7 +2,6 @@ package com.zipper.wallet.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
 import com.zipper.wallet.base.BaseActivity;
@@ -22,8 +21,6 @@ import net.bither.bitherj.crypto.hd.HDKeyDerivation;
 import net.bither.bitherj.crypto.mnemonic.MnemonicCode;
 import net.bither.bitherj.crypto.mnemonic.MnemonicException;
 import net.bither.bitherj.utils.Utils;
-
-import org.litepal.LitePal;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -187,6 +184,14 @@ public class CreateAcountUtils {
 
     }
 
+    public static byte[] entropyRandomSeed(List<String> words) throws MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException, MnemonicException.MnemonicWordException {
+        if(!isInstanced()){
+            MyLog.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+            throw new NullPointerException();
+        }
+        return MnemonicCode.instance().toEntropy(words);
+    }
+
 
     /**
      * 获取统一地址
@@ -286,14 +291,12 @@ public class CreateAcountUtils {
                     @Override
                     public void run() {
                         try {
-                            SQLiteDatabase sqlDB = SqliteUtils.openDataBase(mContext);
                             try{
-                                sqlDB.execSQL("drop table coininfo");
-                                sqlDB.execSQL("drop table walletinfo");
+                                SqliteUtils.execSQL("drop table coininfo");
                             }catch (SQLiteException e){
                                 e.printStackTrace();
                             }
-                            sqlDB.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42),addr VARCHAR(42));");
+                            SqliteUtils.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42),addr VARCHAR(42));");
 
                             SqliteUtils.test();
                             MyLog.i("StartActivity",(param.get("data") instanceof Collection)+"");
@@ -338,8 +341,33 @@ public class CreateAcountUtils {
     public static void saveWallet(String randomSeed, String mnemonicSeed, String firstAddr, RuntHTTPApi.ResPonse resPonse){
 
         try {
+            Map<String, Object> param = new HashMap<>();
+            List<WalletInfo> list = new ArrayList<>();
+            try{
 
-            SQLiteDatabase db = LitePal.getDatabase();
+                List<Map> maps = SqliteUtils.selecte("walletinfo");
+                for (Map map : maps) {
+                    list.add(new WalletInfo(map));
+                }
+                if(list.size() > 0 && !list.get(0).getAddress().equals(firstAddr)){//判断生成的同一地址，是否与数据库相同
+                    if(randomSeed != null && !randomSeed.equals("") && !randomSeed.equals("null")) {
+                        param.put("error", "助记词有误，请重新输入");
+                    }else{
+                        param.put("error", "私钥有误，请重新输入");
+                    }
+                    resPonse.doErrorThing(param);
+                    return;
+                }
+                if(list.size() > 0) {
+                    PreferencesUtils.putString(mContext, BaseActivity.KEY_WALLET_NAME,list.get(0).getName(), PreferencesUtils.VISITOR);
+                    PreferencesUtils.putString(mContext, BaseActivity.KEY_WALLET_PWD_TIP,list.get(0).getTip(), PreferencesUtils.VISITOR);
+                    param.put("success", "密码修改成功");
+                }
+                SqliteUtils.execSQL("drop table walletinfo");
+            }catch (SQLiteException e){
+                e.printStackTrace();
+
+            }
             WalletInfo walletInfo = new WalletInfo(mContext);
             walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME,PreferencesUtils.VISITOR));
             walletInfo.setTip(PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD_TIP,PreferencesUtils.VISITOR));
@@ -347,7 +375,7 @@ public class CreateAcountUtils {
                     PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD,PreferencesUtils.VISITOR),
                     false)
                     .toEncryptedString());
-            if(randomSeed != null && randomSeed.equals("") && randomSeed.indexOf("null") == -1) {
+            if(randomSeed != null && !randomSeed.equals("") && randomSeed.indexOf("null") == -1) {
                 walletInfo.setMnem_seed(new EncryptedData(Utils.hexStringToByteArray(randomSeed),
                         PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD, PreferencesUtils.VISITOR),
                         false)
@@ -361,10 +389,9 @@ public class CreateAcountUtils {
                     cValue.put(key.toString(), walletInfo.toMap().get(key) + "");
                 }
             }
-
-            db.insert("walletinfo",null,cValue);
+            SqliteUtils.insert("walletinfo",cValue);
             MyLog.i(TAG,"钱包数据保存成功");
-            resPonse.doSuccessThing(new HashMap<>());
+            resPonse.doSuccessThing(param);
         }catch ( Exception e){
             e.printStackTrace();
             Map<String, Object> param = new HashMap<>();

@@ -77,7 +77,9 @@ public class ActivityManager {
                 break;
             }
         }
-        finishActivity(activityStack.get(flag));
+        if(flag>-1) {
+            finishActivity(activityStack.get(flag));
+        }
     }
 
     /**

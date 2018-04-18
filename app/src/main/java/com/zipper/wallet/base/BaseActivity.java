@@ -26,6 +26,7 @@ import com.zipper.wallet.dialog.TipDialog;
 import com.zipper.wallet.utils.KeyBoardUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.ScreenUtils;
+import com.zipper.wallet.utils.SqliteUtils;
 
 import java.net.HttpURLConnection;
 
@@ -52,14 +53,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         ActivityManager.getInstance().addActivity(this);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = this;
+        SqliteUtils.openDataBase(mContext);
 
         titlebar = (TitleBarView) findViewById(R.id.title_bar);
         if (titlebar != null) {
             titlebar.setLeftOnclickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //onBackKeyDown();
-                    onBackPressed();
+                    onBackKeyDown();
                 }
             });
         }
@@ -273,6 +274,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected boolean onBackKeyDown() {
+        onBackPressed();
         return false;
     }
 
@@ -284,8 +286,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             case KeyEvent.KEYCODE_MENU:
                 break;
             case KeyEvent.KEYCODE_BACK:
-                onBackKeyDown();
-                break;
+                return onBackKeyDown();
         }
         return super.onKeyDown(keycode, event);
     }

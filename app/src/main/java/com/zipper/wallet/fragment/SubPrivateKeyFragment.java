@@ -2,10 +2,7 @@ package com.zipper.wallet.fragment;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -21,18 +18,13 @@ import android.widget.Toast;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.activity.ImportWalletActivity;
-import com.zipper.wallet.activity.MyWalletActivity;
+import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.base.BaseFragment;
-import com.zipper.wallet.utils.CreateAcountUtils;
-import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.PreferencesUtils;
-import com.zipper.wallet.utils.RuntHTTPApi;
 
 import net.bither.bitherj.crypto.EncryptedData;
-import net.bither.bitherj.crypto.hd.DeterministicKey;
 import net.bither.bitherj.utils.Utils;
 
-import java.util.Map;
 
 /**
  * 明文私钥、密文私钥共用页面
@@ -56,46 +48,12 @@ public class SubPrivateKeyFragment extends BaseFragment {
     private int type = 0;//0---明文，1--密文
 
     private Context mContext;
-    final int SAVE_PRIVATE = 100;
-    final int TRANSMIT_WORDS = 101;
-    final int ERROR = 404;
 
     public SubPrivateKeyFragment() {
         // Required empty public constructor
     }
 
 
-    Handler mHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            Object obj = msg.obj;
-            switch (msg.what) {
-                case SAVE_PRIVATE:
-                    break;
-                case ERROR:
-
-                    if(obj!=null){
-
-                        toast(obj.toString());
-                    }else{
-                        toast("生成数据错误");
-                    }
-
-
-                    break;
-
-                case TRANSMIT_WORDS:
-                    ((ImportWalletActivity)getActivity()).hideProgressDialog();
-                    PreferencesUtils.putBoolean(mContext,((ImportWalletActivity)getActivity()).KEY_IS_LOGIN,true,PreferencesUtils.USER);
-                    PreferencesUtils.clearData(mContext,PreferencesUtils.VISITOR);
-                    startActivity(new Intent(getActivity(), MyWalletActivity.class)
-                            .putExtra("isFromImportPage", true));
-                    break;
-
-            }
-        }
-    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -176,8 +134,9 @@ public class SubPrivateKeyFragment extends BaseFragment {
                 Toast.makeText(getActivity(), "两次密码不一致", Toast.LENGTH_SHORT).show();
                 return;
             }
+            PreferencesUtils.putString(mContext, BaseActivity.KEY_WALLET_PWD,password, PreferencesUtils.VISITOR);
             if (type == 0) {//0---明文，1--密文
-                generateWalletAddress(key);
+                ((ImportWalletActivity)getActivity()).generateWalletAddress(null,key);
             } else {
                 byte[] bytes = null;
                 try {
@@ -186,7 +145,7 @@ public class SubPrivateKeyFragment extends BaseFragment {
                     toast("密钥或密码错误");
                     return;
                 }
-                generateWalletAddress(Utils.bytesToHexString(bytes));
+                ((ImportWalletActivity)getActivity()).generateWalletAddress(null,Utils.bytesToHexString(bytes));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -224,63 +183,6 @@ public class SubPrivateKeyFragment extends BaseFragment {
                 }
             }
         });
-    }
-
-    private void generateWalletAddress(String prikey) {
-        ((ImportWalletActivity)getActivity()).showProgressDialog("正在导入。。。");
-        new Thread(){
-            @Override
-            public void run() {
-                try {
-                    CreateAcountUtils.instance(mContext);
-
-                    DeterministicKey master = CreateAcountUtils.CreateRootKey(Utils.hexStringToByteArray(prikey));//生成根公私钥对象
-
-                    CreateAcountUtils.saveCoins(master, new RuntHTTPApi.ResPonse() {
-                        @Override
-                        public void doSuccessThing(Map<String, Object> param) {
-                            String firstAddr = param.get("firstAddr").toString();
-                            CreateAcountUtils.saveWallet(null, prikey, firstAddr, new RuntHTTPApi.ResPonse() {
-                                @Override
-                                public void doSuccessThing(Map<String, Object> param) {
-
-
-                                    MyLog.i(TAG,"mnemonicSeed :"+prikey);
-                                    MyLog.i(TAG,"512PrivateKey:"+Utils.bytesToHexString(master.getPrivKeyBytes()));
-                                    MyLog.i(TAG,"512publicKey:"+Utils.bytesToHexString(master.getPubKey()));
-                                    MyLog.i(TAG,"512PrivateKey33:"+Utils.bytesToHexString(master.getPrivKeyBytes33()));
-                                    MyLog.i(TAG,"512publicKeyhash:"+Utils.bytesToHexString(master.getPubKeyHash()));
-                                    MyLog.i(TAG,"512publicKeyExtended:"+Utils.bytesToHexString(master.getPubKeyExtended()));
-                                    MyLog.i(TAG,"firstAddr:"+firstAddr);
-                                    Message msg = new Message();
-                                    msg.what = TRANSMIT_WORDS;
-                                    mHandler.sendMessage(msg);
-                                }
-
-                                @Override
-                                public void doErrorThing(Map<String, Object> param) {
-
-                                    Message msg = new Message();
-                                    msg.what = ERROR;
-                                    msg.obj = param.get("error");
-                                    mHandler.sendMessage(msg);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void doErrorThing(Map<String, Object> param) {
-                            Message msg = new Message();
-                            msg.what = ERROR;
-                            msg.obj = param.get("error");
-                            mHandler.sendMessage(msg);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
     }
 
 }

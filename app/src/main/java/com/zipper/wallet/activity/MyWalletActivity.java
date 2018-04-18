@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -174,7 +173,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         } else {
             checkboxGesturePassword.setChecked(false);
         }
-        checkboxGesturePassword.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        checkboxGesturePassword.setOnClickListener((v) -> {
             String pwd = PreferencesUtils.getString(mContext, "hand_pwd", PreferencesUtils.USER);
             int mode = 0;
             if (!TextUtils.isEmpty(pwd)) {
@@ -196,7 +195,6 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
 
 
         List<WalletInfo> list = new ArrayList<>();
-        SqliteUtils.openDataBase(this);
         List<Map> maps = SqliteUtils.selecte("walletinfo");
         for (Map map : maps) {
             list.add(new WalletInfo(map));

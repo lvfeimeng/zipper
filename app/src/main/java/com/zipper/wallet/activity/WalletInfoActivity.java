@@ -52,13 +52,11 @@ public class WalletInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_wallet_info);
         initView();
-        initData();
     }
 
     private void initData() {
         try {
             List<WalletInfo> list = new ArrayList<>();
-            SqliteUtils.openDataBase(WalletInfoActivity.this);
             List<Map> maps = SqliteUtils.selecte("walletinfo");
             for (Map map : maps) {
                 list.add(new WalletInfo(map));
@@ -97,6 +95,7 @@ public class WalletInfoActivity extends BaseActivity {
             startActivity(new Intent(this, UpdatePasActivity.class));
         });
         textExportWallet.setOnClickListener(v -> {
+            initData();
             inputPwd();
 //            startActivity(new Intent(this, ExportWalletActivity.class));
         });
@@ -113,7 +112,6 @@ public class WalletInfoActivity extends BaseActivity {
                 } catch (SQLiteException e) {
                     e.printStackTrace();
                 }
-                SqliteUtils.openDataBase(mContext);
                 SqliteUtils.test();
                 PreferencesUtils.clearData(this, PreferencesUtils.USER);
                 startActivity(new Intent(this, StartActivity.class));

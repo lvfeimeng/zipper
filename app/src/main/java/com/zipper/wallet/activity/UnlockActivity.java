@@ -1,6 +1,5 @@
 package com.zipper.wallet.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -38,6 +37,9 @@ public class UnlockActivity extends BaseActivity {
         if(mode ==0 && pwd !=null && !pwd.equals("")){
             mode =1;
         }
+        txtTitle.setText(getString(R.string.input_hand_pwd));
+        mUnlockView.setMode(UnlockView.CHECK_MODE);
+        txtTip.setText("");
         switch (mode) {
             case 0://创建
                 txtTitle.setText(getString(R.string.create_hand_pwd));
@@ -45,21 +47,11 @@ public class UnlockActivity extends BaseActivity {
                 mUnlockView.setMode(UnlockView.CREATE_MODE);
                 break;
             case 1://验证
-                titlebar.setRightText("修改");
-                titlebar.setRightOnclickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(mContext, UnlockActivity.class);
-                        intent.putExtra("mode", 2);
-                        startActivity(intent);
-                    }
-                });
+                titlebar.setLeftVisible(View.GONE);
             case 2://修改
             case 3://删除
+            case 4:
             default:
-                txtTitle.setText(getString(R.string.input_hand_pwd));
-                mUnlockView.setMode(UnlockView.CHECK_MODE);
-                txtTip.setText("");
                 break;
         }
         txtWarning.setText("");
@@ -67,7 +59,7 @@ public class UnlockActivity extends BaseActivity {
             @Override
             public void onGestureCreated(String result) {
                 pwd = result;
-                Toast.makeText(mContext, "Set Gesture Succeeded!" + pwd, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "Set Gesture Succeeded!" + pwd, Toast.LENGTH_SHORT).show();
                 mUnlockView.setMode(UnlockView.CHECK_MODE);
                 txtTitle.setText(getString(R.string.input_hand_pwd));
                 txtTip.setText(getString(R.string.re_hand_pwd));
@@ -100,7 +92,7 @@ public class UnlockActivity extends BaseActivity {
                         finish();
                         break;
                     case 1://验证
-                        Toast.makeText(mContext, getString(R.string.success_hand_pwd), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, getString(R.string.success_hand_pwd), Toast.LENGTH_SHORT).show();
                         finish();
                         break;
                     case 2://修改
@@ -115,6 +107,9 @@ public class UnlockActivity extends BaseActivity {
                         PreferencesUtils.putString(mContext,KEY_HAND_PWD,"",PreferencesUtils.USER);
                         finish();
                         break;
+                    case 4:
+                        finish();
+
                     default:
                         break;
                 }
@@ -143,5 +138,13 @@ public class UnlockActivity extends BaseActivity {
     @Override
     public void statusBarSetting() {
         setTransparentStatusBar();
+    }
+
+    @Override
+    protected boolean onBackKeyDown() {
+        if(mode == 1){
+            return true;
+        }
+        return super.onBackKeyDown();
     }
 }

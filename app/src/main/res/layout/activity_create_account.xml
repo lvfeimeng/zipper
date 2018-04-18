@@ -35,7 +35,7 @@
             style="@style/EditText_register"
             android:layout_marginRight="30dp"
             android:hint="@string/wallet_hint"
-            android:maxLines="1"
+            android:singleLine="true"
             />
 
         <Button

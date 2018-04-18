@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,15 +18,16 @@ import java.util.Map;
 public class SqliteUtils {
     public static final String DB = "ZipperOne.db";
      static SQLiteDatabase sqlDB;
+    static Context mContext;
 
-     public static SQLiteDatabase openDataBase(Context context){
-         sqlDB = context.openOrCreateDatabase(DB,Context.MODE_PRIVATE,null);
-         return sqlDB;
+     public static void openDataBase(Context context){
+         mContext = context;
      }
 
 
     public static void test(){
         String sql = "select * from sqlite_master";
+        sqlDB = mContext.openOrCreateDatabase(DB,Context.MODE_PRIVATE,null);
         Cursor cursor = sqlDB.rawQuery(sql, null);
 
         //打印表的所有列名
@@ -46,22 +46,26 @@ public class SqliteUtils {
 
             } while (cursor.moveToNext());
         }
+        sqlDB.close();
     }
 
 
     public static  void insert(String table , ContentValues cValue){
+        sqlDB = mContext.openOrCreateDatabase(DB,Context.MODE_PRIVATE,null);
         sqlDB.insert(table,null,cValue);
-
+        sqlDB.close();
     }
 
 
     public static  void delete(String table,String whereClause,String[] whereArgs){
+        sqlDB = mContext.openOrCreateDatabase(DB,Context.MODE_PRIVATE,null);
         //删除条件
         //String whereClause = "id=?";
         //删除条件参数
         //String[] whereArgs = {String.valueOf(2)};
         //执行删除
         sqlDB.delete(table,whereClause,whereArgs);
+        sqlDB.close();
     }
 
     /**
@@ -72,16 +76,19 @@ public class SqliteUtils {
      * @param whereArgs 条件各个值，列入Id=1，Id=2
      */
     public  static void update(String table ,ContentValues cValue,String whereClause,String[] whereArgs){
+        sqlDB = mContext.openOrCreateDatabase(DB,Context.MODE_PRIVATE,null);
         //删除条件
         //String whereClause = "id=?";
         //删除条件参数
         //String[] whereArgs = {String.valueOf(2)};
         //执行删除
         sqlDB.update(table,cValue,whereClause,whereArgs);
+        sqlDB.close();
     }
 
 
     public static List<Map> selecte(String table){
+        sqlDB = mContext.openOrCreateDatabase(DB,Context.MODE_PRIVATE,null);
         List<Map> list = new ArrayList<>();
         Cursor cursor = sqlDB.query(table,null,null,null,null,null,null);
         //判断游标是否为空
@@ -101,12 +108,15 @@ public class SqliteUtils {
                 list.add(map);
             }
         }
+        sqlDB.close();
         return list;
     }
 
 
-    public void execSql(String sql){
+    public static void execSQL(String sql){
+        sqlDB = mContext.openOrCreateDatabase(DB,Context.MODE_PRIVATE,null);
         sqlDB.execSQL(sql);
+        sqlDB.close();
     }
 
 }

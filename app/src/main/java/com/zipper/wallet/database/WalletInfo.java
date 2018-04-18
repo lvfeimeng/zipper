@@ -28,8 +28,8 @@ public class WalletInfo extends DataSupport {
 
     public void createTable(Context context){
         //CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42));
-        SQLiteDatabase sqlDB = SqliteUtils.openDataBase(context);
-        sqlDB.execSQL("CREATE TABLE IF NOT EXISTS walletinfo (id INTEGER PRIMARY KEY NOT NULL," +
+
+        SqliteUtils.execSQL("CREATE TABLE IF NOT EXISTS walletinfo (id INTEGER PRIMARY KEY NOT NULL," +
                 "path VARCHAR(420) ,address VARCHAR(420) NOT NULL ,name VARCHAR(42) NOT NULL ,tip varchar(42)," +
                 "mnem_seed VARCHAR(420) NOT NULL,esda_seed varchar(420) );");
         MyLog.i("WalletInfo","createTable 表创建成功");
