@@ -188,7 +188,7 @@ public class CreateAcountUtils {
         if(!isInstanced()){
             MyLog.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
-        }
+        }//
         return MnemonicCode.instance().toEntropy(words);
     }
 
