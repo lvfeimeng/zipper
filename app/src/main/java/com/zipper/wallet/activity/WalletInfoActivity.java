@@ -103,23 +103,64 @@ public class WalletInfoActivity extends BaseActivity {
     }
 
     private void deleteWallet() {
-        if (dialog == null) {
-            dialog = new DeleteWalletDialog(this);
-            dialog.setCallback(() -> {
-                SQLiteDatabase sqlDB = mContext.openOrCreateDatabase(SqliteUtils.DB, Context.MODE_PRIVATE,null);
-                try{
-                    sqlDB.execSQL("drop table walletinfo");
-                } catch (SQLiteException e) {
-                    e.printStackTrace();
-                }
-                SqliteUtils.test();
-                PreferencesUtils.clearData(this, PreferencesUtils.USER);
-                startActivity(new Intent(this, StartActivity.class));
-                ActivityManager.getInstance().finishAllActivity();
-                finish();
-            });
-        }
-        dialog.show();
+
+        showInputDialog("请输入密码", "", "", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
+
+            @Override
+            public void doSuccessThing(Map<String, Object> param) {
+                initData();
+                showProgressDialog("正在导出。。。");
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            String pwd = param.get(INPUT_TEXT).toString().trim();
+                            MyLog.i(TAG, walletInfo.getEsda_seed() + " " + pwd);
+                            byte[] bytes = new EncryptedData(walletInfo.getEsda_seed()).decrypt(pwd);
+                            if (bytes == null) {
+                                return;
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    hideProgressDialog();
+
+                                    if (dialog == null) {
+                                        dialog = new DeleteWalletDialog(mContext);
+                                        dialog.setCallback(() -> {
+                                            SQLiteDatabase sqlDB = mContext.openOrCreateDatabase(SqliteUtils.DB, Context.MODE_PRIVATE,null);
+                                            try{
+                                                sqlDB.execSQL("drop table walletinfo");
+                                            } catch (SQLiteException e) {
+                                                e.printStackTrace();
+                                            }
+                                            SqliteUtils.test();
+                                            PreferencesUtils.clearData(mContext, PreferencesUtils.USER);
+                                            startActivity(new Intent(mContext, StartActivity.class));
+                                            ActivityManager.getInstance().finishAllActivity();
+                                            finish();
+                                        });
+                                    }
+                                    dialog.show();
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(() -> {
+                                hideProgressDialog();
+                                toast("密码错误");
+                            });
+                        }
+                    }
+                }.start();
+                alertDialog.dismiss();
+            }
+
+            @Override
+            public void doErrorThing(Map<String, Object> param) {
+
+            }
+        });
     }
 
     private void rightClick() {
