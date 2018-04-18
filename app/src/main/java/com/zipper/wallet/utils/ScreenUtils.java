@@ -173,7 +173,7 @@ public class ScreenUtils {
 		Resources resources = context.getResources();
 		int resourceId = resources.getIdentifier("navigation_bar_height","dimen", "android");
 		int height = resources.getDimensionPixelSize(resourceId);
-		Log.v("dbw", "Navi height:" + height);
+		MyLog.v("dbw", "Navi height:" + height);
 		return height;
 	}
 

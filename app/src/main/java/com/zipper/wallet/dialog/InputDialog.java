@@ -2,11 +2,11 @@ package com.zipper.wallet.dialog;
 
 import android.content.Context;
 import android.text.InputType;
-import android.util.Log;
 import android.widget.EditText;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseDialog;
+import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.RuntHTTPApi;
 
 import java.util.HashMap;
@@ -80,7 +80,7 @@ public class InputDialog extends BaseDialog {
 
     @Override
     public void btnOkClick() {
-        Log.i(TAG,"btnOkClick()");
+        MyLog.i(TAG,"btnOkClick()");
         dismiss();
         Map map = new HashMap();
         map.put(INPUT_TEXT, editText.getText());

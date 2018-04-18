@@ -71,7 +71,7 @@ public class RuntHandleFile {
                 is.close();
 
                 str = new String(buffer, "UTF-8");
-                Log.i("getStr", String.format("is:%s,buffer:%s,str:%s",is,buffer,str));
+                MyLog.i("getStr", String.format("is:%s,buffer:%s,str:%s",is,buffer,str));
             } catch (IOException e) {
                 e.printStackTrace();
             }

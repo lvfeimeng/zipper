@@ -2,12 +2,12 @@ package com.zipper.wallet.base;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.listenear.OnClickListenearAndDo;
+import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.RuntHTTPApi;
 
 import java.util.HashMap;
@@ -42,13 +42,13 @@ public class BaseDialog extends Dialog {
         this.right = right;
         TAG = this.getClass().getSimpleName().toString();
         map = new HashMap();
-        Log.i(TAG,String.format("title:%s, tip:%s, left:%s, right:%s, rp:%s",title, tip, left, right, rp));
+        MyLog.i(TAG,String.format("title:%s, tip:%s, left:%s, right:%s, rp:%s",title, tip, left, right, rp));
     }
 
 
 
     public  void  setContentViewId(int ViewId ){
-        Log.i(TAG,"执行setContentViewId");
+        MyLog.i(TAG,"执行setContentViewId");
         setContentView(ViewId);
         txtTip = (TextView)findViewById(R.id.txt_tip);
         txtTitle = (TextView)findViewById(R.id.txt_title);
@@ -96,10 +96,10 @@ public class BaseDialog extends Dialog {
     }
 
     public void initComponent(){
-        Log.i(TAG,"initComponent()");
+        MyLog.i(TAG,"initComponent()");
     }
     public void btnOkClick(){
-        Log.i(TAG,"btnOkClick()");
+        MyLog.i(TAG,"btnOkClick()");
         BaseDialog.this.dismiss();
         if(rp!=null)
             rp.doSuccessThing(null);

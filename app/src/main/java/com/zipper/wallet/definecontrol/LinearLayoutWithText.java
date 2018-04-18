@@ -1,29 +1,22 @@
 package com.zipper.wallet.definecontrol;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
-import android.text.InputType;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.listenear.OnClickListenearAndDo;
-import com.zipper.wallet.utils.KeyBoardUtils;
+import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.RuntHTTPApi;
 
 import java.util.HashMap;
@@ -86,10 +79,10 @@ public class LinearLayoutWithText extends LinearLayout {
             redPoint.setText("9+");
         }
         float rightSize = typedArray.getInt(R.styleable.LinearLayoutWithText_text_rightSize,17);
-        //Log.i("LinearLayoutWithText","rightSize:"+rightSize);
+        //MyLog.i("LinearLayoutWithText","rightSize:"+rightSize);
         setRightSize(rightSize);
         float titleSize = typedArray.getInt(R.styleable.LinearLayoutWithText_text_titleSize,17);
-        //Log.i("LinearLayoutWithText","titleSize:"+titleSize);
+        //MyLog.i("LinearLayoutWithText","titleSize:"+titleSize);
         setTitleSize(titleSize);
         int  visible = typedArray.getInt(R.styleable.LinearLayoutWithText_divider_visible,VISIBLE);
         setDividerVisibility(visible);
@@ -176,7 +169,7 @@ public class LinearLayoutWithText extends LinearLayout {
                     int ww = (int) (height*drawablesize*size);
                     left.setBounds(0, 0, ww, (int)(height*drawablesize));
                     title.setCompoundDrawablePadding(15);
-                    Log.i("LinearLayoutWithText","title.Height:"+height+" Drawable.height"+ww+" "+(int)(height*drawablesize));
+                    MyLog.i("LinearLayoutWithText","title.Height:"+height+" Drawable.height"+ww+" "+(int)(height*drawablesize));
 
                     title.getViewTreeObserver().removeOnPreDrawListener(this);
                     title.setCompoundDrawables(left,null,null,null);
@@ -192,7 +185,7 @@ public class LinearLayoutWithText extends LinearLayout {
      * 设置Textview右侧标签icon  对应属性  rightCompoundDrawable
      */
     public void setRightCompoundDrawables(Drawable drawable){
-        Log.i("LinearLayoutWithText","setRightCompoundDrawables rightdra:"+drawable);
+        MyLog.i("LinearLayoutWithText","setRightCompoundDrawables rightdra:"+drawable);
         if(drawable!=null) {
             final int w = drawable.getIntrinsicWidth();
             int h = drawable.getIntrinsicHeight();
@@ -220,7 +213,7 @@ public class LinearLayoutWithText extends LinearLayout {
      */
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
-        Log.i("LinearLayoutWithText","setOnClickListener "+l+" father"+father);
+        MyLog.i("LinearLayoutWithText","setOnClickListener "+l+" father"+father);
         lin.setOnClickListener(l);
     }
 
@@ -261,7 +254,7 @@ public class LinearLayoutWithText extends LinearLayout {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.i("LinearLayoutWithText","addTextChangedListener text"+right.getText()+" editable"+editable);
+                MyLog.i("LinearLayoutWithText","addTextChangedListener text"+right.getText()+" editable"+editable);
                 Map map = new HashMap();
                 map.put("text",right.getText());
                 rp.doSuccessThing(map);

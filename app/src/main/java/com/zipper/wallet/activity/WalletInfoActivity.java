@@ -9,7 +9,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +19,7 @@ import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.dialog.DeleteWalletDialog;
 import com.zipper.wallet.utils.CreateAcountUtils;
+import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.SqliteUtils;
@@ -151,7 +151,7 @@ public class WalletInfoActivity extends BaseActivity {
                     public void run() {
                         try {
                             String pwd = param.get(INPUT_TEXT).toString().trim();
-                            Log.i(TAG, walletInfo.getEsda_seed() + " " + pwd);
+                            MyLog.i(TAG, walletInfo.getEsda_seed() + " " + pwd);
                             byte[] bytes = new EncryptedData(walletInfo.getEsda_seed()).decrypt(pwd);
                             if (bytes == null) {
                                 return;
@@ -194,9 +194,9 @@ public class WalletInfoActivity extends BaseActivity {
         if (walletInfo.getMnem_seed() == null || walletInfo.getMnem_seed().trim().equals("") || walletInfo.getMnem_seed().trim().indexOf("null") > -1) {
             return "";
         }
-        byte[] mnem_bytes = new EncryptedData(walletInfo.getMnem_seed()).decrypt(pwd);
+        byte[] radomSeed = new EncryptedData(walletInfo.getMnem_seed()).decrypt(pwd);
         CreateAcountUtils.instance(this);
-        List<String> words = CreateAcountUtils.detropyMnemSeed(mnem_bytes);
+        List<String> words = CreateAcountUtils.getMnemonicCode(radomSeed);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < words.size(); i++) {
             sb.append(words.get(i));

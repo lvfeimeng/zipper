@@ -2,11 +2,11 @@ package com.zipper.wallet.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.utils.MyLog;
 
 /**
  * Created by Administrator on 2018/4/14.
@@ -20,7 +20,7 @@ public class AgreementDialog extends Dialog {
 
     public AgreementDialog(Context context,String path) {
         super(context, R.style.MyDialog);
-        Log.i("AgreementDialog","AgreementDialog path:"+path);
+        MyLog.i("AgreementDialog","AgreementDialog path:"+path);
         setContentView(R.layout.layout_web);
         mContext = context;
         webView = (WebView)findViewById(R.id.web_view);

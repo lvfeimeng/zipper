@@ -304,7 +304,7 @@ public class MyAnimations {
      * @param view
      */
     public static void showReBound(final View view){
-        //Log.i("","showReBound view:"+view);
+        //MyLog.i("","showReBound view:"+view);
         view.setVisibility(View.GONE);
         showAnimaInSitu(view);
         SpringSystem springSystem = SpringSystem.create();
@@ -314,7 +314,7 @@ public class MyAnimations {
             @Override
             public void onSpringUpdate(Spring spring) {
                 float value = (float) spring.getCurrentValue();
-                //Log.i("MyAnimations","showReBound value:"+value);
+                //MyLog.i("MyAnimations","showReBound value:"+value);
                 float scale = value;
                 view.setScaleX(scale);
                 view.setScaleY(scale);
@@ -328,7 +328,7 @@ public class MyAnimations {
      * @param view
      */
     public static void showReBoundBig(final View view){
-        //Log.i("","showReBound view:"+view);
+        //MyLog.i("","showReBound view:"+view);
         view.setVisibility(View.GONE);
         showAnimaInSitu(view);
         SpringSystem springSystem = SpringSystem.create();
@@ -453,7 +453,7 @@ public class MyAnimations {
      * @param view
      */
     public static void scaleReBoundX(final View view,final int size){
-        //Log.i("","scaleReBound view:"+view);
+        //MyLog.i("","scaleReBound view:"+view);
         SpringSystem springSystem = SpringSystem.create();
         final Spring spring = springSystem.createSpring();
         spring.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(100,7));//qcTension拉力和qcFriction摩擦力参数

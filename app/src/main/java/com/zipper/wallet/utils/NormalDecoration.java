@@ -147,7 +147,7 @@ public abstract class NormalDecoration extends RecyclerView.ItemDecoration {
                     translateTop = viewTop - 2 * headerHeight;
                 }
                 stickyHeaderPosArray.put(pos, viewTop);//将头部信息放进array
-                Log.i(TAG, "绘制各个头部" + pos);
+                MyLog.i(TAG, "绘制各个头部" + pos);
             }
         }
         if (firstHeaderName == null)
@@ -178,7 +178,7 @@ public abstract class NormalDecoration extends RecyclerView.ItemDecoration {
 //           canvas.drawLine(0, headerHeight / 2, right, headerHeight / 2, mHeaderTxtPaint);//画条线看看文字居中不
         }
         canvas.restore();
-        Log.i(TAG, "绘制悬浮头部");
+        MyLog.i(TAG, "绘制悬浮头部");
     }
 
     private Map<Integer, View> headViewMap = new HashMap<>();
@@ -251,7 +251,7 @@ public abstract class NormalDecoration extends RecyclerView.ItemDecoration {
     public void loadImage(final String url, final int pos, ImageView imageView) {
 
         if (getImg(url) != null) {
-            Log.i("qdx", "Glide 加载完图片" + pos);
+            MyLog.i("qdx", "Glide 加载完图片" + pos);
 
             imageView.setImageDrawable(getImg(url));
 
@@ -259,7 +259,7 @@ public abstract class NormalDecoration extends RecyclerView.ItemDecoration {
 //            Glide.with(mRecyclerView.getContext()).load(url).into(new SimpleTarget<Drawable>() {
 //                @Override
 //                public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-//                    Log.i("qdx", "Glide回调" + pos);
+//                    MyLog.i("qdx", "Glide回调" + pos);
 //                    headViewMap.remove(pos);//删除，重新更新
 //                    imgDrawableMap.put(url, resource);
 //                    mRecyclerView.postInvalidate();

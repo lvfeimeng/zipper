@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,7 @@ import com.zipper.wallet.base.BaseFragment;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.utils.CreateAcountUtils;
+import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.SqliteUtils;
@@ -162,14 +162,14 @@ public class MnemonicWordFragment extends BaseFragment {
                 if (param.get("data") instanceof Collection) {
                     for (Map map : (List<Map>) param.get("data")) {
                         CoinInfo coinInfo = new CoinInfo(map);
-                        Log.i(TAG, coinInfo.getName() + "信息正在保存");
+                        MyLog.i(TAG, coinInfo.getName() + "信息正在保存");
                         if (coinInfo.getName().equalsIgnoreCase("BTC")) {
                             String addr = CreateAcountUtils.getAccount(master, coinInfo.getType()).toAddress();
-                            Log.i(TAG, "addr:" + addr);
+                            MyLog.i(TAG, "addr:" + addr);
                             coinInfo.setAddr(addr);
                         } else if (coinInfo.getName().equalsIgnoreCase("eth")) {
                             String addr = CreateAcountUtils.getAccount(master, coinInfo.getType()).toAddress();
-                            Log.i(TAG, "addr:" + addr);
+                            MyLog.i(TAG, "addr:" + addr);
                             coinInfo.setAddr(addr);
 
                             try {
@@ -196,7 +196,7 @@ public class MnemonicWordFragment extends BaseFragment {
                                 }
 
                                 db.insert("walletinfo", null, cValue);
-                                Log.i(TAG, "钱包数据保存成功");
+                                MyLog.i(TAG, "钱包数据保存成功");
 
                                 PreferencesUtils.putBoolean(mContext, KEY_IS_LOGIN, true, PreferencesUtils.USER);
                                 startActivity(new Intent(getActivity(), MyWalletActivity.class)
@@ -213,7 +213,7 @@ public class MnemonicWordFragment extends BaseFragment {
                             }
                         }
                         coinInfo.save();
-                        Log.i(TAG, "信息保存成功");
+                        MyLog.i(TAG, "信息保存成功");
 
                     }
                 }

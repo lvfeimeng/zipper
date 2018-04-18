@@ -9,21 +9,11 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.net.HttpURLConnection;
-import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.Date;
@@ -140,7 +130,7 @@ public class RuntHTTPApi {
                         value = parseJsonToMap(value.toString());
                     }
                 } catch (Exception e) {
-                    //Log.e("error", e.getMessage());
+                    //MyLog.e("error", e.getMessage());
                 }
                 //System.out.println("key:"+key+" value:"+value.toString());
                 map.put(key, value);
@@ -357,16 +347,18 @@ public class RuntHTTPApi {
         @Override
         public void onError(Call call, Exception e, int id) {
             Toast.makeText(mContext, MESS_TIP_NET_ERROR, Toast.LENGTH_LONG).show();
-            Log.e(TAG, e.getLocalizedMessage() + " \\n" + e.getMessage() + " \\n" + e.toString());
+            MyLog.e(TAG, e.getLocalizedMessage() + " \\n" + e.getMessage() + " \\n" + e.toString());
             if (resPonse != null) {
                 //showTipDialog(message.toString());
-                resPonse.doErrorThing(new HashMap<String, Object>());
+                Map<String, Object> param = new HashMap<String, Object>();
+                param.put("error",MESS_TIP_NET_ERROR);
+                resPonse.doErrorThing(param);
             }
         }
 
         @Override
         public void onResponse(final String response, int id) {
-            Log.i(TAG, "response:" + response);
+            MyLog.i(TAG, "response:" + response);
             ((Activity) mContext).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -377,7 +369,7 @@ public class RuntHTTPApi {
                         Map<String, Object> param = RuntHTTPApi.parseJsonToMap(jsonstr);
                         RuntHTTPApi.printMap(param, " ");
                         Object message = param.get(KEY_MES_MESSAGE);
-                        Log.i(TAG, param.toString());
+                        MyLog.i(TAG, param.toString());
 
                         if (message == null) {
                             message = jsonstr;
@@ -390,6 +382,7 @@ public class RuntHTTPApi {
                             Toast.makeText(mContext, message + "", Toast.LENGTH_SHORT).show();
                             if (resPonse != null) {
                                 //showTipDialog(message.toString());
+                                param.put("error","没有数据");
                                 resPonse.doErrorThing(param);
                             }
                         }

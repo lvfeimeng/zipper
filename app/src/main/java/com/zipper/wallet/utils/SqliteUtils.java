@@ -31,7 +31,7 @@ public class SqliteUtils {
         Cursor cursor = sqlDB.rawQuery(sql, null);
 
         //打印表的所有列名
-        Log.i("SqliteUtils", Arrays.toString(cursor.getColumnNames()));
+        MyLog.i("SqliteUtils", Arrays.toString(cursor.getColumnNames()));
 
         //打印当前数据库中的所有表
         if (cursor.moveToFirst()) {
@@ -42,7 +42,7 @@ public class SqliteUtils {
                     str += item + ": " + cursor.getString(cursor.getColumnIndex(item)) + "\n";
                 }
 
-                Log.i("SqliteUtils", str);
+                MyLog.i("SqliteUtils", str);
 
             } while (cursor.moveToNext());
         }
@@ -93,7 +93,7 @@ public class SqliteUtils {
                 for(int p = 0 ; p < cursor.getColumnCount() ; p ++){
                     try {
                         map.put(cursor.getColumnName(p), cursor.getString(p));
-                        Log.i("SqliteUtils", cursor.getColumnName(p) + ":" + cursor.getString(p));
+                        MyLog.i("SqliteUtils", cursor.getColumnName(p) + ":" + cursor.getString(p));
                     }catch (Exception e){
                         e.printStackTrace();
                     }

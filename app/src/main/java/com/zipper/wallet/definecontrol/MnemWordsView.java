@@ -3,7 +3,6 @@ package com.zipper.wallet.definecontrol;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.animations.MyAnimations;
+import com.zipper.wallet.utils.MyLog;
 
 public class MnemWordsView extends RelativeLayout {
     Context mContext;
@@ -76,7 +76,7 @@ public class MnemWordsView extends RelativeLayout {
     }
 
     public boolean removeThis(final OnClickListener onClickListener){
-        Log.i("MnemWordsView","removeThis onClickListener:" +onClickListener);
+        MyLog.i("MnemWordsView","removeThis onClickListener:" +onClickListener);
         if(getParent() instanceof ViewGroup){
             MyAnimations.hideReBound(mnemWordsView,mContext);
             new Handler().postDelayed(new Runnable() {

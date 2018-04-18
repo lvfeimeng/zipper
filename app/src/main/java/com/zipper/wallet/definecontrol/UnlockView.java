@@ -13,9 +13,10 @@ import android.os.Message;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.zipper.wallet.utils.MyLog;
 
 import java.util.ArrayList;
 
@@ -175,7 +176,7 @@ public class UnlockView extends View {
                         if(createListener!=null){
                             createListener.onGestureCreated(sb.toString());
                         }else{
-                            Log.e("UnLockView","Please set CreateGestureListener first!");
+                            MyLog.e("UnLockView","Please set CreateGestureListener first!");
                         }
                     } else if(this.mode == CHECK_MODE){
                         if(listener!=null){
@@ -189,7 +190,7 @@ public class UnlockView extends View {
                                 pathPaint.setColor(errorColor);
                             }
                         }else{
-                            Log.e("UnLockView","Please set OnUnlockListener first!");
+                            MyLog.e("UnLockView","Please set OnUnlockListener first!");
                         }
 
                     }else{
@@ -236,7 +237,7 @@ public class UnlockView extends View {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (mode != CHECK_MODE || mode != CREATE_MODE) {
-            Log.e("UnlockView", "Please set mode first!");
+            MyLog.e("UnlockView", "Please set mode first!");
         }
         //init all path/paint
         mPath = new Path();

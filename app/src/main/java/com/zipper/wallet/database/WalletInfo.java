@@ -2,14 +2,13 @@ package com.zipper.wallet.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
+import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.SqliteUtils;
 
 import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +32,7 @@ public class WalletInfo extends DataSupport {
         sqlDB.execSQL("CREATE TABLE IF NOT EXISTS walletinfo (id INTEGER PRIMARY KEY NOT NULL," +
                 "path VARCHAR(420) ,address VARCHAR(420) NOT NULL ,name VARCHAR(42) NOT NULL ,tip varchar(42)," +
                 "mnem_seed VARCHAR(420) NOT NULL,esda_seed varchar(420) );");
-        Log.i("WalletInfo","createTable 表创建成功");
+        MyLog.i("WalletInfo","createTable 表创建成功");
     }
 
     public WalletInfo(Context context){

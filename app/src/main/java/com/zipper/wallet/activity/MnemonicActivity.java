@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.definecontrol.FlowLayout;
 import com.zipper.wallet.definecontrol.MnemWordsView;
+import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.SqliteUtils;
@@ -77,30 +77,16 @@ public class MnemonicActivity extends BaseActivity {
                     @Override
                     public void onClick(View view) {
                         if(check()){
-                            showTipDialog("", "助记词验证数序正确，是否移除该助记词？", getString(R.string.not_remove), getString(R.string.remove), new RuntHTTPApi.ResPonse() {
+                            showTipDialog("助记词验证顺序正确，进入我的钱包",  getString(R.string.ok), new RuntHTTPApi.ResPonse() {
                                 @Override
                                 public void doSuccessThing(Map<String, Object> param) {
-                                    PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
-                                    SqliteUtils.openDataBase(mContext);
-                                    ContentValues values = new ContentValues();
-                                    //在values中添加内容
-                                    values.put("mnem_seed","");
-                                    SqliteUtils.update("walletinfo",values,"name=?",new String[]{PreferencesUtils.getString(mContext,KEY_WALLET_NAME,PreferencesUtils.VISITOR)});
-
-                                    startActivity(new Intent(mContext,
-                                            MyWalletActivity.class));
-                                    ActivityManager.getInstance().finishAllActivity();
-                                    finish();
-                                    alertDialog.dismiss();
+                                    delMnemCode();
+                                    startNext();
                                 }
 
                                 @Override
                                 public void doErrorThing(Map<String, Object> param) {
-                                    startActivity(new Intent(mContext,
-                                            MyWalletActivity.class));
-                                    ActivityManager.getInstance().finishAllActivity();
-                                    finish();
-                                    alertDialog.dismiss();
+                                    startNext();
                                 }
                             });
                         }else{
@@ -128,7 +114,7 @@ public class MnemonicActivity extends BaseActivity {
         for(WalletInfo walletInfo : list){
             if(walletInfo.getName().equals(PreferencesUtils.getString(mContext,KEY_WALLET_NAME,PreferencesUtils.VISITOR))){
                 hd = walletInfo;
-                Log.i(TAG,String.format("name:%s", walletInfo.getName()));
+                MyLog.i(TAG,String.format("name:%s", walletInfo.getName()));
             }
             RuntHTTPApi.printMap(walletInfo.toMap(),"");
         }
@@ -253,7 +239,7 @@ public class MnemonicActivity extends BaseActivity {
         for(int i = 0 ; i < size; i ++){
             int a = (int)(Math.random()*100);
             int lo = a%residue.size() == 0? 0:a%residue.size()-1;
-            //Log.i(TAG,String.format("a:%s,lo:%s",a,lo));
+            //MyLog.i(TAG,String.format("a:%s,lo:%s",a,lo));
             final String text = residue.get(lo);
             residue.remove(lo);
             new Handler().postDelayed(new Runnable() {
@@ -294,6 +280,25 @@ public class MnemonicActivity extends BaseActivity {
         finish();
 
         return true;
+    }
+
+    private  void delMnemCode(){
+        PreferencesUtils.putBoolean(mContext, KEY_IS_LOGIN, true, PreferencesUtils.USER);
+        SqliteUtils.openDataBase(mContext);
+        ContentValues values = new ContentValues();
+        //在values中添加内容
+        values.put("mnem_seed", "");
+        SqliteUtils.update("walletinfo", values, "name=?", new String[]{PreferencesUtils.getString(mContext, KEY_WALLET_NAME, PreferencesUtils.VISITOR)});
+
+    }
+
+    private void startNext(){
+
+        startActivity(new Intent(mContext,
+                MyWalletActivity.class));
+        ActivityManager.getInstance().finishAllActivity();
+        finish();
+        alertDialog.dismiss();
     }
 
 }

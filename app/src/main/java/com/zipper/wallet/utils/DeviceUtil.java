@@ -41,7 +41,7 @@ public class DeviceUtil {
         str+=getScreenSizeOfDevice(context)+" \n";
         str+=getScreenSizeOfDevice2(context)+" \n";
         str+=getAndroiodScreenProperty(context)+"\n";
-        Log.i(TAG,str);
+        MyLog.i(TAG,str);
     }
 
     /**
@@ -111,9 +111,9 @@ public class DeviceUtil {
     public static   String getDisplayInfomation(Context context) {
         Point point = new Point();
         ((Activity)context).getWindowManager().getDefaultDisplay().getSize(point);
-        Log.d(TAG,"the screen size is "+point.toString());
+        MyLog.d(TAG,"the screen size is "+point.toString());
         ((Activity)context).getWindowManager().getDefaultDisplay().getRealSize(point);
-        Log.d(TAG,"the screen real size is "+point.toString());
+        MyLog.d(TAG,"the screen real size is "+point.toString());
         return  point.toString();
     }
 
@@ -132,12 +132,12 @@ public class DeviceUtil {
         int screenHeight = getDp(context)[1];// 屏幕高度(dp)
 
 
-        Log.d("h_bl", "屏幕宽度（像素）：" + width);
-        Log.d("h_bl", "屏幕高度（像素）：" + height);
-        Log.d("h_bl", "屏幕密度（0.75 / 1.0 / 1.5）：" + density);
-        Log.d("h_bl", "屏幕密度dpi（120 / 160 / 240）：" + densityDpi);
-        Log.d("h_bl", "屏幕宽度（dp）：" + screenWidth);  // 屏幕适配文件夹（例：layout-sw300dp），是以该属性为准则
-        Log.d("h_bl", "屏幕高度（dp）：" + screenHeight);
+        MyLog.d("h_bl", "屏幕宽度（像素）：" + width);
+        MyLog.d("h_bl", "屏幕高度（像素）：" + height);
+        MyLog.d("h_bl", "屏幕密度（0.75 / 1.0 / 1.5）：" + density);
+        MyLog.d("h_bl", "屏幕密度dpi（120 / 160 / 240）：" + densityDpi);
+        MyLog.d("h_bl", "屏幕宽度（dp）：" + screenWidth);  // 屏幕适配文件夹（例：layout-sw300dp），是以该属性为准则
+        MyLog.d("h_bl", "屏幕高度（dp）：" + screenHeight);
 
         StringBuilder sb = new StringBuilder();
         sb.append( "屏幕宽度（像素）：" + width+"\n");
@@ -169,9 +169,9 @@ public class DeviceUtil {
     public static Point getDisplayPixel(Context context) {
         Point point = new Point();
         ((Activity)context).getWindowManager().getDefaultDisplay().getSize(point);
-        Log.d(TAG,"the screen size is "+point.toString());
+        MyLog.d(TAG,"the screen size is "+point.toString());
         ((Activity)context).getWindowManager().getDefaultDisplay().getRealSize(point);
-        Log.d(TAG,"the screen real size is "+point.toString());
+        MyLog.d(TAG,"the screen real size is "+point.toString());
         return  point;
     }
 
@@ -210,7 +210,7 @@ public class DeviceUtil {
      */
     public static   String getDensity(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        Log.d(TAG,"Density is "+displayMetrics.density+" densityDpi is "+displayMetrics.densityDpi+" height: "+displayMetrics.heightPixels+
+        MyLog.d(TAG,"Density is "+displayMetrics.density+" densityDpi is "+displayMetrics.densityDpi+" height: "+displayMetrics.heightPixels+
                 " width: "+displayMetrics.widthPixels);
         return "Density is "+displayMetrics.density+" densityDpi is "+displayMetrics.densityDpi+" height: "+displayMetrics.heightPixels+
                 " width: "+displayMetrics.widthPixels;
@@ -229,7 +229,7 @@ public class DeviceUtil {
 
         int dens=dm.densityDpi;
         double screenInches = diagonal/(double)dens;
-        Log.d(TAG,"The screenInches "+screenInches);
+        MyLog.d(TAG,"The screenInches "+screenInches);
         return "The screenInches: "+screenInches;
     }
 
@@ -244,7 +244,7 @@ public class DeviceUtil {
         double x = Math.pow(point.x/ dm.xdpi, 2);
         double y = Math.pow(point.y / dm.ydpi, 2);
         double screenInches = Math.sqrt(x + y);
-        Log.d(TAG, "Screen inches : " + screenInches);
+        MyLog.d(TAG, "Screen inches : " + screenInches);
         return "The inches: "+screenInches;
     }
 

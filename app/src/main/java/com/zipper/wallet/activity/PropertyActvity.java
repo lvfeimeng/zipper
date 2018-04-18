@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -26,6 +25,7 @@ import com.zipper.wallet.adapter.DealRecordAdapter;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.definecontrol.TestPopupWindow;
 import com.zipper.wallet.utils.DeviceUtil;
+import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.ScreenUtils;
 
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public class PropertyActvity extends BaseActivity {
         srf.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(final RefreshLayout refreshlayout) {
-                Log.i("MoneyExpenseFragment","onRefresh");
+                MyLog.i("MoneyExpenseFragment","onRefresh");
                 refreshlayout.finishRefresh(1000);
                 refreshlayout.finishLoadmore(1000);
             }
@@ -82,7 +82,7 @@ public class PropertyActvity extends BaseActivity {
         srf.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(final RefreshLayout refreshlayout) {
-                Log.i("MoneyExpenseFragment","onLoadmore");
+                MyLog.i("MoneyExpenseFragment","onLoadmore");
                 refreshlayout.finishRefresh(1000);
                 refreshlayout.finishLoadmore(1000);
             }
@@ -104,7 +104,7 @@ public class PropertyActvity extends BaseActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                //Log.i("MoneyExpenseFragment","dy:"+dy+" scrollView ScrollY:"+scrollView.getScrollY()+" "+(scrollView.getHeight() - srf.getHeight()));
+                //MyLog.i("MoneyExpenseFragment","dy:"+dy+" scrollView ScrollY:"+scrollView.getScrollY()+" "+(scrollView.getHeight() - srf.getHeight()));
                 //dx用来判断横向滑动方向，dy用来判断纵向滑动方向
                 if (dy > 0 && scrollView.getScrollY() == 0) {
                     //大于0表示正在向右滚动

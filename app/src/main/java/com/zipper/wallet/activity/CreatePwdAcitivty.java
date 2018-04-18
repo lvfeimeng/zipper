@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,6 +19,7 @@ import com.zipper.wallet.R;
 import com.zipper.wallet.WebBrowserActivity;
 import com.zipper.wallet.base.CreateActvity;
 import com.zipper.wallet.bean.WalletBean;
+import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.PreferencesUtils;
 
 public class CreatePwdAcitivty extends CreateActvity {
@@ -154,7 +154,7 @@ public class CreatePwdAcitivty extends CreateActvity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            Log.i(TAG,"pwdWatcher "+edPwd.getText());
+            MyLog.i(TAG,"pwdWatcher "+edPwd.getText());
             if(edPwd.getText().equals("")|| edPwd.getText().toString().trim().length() ==0){
                 linSign.setVisibility(View.INVISIBLE);
                 txtStrong.setText("");
@@ -183,7 +183,7 @@ public class CreatePwdAcitivty extends CreateActvity {
                     }
                 }
 
-                Log.i(TAG,"pwdWatcher isHigh:"+isHigh+" hasLow:"+hasLow+" hasUp:"+hasUp+" flag:"+flag+" pwd.length():"+(pwd.length()));
+                MyLog.i(TAG,"pwdWatcher isHigh:"+isHigh+" hasLow:"+hasLow+" hasUp:"+hasUp+" flag:"+flag+" pwd.length():"+(pwd.length()));
 
                 if(pwd.length()>7 && isHigh && hasLow && hasUp && flag){
                     linSign.setVisibility(View.VISIBLE);
@@ -192,7 +192,7 @@ public class CreatePwdAcitivty extends CreateActvity {
                     txtStrong.setText("很好");
                     linWarining.setVisibility(View.INVISIBLE);
                 }else if(pwd.length()>7 && flag){
-                    Log.i(TAG,"pwdWatcher "+" 一般:"+(pwd.length()>6 && flag));
+                    MyLog.i(TAG,"pwdWatcher "+" 一般:"+(pwd.length()>6 && flag));
                     linSign.setVisibility(View.VISIBLE);
                     imgPwdSign.setImageResource(R.mipmap.pwd_well);
                     txtStrong.setTextColor(getResources().getColor(R.color.text_link));
@@ -214,7 +214,7 @@ public class CreatePwdAcitivty extends CreateActvity {
     };
 
     private void setBtnCreateEnable(){
-        Log.i(TAG,String.format("edPwd:%s,edPwdRe:%s,check:%s",edPwd.getText(),edPwdRe.getText(),checkBox.isChecked()));
+        MyLog.i(TAG,String.format("edPwd:%s,edPwdRe:%s,check:%s",edPwd.getText(),edPwdRe.getText(),checkBox.isChecked()));
         if(edPwd.getText().toString().trim().equals("") || edPwdRe.getText().toString().trim().equals("") ||edPwd.getText().toString().trim().length()<8){
             btnCreate.setEnabled(false);
         }else{

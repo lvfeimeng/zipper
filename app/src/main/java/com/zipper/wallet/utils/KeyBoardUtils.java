@@ -31,7 +31,7 @@ public class KeyBoardUtils {
                 imm.hideSoftInputFromWindow(((Activity)mContext).getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
         }catch (Exception e){
             e.printStackTrace();
-            Log.e("KeyBoardUtils",e.getMessage());
+            MyLog.e("KeyBoardUtils",e.getMessage());
         }
     }
     /**
@@ -44,7 +44,7 @@ public class KeyBoardUtils {
             imm.hideSoftInputFromWindow(view.getWindowToken(),0);
         }catch (Exception e){
             e.printStackTrace();
-            Log.e("KeyBoardUtils",e.getMessage());
+            MyLog.e("KeyBoardUtils",e.getMessage());
         }
     }
 }

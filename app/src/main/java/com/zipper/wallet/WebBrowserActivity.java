@@ -2,9 +2,7 @@ package com.zipper.wallet;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.LayoutAnimationController;
@@ -21,6 +19,7 @@ import android.widget.Toast;
 import com.zipper.wallet.animations.MyAnimations;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.listenear.OnClickListenearAndDo;
+import com.zipper.wallet.utils.MyLog;
 
 
 /**
@@ -46,7 +45,7 @@ public class WebBrowserActivity extends BaseActivity {
         progressbar = (ProgressBar) findViewById(R.id.myProgressBar);
 
         View imgLeft = findViewById(R.id.imgLeft);
-        Log.i(TAG,"imgLeft:"+imgLeft);
+        MyLog.i(TAG,"imgLeft:"+imgLeft);
         if(imgLeft!=null) {
             imgLeft.setOnClickListener(new OnClickListenearAndDo() {
                 @Override
@@ -74,7 +73,7 @@ public class WebBrowserActivity extends BaseActivity {
             }
         });
         //跳转至拼接好的地址
-        Log.i("Runt", "正在跳转页面"+url);
+        MyLog.i("Runt", "正在跳转页面"+url);
         showProgressDialog("正在跳转页面");
         //mBaseHandler.sendMessage(msg);//http://192.168.5.156:8080/MyFinance/gd16/1.html
         browser.loadUrl(url);
@@ -83,8 +82,8 @@ public class WebBrowserActivity extends BaseActivity {
 
             @Override
             public void onProgressChanged(WebView view,final int newProgress) {
-                Log.i("onProgressChanged","--newProgress:--"+newProgress);
-                Log.i("onProgressChanged","--viewPrgress:--"+viewPrgress.getWidth());
+                MyLog.i("onProgressChanged","--newProgress:--"+newProgress);
+                MyLog.i("onProgressChanged","--viewPrgress:--"+viewPrgress.getWidth());
                 final LayoutAnimationController.AnimationParameters animation= new LayoutAnimationController.AnimationParameters();   //得到一个LayoutAnimationController对象；
                 animation.index =index++ ;
                 animation.count = count++ ;
@@ -135,9 +134,9 @@ public class WebBrowserActivity extends BaseActivity {
         browser.getSettings().setSavePassword(false);
         //Toast.makeText(mContext,"进入浏览器",Toast.LENGTH_SHORT).show();
         String Scale = String.valueOf(browser.getScale());
-        Log.i("Runt","--Scale:--"+Scale);
+        MyLog.i("Runt","--Scale:--"+Scale);
         int screenDensity=getResources().getDisplayMetrics().densityDpi;
-        Log.i("Runt", "--screenDensity:--"+String.valueOf(screenDensity));  //60-160-240
+        MyLog.i("Runt", "--screenDensity:--"+String.valueOf(screenDensity));  //60-160-240
     }
 
 
@@ -173,14 +172,14 @@ public class WebBrowserActivity extends BaseActivity {
             // TODO Auto-generated method stub
             super.onLoadResource(view, url);
             hideProgressDialog();
-            //Log.i("WebView", "onLoadResource "+url);
+            //MyLog.i("WebView", "onLoadResource "+url);
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             hideProgressDialog();
             hideProgressBar();
-            //Log.i("WebView", "onPageFinished "+url);
+            //MyLog.i("WebView", "onPageFinished "+url);
         }
 
         /**
@@ -189,7 +188,7 @@ public class WebBrowserActivity extends BaseActivity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             // TODO Auto-generated method stub
-            //Log.i("UrlLoading", "UrlLoading 正在跳转页面"+url);
+            //MyLog.i("UrlLoading", "UrlLoading 正在跳转页面"+url);
             view.loadUrl(url);
             if(browser.canGoBack() && imgClose.getVisibility() != View.VISIBLE){
                 MyAnimations.showReBound(imgClose);

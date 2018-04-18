@@ -55,7 +55,7 @@ public class DealRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         DealViewHolder dHolder = (DealViewHolder) holder;
         dHolder.txtAddr.setText(mList.get(position).get("addr") + "");
         String str = mList.get(position).get("date") + " | 确认次数：" + mList.get(position).get("times");
-        //Log.i("DealRecordAdapter","str:"+str);
+        //MyLog.i("DealRecordAdapter","str:"+str);
         dHolder.txtDetail.setText(str);
         dHolder.txtCount.setText(mList.get(position).get("count") + "");
         dHolder.txtName.setText(mList.get(position).get("name") + "");

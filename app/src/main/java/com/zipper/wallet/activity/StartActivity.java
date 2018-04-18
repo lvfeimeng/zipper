@@ -43,12 +43,12 @@ public class StartActivity extends BaseActivity {
         }
         /*CreateAcountUtils.instance(this);
         byte[] seed = CreateAcountUtils.createRandomSeed();
-        Log.i("StartActivity","seed:" + Utils.bytesToHexString(seed));
+        MyLog.i("StartActivity","seed:" + Utils.bytesToHexString(seed));
         EncryptedData ed = new EncryptedData(seed,"abcd",false);
-        Log.i("StartActivity","seed:" + Utils.bytesToHexString(seed));
+        MyLog.i("StartActivity","seed:" + Utils.bytesToHexString(seed));
         String encrypte = ed.toEncryptedString();
-        Log.i("StartActivity","Encrypted seed:" + encrypte);
-        Log.i("StartActivity","decrypt seed:" + Utils.bytesToHexString(new EncryptedData(encrypte).decrypt("abcd")));*/
+        MyLog.i("StartActivity","Encrypted seed:" + encrypte);
+        MyLog.i("StartActivity","decrypt seed:" + Utils.bytesToHexString(new EncryptedData(encrypte).decrypt("abcd")));*/
 
 
         boolean isLogin = PreferencesUtils.getBoolean(this, "islogin", false, PreferencesUtils.USER);

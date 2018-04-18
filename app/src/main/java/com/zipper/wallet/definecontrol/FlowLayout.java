@@ -3,11 +3,11 @@ package com.zipper.wallet.definecontrol;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.utils.MyLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +63,10 @@ public class FlowLayout extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if(DEBUG) Log.d(TAG, "");
+        if(DEBUG) MyLog.d(TAG, "");
         int count = getChildCount();
         int width = getWidth();
-        //Log.i(TAG, "宽度 :"+width);
+        //MyLog.i(TAG, "宽度 :"+width);
 
 
         int startOffsetX = paddingLeft;// 横坐标开始
@@ -90,11 +90,11 @@ public class FlowLayout extends ViewGroup {
     }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if(DEBUG) Log.v(TAG, "");
+        if(DEBUG) MyLog.v(TAG, "");
 
         int count = getChildCount();
         int width = measureWidth(widthMeasureSpec);
-        //Log.i(TAG, "宽度 :"+width);
+        //MyLog.i(TAG, "宽度 :"+width);
 
 
         int startOffsetX = paddingLeft;// 横坐标开始
@@ -106,14 +106,14 @@ public class FlowLayout extends ViewGroup {
         listX.clear();
         listY.clear();
         for (int i = 0; i < count; i++) {
-            //Log.v(TAG, "----");
+            //MyLog.v(TAG, "----");
             final View childView = getChildAt(i);
             // 设置子空间Child的宽高
             childView.measure(0,0);
             /* 获取子控件Child的宽高 */
             int childWidth = childView.getMeasuredWidth();
             int childHeight = childView.getMeasuredHeight();
-            //Log.v(TAG, "childWidth :"+childWidth+" childHeight :"+childHeight);
+            //MyLog.v(TAG, "childWidth :"+childWidth+" childHeight :"+childHeight);
             preEndOffsetX = startOffsetX + childWidth /*+ CHILD_MARGIN*/;
             //TODO [yaojian]margin属性？
             if (preEndOffsetX > width - paddingRight ) {
@@ -124,7 +124,7 @@ public class FlowLayout extends ViewGroup {
                     rowCount++;
                 }
             }
-            //Log.d(TAG, "measure child :"+startOffsetX+", "+startOffsety+", "+preEndOffsetX+", "+(startOffsety+childHeight));
+            //MyLog.d(TAG, "measure child :"+startOffsetX+", "+startOffsety+", "+preEndOffsetX+", "+(startOffsety+childHeight));
             listX.add(startOffsetX);
             listY.add(startOffsety);
 
