@@ -80,7 +80,7 @@ public class MnemonicActivity extends BaseActivity {
                             showTipDialog("助记词验证顺序正确，进入我的钱包",  getString(R.string.ok), new RuntHTTPApi.ResPonse() {
                                 @Override
                                 public void doSuccessThing(Map<String, Object> param) {
-                                    delMnemCode();
+                                    //delMnemCode();
                                     startNext();
                                 }
 
