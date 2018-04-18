@@ -100,7 +100,7 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
                 mTextState.setTextColor(R.color.color_button_blue);
                 mLinerGradient.setBackgroundResource(R.drawable.wallet_ok_bg);
                 mImgState.setBackgroundResource(R.mipmap.transaction_ok);
-                mTextUpdate.setGravity(View.GONE);
+                mTextUpdate.setVisibility(View.GONE);
                 break;
 
             case 2:
@@ -118,7 +118,7 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
                 mTextState.setTextColor(R.color.text_minor);
                 mLinerGradient.setBackgroundResource(R.drawable.wallet_inprocess_bg);
                 mImgState.setBackgroundResource(R.mipmap.inprocess);
-                mTextUpdate.setGravity(View.VISIBLE);
+                mTextUpdate.setVisibility(View.VISIBLE);
                 break;
 
             default:
