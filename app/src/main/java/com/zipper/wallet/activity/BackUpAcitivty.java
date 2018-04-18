@@ -113,7 +113,7 @@ public class BackUpAcitivty extends CreateActvity {
                             }.start();
 
                         }else{
-                            hideProgressDialog();
+                            //hideProgressDialog();
                             toast("密码错误");
                         }
                     }
