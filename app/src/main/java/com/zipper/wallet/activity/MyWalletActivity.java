@@ -158,11 +158,11 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         checkboxGesturePassword = (CheckBox) headerView.findViewById(R.id.checkbox_gesture_password);
         layoutTradingRecord.setOnClickListener(v -> {
             startActivity(new Intent(this, TransactionActivity.class));
-            drawerLayout.closeDrawer(GravityCompat.START);
+            //drawerLayout.closeDrawer(GravityCompat.START);
         });
         textContacts.setOnClickListener(v -> {
             startActivity(new Intent(this, ContactsActivity.class));
-            drawerLayout.closeDrawer(GravityCompat.START);
+            //drawerLayout.closeDrawer(GravityCompat.START);
         });
         layoutLanguage.setOnClickListener(v -> {
             startActivityForResult(new Intent(this, LanguageSettingActivity.class), 99);
@@ -173,7 +173,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         } else {
             checkboxGesturePassword.setChecked(false);
         }
-        checkboxGesturePassword.setOnClickListener((v) -> {
+        checkboxGesturePassword.setOnClickListener(v -> {
             String pwd = PreferencesUtils.getString(mContext, "hand_pwd", PreferencesUtils.USER);
             int mode = 0;
             if (!TextUtils.isEmpty(pwd)) {
@@ -195,6 +195,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
 
 
         List<WalletInfo> list = new ArrayList<>();
+        SqliteUtils.openDataBase(this);
         List<Map> maps = SqliteUtils.selecte("walletinfo");
         for (Map map : maps) {
             list.add(new WalletInfo(map));
@@ -212,7 +213,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             if (!TextUtils.isEmpty(address)) {
                 String result = "zp" + address.substring(0, 5) + "..." + address.substring(address.length() - 7);
                 textWallet.setText(result);
-                textWalletAddress.setText("zp" + address);
+                textWalletAddress.setText(result);
             } else {
                 textWallet.setText("");
                 textWalletAddress.setText("");

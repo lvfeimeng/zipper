@@ -42,21 +42,74 @@
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/editPassword"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_line"
-                android:gravity="center_vertical"
-                android:hint="输入密码"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:padding="5dp"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:layout_marginTop="0dp"
+                android:layout_height="60dp">
+
+                <LinearLayout
+                    android:id="@+id/lin_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:src="@mipmap/warning"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pwd_warning"
+                        android:textColor="@color/btn_delete" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/editPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lin_warning"
+                    android:background="@drawable/bg_line"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center_vertical"
+                    android:hint="输入密码"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="45dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:id="@+id/lin_sign"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lin_warning"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
+
+                    <TextView
+                        android:id="@+id/txt_strong"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="强" />
+
+                    <ImageView
+                        android:id="@+id/img_pwd_sign"
+                        android:layout_width="25dp"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/pwd_n" />
+                </LinearLayout>
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -91,9 +144,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
                 android:text="密码提示"
-                android:visibility="gone"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/editPasswordHint"
@@ -105,11 +158,11 @@
                 android:background="@drawable/bg_line"
                 android:gravity="center_vertical"
                 android:hint="选填"
-                android:visibility="gone"
                 android:maxLines="1"
                 android:padding="5dp"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -134,8 +187,8 @@
                     android:id="@+id/textAgreement"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="服务及隐私条款"
                     android:layout_marginLeft="10dp"
+                    android:text="服务及隐私条款"
                     android:textColor="@color/btn_normal"
                     android:textSize="12sp" />
 
@@ -145,14 +198,14 @@
                 android:id="@+id/btnImport"
                 android:layout_width="120dp"
                 android:layout_height="45dp"
-                android:textSize="16sp"
                 android:layout_marginBottom="30dp"
-                android:layout_marginTop="30dp"
                 android:layout_marginLeft="20dp"
-                android:enabled="false"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/btn_ripple_blue_corner"
+                android:enabled="false"
+                android:text="开始导入"
                 android:textColor="@color/white"
-                android:text="开始导入"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/textWord"
@@ -162,9 +215,9 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="40dp"
                 android:text="什么是助记词？"
-                android:visibility="gone"
                 android:textColor="@color/btn_normal"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>

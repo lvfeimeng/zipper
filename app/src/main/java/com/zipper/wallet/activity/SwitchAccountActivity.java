@@ -103,8 +103,9 @@ public class SwitchAccountActivity extends BaseActivity {
         addTextChangedListener(editCount);
 
         imgBack.setOnClickListener(v -> finish());
-        textHelp.setOnClickListener(v -> {
-        });
+        textHelp.setOnClickListener(v ->
+                startActivity(new Intent(this, WebActivity.class)
+                        .putExtra("type", 3)));
         textSelectCoins.setOnClickListener(v -> startActivityForResult(new Intent(this, SelectCoinsActivity.class), 100));
         textCostType.setOnClickListener(v ->
                 {

@@ -40,7 +40,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         versionCode updateVersionCode()
-        versionName increasedVersionCode() +"."+ versionTag()
+        versionName increasedVersionCode() + "." + versionTag()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

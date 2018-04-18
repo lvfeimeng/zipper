@@ -115,7 +115,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return super.onTouchEvent(event);
     }
 
-    protected void showTipDialog( String tip, RuntHTTPApi.ResPonse rp) {
+    public void showTipDialog( String tip, RuntHTTPApi.ResPonse rp) {
         showTipDialog(tip,"OK",rp);
     }
     protected void showTipDialog( String tip,String right,  RuntHTTPApi.ResPonse rp) {
@@ -128,8 +128,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         showTipDialog(null,tip,left,right, rp);
 
     }
-    protected void showTipDialog(String title,String tip,String left,String right,  RuntHTTPApi.ResPonse rp) {
-        showTipDialog(null,tip,left,right,0, rp);
+    public void showTipDialog(String title,String tip,String left,String right,  RuntHTTPApi.ResPonse rp) {
+        showTipDialog(title,tip,left,right,0, rp);
     }
     protected void showTipDialog(String title,String tip,String left,String right,int img,  RuntHTTPApi.ResPonse rp) {
         showTipDialog(title,tip,left,right,img, TipDialog.TipType.TIP, rp);

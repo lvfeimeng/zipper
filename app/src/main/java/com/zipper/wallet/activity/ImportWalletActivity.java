@@ -103,7 +103,7 @@ public class ImportWalletActivity extends BaseActivity {
 
     private void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+//        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (WrapContentHeightViewPager) findViewById(R.id.view_pager);
         magicIndicator = (MagicIndicator) findViewById(R.id.magic_indicator);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -114,14 +114,14 @@ public class ImportWalletActivity extends BaseActivity {
     private void initViewPager() {
         list = new ArrayList<>();
         list.add(new MnemonicWordFragment());
-        //        list.add(new OfficialWalletFragment());
-        list.add(new PrivateKeyFragment());
-        //        list.add(new ObserveFragment());
+//        list.add(new OfficialWalletFragment());
+//        list.add(new PrivateKeyFragment());
+//        list.add(new ObserveFragment());
         viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), list));
     }
 
     private void initMagicIndicator() {
-        tabs = new String[]{"助记词", "私钥"};
+        tabs = new String[]{"助记词"};//, "私钥"
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
 

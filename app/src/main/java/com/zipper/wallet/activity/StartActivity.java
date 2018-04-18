@@ -93,13 +93,9 @@ public class StartActivity extends BaseActivity {
                 }
             }, 1000);
         }
-        btnCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this, RiskActivity.class));
-
-            }
-        });
+        btnCreate.setOnClickListener(v ->
+                startActivity(new Intent(this, WebActivity.class)
+                        .putExtra("type", 2)));
         btnImport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

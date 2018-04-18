@@ -82,9 +82,10 @@ public class ExportWalletActivity extends BaseActivity {
     private void initMagicIndicator() {
 
         if(!TextUtils.isEmpty(mnemonicWord)){
-            tabs = new String[]{"导出助记词", "导出明文私钥", "导出加密私钥"};
+//            tabs = new String[]{"导出助记词", "导出明文私钥", "导出加密私钥"};
+            tabs = new String[]{"导出助记词"};
         }else{
-            tabs = new String[]{"导出明文私钥", "导出加密私钥"};
+           // tabs = new String[]{"导出明文私钥", "导出加密私钥"};
         }
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {

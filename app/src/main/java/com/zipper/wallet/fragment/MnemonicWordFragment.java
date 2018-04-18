@@ -1,43 +1,53 @@
 package com.zipper.wallet.fragment;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.WebBrowserActivity;
 import com.zipper.wallet.activity.ImportWalletActivity;
+import com.zipper.wallet.activity.MyWalletActivity;
+import com.zipper.wallet.activity.WebActivity;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.base.BaseFragment;
+import com.zipper.wallet.database.CoinInfo;
+import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.utils.CreateAcountUtils;
 import com.zipper.wallet.utils.PreferencesUtils;
+import com.zipper.wallet.utils.RuntHTTPApi;
+import com.zipper.wallet.utils.SqliteUtils;
 
+import net.bither.bitherj.crypto.EncryptedData;
 import net.bither.bitherj.crypto.hd.DeterministicKey;
-import net.bither.bitherj.crypto.hd.HDKeyDerivation;
 import net.bither.bitherj.crypto.mnemonic.MnemonicCode;
 import net.bither.bitherj.crypto.mnemonic.MnemonicException;
-import net.bither.bitherj.utils.Sha256Hash;
 import net.bither.bitherj.utils.Utils;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.zipper.wallet.base.BaseActivity.KEY_IS_LOGIN;
 import static com.zipper.wallet.base.BaseActivity.PARAMS_TITLE;
 import static com.zipper.wallet.base.BaseActivity.PARAMS_URL;
 
@@ -57,6 +67,10 @@ public class MnemonicWordFragment extends BaseFragment {
     protected TextView textAgreement;
     protected Button btnImport;
     protected TextView textWord;
+
+    TextView txtPwdReWar, txtStrong;
+    ImageView imgPwdSign;
+    LinearLayout linSign, linWarining;
 
     private Context mContext;
 
@@ -84,14 +98,22 @@ public class MnemonicWordFragment extends BaseFragment {
         textAgreement = (TextView) rootView.findViewById(R.id.textAgreement);
         btnImport = (Button) rootView.findViewById(R.id.btnImport);
         textWord = (TextView) rootView.findViewById(R.id.textWord);
+
+        linWarining = (LinearLayout) rootView.findViewById(R.id.lin_warning);
+        txtStrong = (TextView) rootView.findViewById(R.id.txt_strong);
+        txtPwdReWar = (TextView) rootView.findViewById(R.id.txt_pwdre_warning);
+        imgPwdSign = (ImageView) rootView.findViewById(R.id.img_pwd_sign);
+        linSign = (LinearLayout) rootView.findViewById(R.id.lin_sign);
+
         addTextChangedListener(editWord);
         addTextChangedListener(editPassword);
         addTextChangedListener(editConfirmPassword);
         textAgreement.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), WebBrowserActivity.class);
-            intent.putExtra(PARAMS_TITLE, "服务协议");
-            intent.putExtra(PARAMS_URL, "file:///android_asset/agreement.html");
-            startActivity(intent);
+//            Intent intent = new Intent(getActivity(), WebBrowserActivity.class);
+//            intent.putExtra(PARAMS_TITLE, "服务协议");
+//            intent.putExtra(PARAMS_URL, "file:///android_asset/agreement.html");
+            startActivity(new Intent(getActivity(), WebActivity.class)
+                    .putExtra("type", 1));
         });
         btnImport.setOnClickListener(v -> submit());
     }
@@ -112,6 +134,12 @@ public class MnemonicWordFragment extends BaseFragment {
         }
         if (TextUtils.isEmpty(wordStr) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passwordConfirm)) {
             Toast.makeText(getActivity(), "助记词及密码不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.length() < 8) {
+//            ((ImportWalletActivity) getActivity()).showTipDialog("密码不能小于8位数", null);
+            toast("密码不小于8位字符");
             return;
         }
 
@@ -154,6 +182,7 @@ public class MnemonicWordFragment extends BaseFragment {
                     wordStr = s.toString().trim();
                 } else if (editText == editPassword) {
                     password = s.toString().trim();
+                    handlePwdStrong(password);
                 } else if (editText == editConfirmPassword) {
                     passwordConfirm = s.toString().trim();
                 }
@@ -166,104 +195,74 @@ public class MnemonicWordFragment extends BaseFragment {
         });
     }
 
-    private void importWallet() {
-        try {
-            MnemonicCode.setInstance(new MnemonicCodeTestClass());
-            SecureRandom random = new SecureRandom();
-            byte[] mnemonicSeed = new byte[16];
-            random.nextBytes(mnemonicSeed);
-            List<String> words = getMnemonicCode(Utils.hexStringToByteArray(Utils.bytesToHexString(mnemonicSeed)));
-            byte[] seed = MnemonicCode.toSeed(words, "");
-            //Utils.bytesToHexString(seed)
-            DeterministicKey master = HDKeyDerivation.createMasterPrivateKey(seed);
 
-            Utils.bytesToHexString(master.getPrivKeyBytes());
-            Utils.bytesToHexString(master.getPubKey());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void importSuccess() {
+        ((ImportWalletActivity) getActivity()).showTipDialog("导入钱包成功", "正在后台生成钱包地址，可能需要一段时间，可在首页查看", "", "知道了",
+                new RuntHTTPApi.ResPonse() {
+                    @Override
+                    public void doSuccessThing(Map<String, Object> param) {
+                        startActivity(new Intent(getActivity(), MyWalletActivity.class)
+                                .putExtra("isFromImportPage", true));
+                    }
+
+                    @Override
+                    public void doErrorThing(Map<String, Object> param) {
+
+                    }
+                });
     }
 
-    public List<String> getMnemonicCode(byte[] entropy) throws MnemonicException
-            .MnemonicLengthException {
-        if (entropy.length % 4 > 0) {
-            throw new MnemonicException.MnemonicLengthException("Entropy length not multiple of "
-                    + "32 bits.");
-        }
+    public void handlePwdStrong(String pwd) {
+        if (TextUtils.isEmpty(pwd)) {
+            linSign.setVisibility(View.INVISIBLE);
+            txtStrong.setText("");
+            linWarining.setVisibility(View.INVISIBLE);
+        } else {
+            boolean flag = false;
+            try {
+                Integer.parseInt(pwd);
+            } catch (Exception e) {
+                flag = true;
+            }
 
-        if (entropy.length == 0) {
-            throw new MnemonicException.MnemonicLengthException("Entropy is empty.");
-        }
 
-        // We take initial entropy of ENT bits and compute its
-        // checksum by taking first ENT / 32 bits of its SHA256 hash.
-
-        byte[] hash = Sha256Hash.create(entropy).getBytes();
-        boolean[] hashBits = bytesToBits(hash);
-
-        boolean[] entropyBits = bytesToBits(entropy);
-        int checksumLengthBits = entropyBits.length / 32;
-
-        // We append these bits to the end of the initial entropy.
-        boolean[] concatBits = new boolean[entropyBits.length + checksumLengthBits];
-        System.arraycopy(entropyBits, 0, concatBits, 0, entropyBits.length);
-        System.arraycopy(hashBits, 0, concatBits, entropyBits.length, checksumLengthBits);
-
-        // Next we take these concatenated bits and split them into
-        // groups of 11 bits. Each group encodes number from 0-2047
-        // which is a position in a wordlist.  We convert numbers into
-        // words and use joined words as mnemonic sentence.
-
-        ArrayList<String> words = new ArrayList<String>();
-        int nwords = concatBits.length / 11;
-        for (int i = 0;
-             i < nwords;
-             ++i) {
-            int index = 0;
-            for (int j = 0;
-                 j < 11;
-                 ++j) {
-                index <<= 1;
-                if (concatBits[(i * 11) + j]) {
-                    index |= 0x1;
+            boolean isHigh = false;
+            boolean hasUp = false;
+            boolean hasLow = false;
+            for (int i = 0; i < pwd.length(); i++) {
+                int chars = (int) pwd.toCharArray()[i];
+                if (chars > 64 && chars < 91) {
+                    hasUp = true;
+                } else if (chars > 96 && chars < 123) {
+                    hasLow = true;
+                } else if (chars > 9) {
+                    isHigh = true;
                 }
             }
-            words.add((String) this.wordList.get(index));
-        }
 
-        return words;
+            Log.i(TAG, "pwdWatcher isHigh:" + isHigh + " hasLow:" + hasLow + " hasUp:" + hasUp + " flag:" + flag + " pwd.length():" + (pwd.length()));
 
-    }
-
-    public static ArrayList<String> wordList = new ArrayList<String>(2048);
-
-    private static boolean[] bytesToBits(byte[] data) {
-        boolean[] bits = new boolean[data.length * 8];
-        for (int i = 0;
-             i < data.length;
-             ++i)
-            for (int j = 0;
-                 j < 8;
-                 ++j)
-                bits[(i * 8) + j] = (data[i] & (1 << (7 - j))) != 0;
-        return bits;
-    }
-
-    public final class MnemonicCodeTestClass extends MnemonicCode {
-        private static final String WordListPath = "english.txt";
-
-        public MnemonicCodeTestClass() throws IOException {
-            super();
-        }
-
-        @Override
-        protected InputStream openWordList() throws IOException {
-            InputStream stream = getActivity().getAssets().open(WordListPath);
-            if (stream == null) {
-                throw new FileNotFoundException(WordListPath);
+            if (pwd.length() > 7 && isHigh && hasLow && hasUp && flag) {
+                linSign.setVisibility(View.VISIBLE);
+                imgPwdSign.setImageResource(R.mipmap.pwd_good);
+                txtStrong.setTextColor(getResources().getColor(R.color.text_link));
+                txtStrong.setText("很好");
+                linWarining.setVisibility(View.INVISIBLE);
+            } else if (pwd.length() > 7 && flag) {
+                Log.i(TAG, "pwdWatcher " + " 一般:" + (pwd.length() > 6 && flag));
+                linSign.setVisibility(View.VISIBLE);
+                imgPwdSign.setImageResource(R.mipmap.pwd_well);
+                txtStrong.setTextColor(getResources().getColor(R.color.text_link));
+                txtStrong.setText("一般");
+                linWarining.setVisibility(View.INVISIBLE);
+            } else if (pwd.length() < 8 || !flag) {
+                linSign.setVisibility(View.VISIBLE);
+                imgPwdSign.setImageResource(R.mipmap.pwd_low);
+                txtStrong.setTextColor(getResources().getColor(R.color.btn_delete));
+                ((View) txtStrong.getParent()).setVisibility(View.VISIBLE);
+                linWarining.setVisibility(View.VISIBLE);
+                txtStrong.setText("弱");
             }
-            return stream;
         }
     }
-
 }

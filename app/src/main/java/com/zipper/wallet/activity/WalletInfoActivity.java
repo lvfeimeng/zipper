@@ -52,6 +52,7 @@ public class WalletInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_wallet_info);
         initView();
+        initData();
     }
 
     private void initData() {
@@ -109,7 +110,7 @@ public class WalletInfoActivity extends BaseActivity {
             @Override
             public void doSuccessThing(Map<String, Object> param) {
                 initData();
-                showProgressDialog("正在导出。。。");
+                showProgressDialog("正在验证。。。");
                 new Thread() {
                     @Override
                     public void run() {

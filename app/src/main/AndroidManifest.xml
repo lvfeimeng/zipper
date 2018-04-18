@@ -63,8 +63,10 @@
         <activity android:name=".activity.WalletInfoActivity" />
         <activity android:name=".activity.UpdatePasActivity" />
         <activity android:name=".activity.ExportWalletActivity" />
-        <activity android:name=".activity.SearchPropertyActivity"
-            android:theme="@style/ActivityTransparent"/>
+        <activity
+            android:name=".activity.SearchPropertyActivity"
+            android:theme="@style/ActivityTransparent" />
+        <activity android:name=".activity.WebActivity"></activity>
     </application>
 
 </manifest>
