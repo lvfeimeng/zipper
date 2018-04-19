@@ -16,21 +16,17 @@ import com.zipper.wallet.R;
 import com.zipper.wallet.animations.MyAnimations;
 import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
-import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.definecontrol.FlowLayout;
 import com.zipper.wallet.definecontrol.MnemWordsView;
-import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.SqliteUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Administrator on 2018/3/29.
@@ -43,6 +39,7 @@ public class MnemonicActivity extends BaseActivity {
     Button btnOk;
     List<String> words;
     List<MnemWordsView> selectWords = new ArrayList<MnemWordsView>();
+    int mode;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_mnemonic);
@@ -55,6 +52,7 @@ public class MnemonicActivity extends BaseActivity {
         linVerify = (LinearLayout)findViewById(R.id.lin_verify);
         txtMnem = (TextView)findViewById(R.id.txt_mnem);
         words = (List<String>) getIntent().getSerializableExtra("list");
+        mode = getIntent().getIntExtra("mode",0);
         btnOk.setEnabled(true);
         String str = "";
         for(String s : words){
@@ -64,19 +62,42 @@ public class MnemonicActivity extends BaseActivity {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                linCopy.setVisibility(View.GONE);
-                linVerify.setVisibility(View.VISIBLE);
-                List<String> list = new LinkedList<>();
-                for(String str:words){
-                    list.add(str);
-                }
-                randomCreateViews(list);
-                btnOk.setEnabled(false);
-                btnOk.setOnClickListener(null);
-                btnOk.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(check()){
+                startVerify();
+            }
+        });
+
+        /*Set set = new LinkedHashSet();
+        set.add(((List) words));
+        PreferencesUtils.putStringSet(mContext,KEY_MNEN_WORDS,set,PreferencesUtils.VISITOR);*/
+        switch (mode){
+            case 0:
+                showTipDialog("请勿截图","如果有人获取你的助记词将直接获取你的资产！请抄写下助记词并存放在安全地方.",R.mipmap.no_photo,null);
+                break;
+            case 1:
+                startVerify();
+                break;
+        }
+
+    }
+
+
+    private void startVerify(){
+        linCopy.setVisibility(View.GONE);
+        linVerify.setVisibility(View.VISIBLE);
+        List<String> list = new LinkedList<>();
+        for(String str:words){
+            list.add(str);
+        }
+        randomCreateViews(list);
+        btnOk.setEnabled(false);
+        btnOk.setOnClickListener(null);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(check()){
+
+                    switch (mode){
+                        case 0:
                             showTipDialog("助记词验证顺序正确，进入我的钱包",  getString(R.string.ok), new RuntHTTPApi.ResPonse() {
                                 @Override
                                 public void doSuccessThing(Map<String, Object> param) {
@@ -89,35 +110,27 @@ public class MnemonicActivity extends BaseActivity {
                                     startNext();
                                 }
                             });
-                        }else{
-                            showTipDialog("备份失败，请检查你的助记词",null);
-                        }
-                    }
-                });
+                            break;
+                        case 1:
+                            showTipDialog("助记词验证顺序正确","返回上一页", new RuntHTTPApi.ResPonse() {
+                                @Override
+                                public void doSuccessThing(Map<String, Object> param) {
+                                    alertDialog.dismiss();
+                                    ActivityManager.getInstance().finishActivity(ExportWalletActivity.class);
+                                    finish();
+                                }
 
+                                @Override
+                                public void doErrorThing(Map<String, Object> param) {
+                                }
+                            });
+                            break;
+                    }
+                }else{
+                    showTipDialog("备份失败，请检查你的助记词",null);
+                }
             }
         });
-
-        showTipDialog("请勿截图","如果有人获取你的助记词将直接获取你的资产！请抄写下助记词并存放在安全地方.",R.mipmap.no_photo,null);
-        Set set = new LinkedHashSet();
-        set.add(((List) words));
-        PreferencesUtils.putStringSet(mContext,KEY_MNEN_WORDS,set,PreferencesUtils.VISITOR);
-        List<WalletInfo> list = new ArrayList<>();
-        WalletInfo hd = null;
-
-        List<Map> maps = SqliteUtils.selecte("walletinfo");
-            for(Map map : maps){
-                list.add(new WalletInfo(map));
-            }
-
-        for(WalletInfo walletInfo : list){
-            if(walletInfo.getName().equals(PreferencesUtils.getString(mContext,KEY_WALLET_NAME,PreferencesUtils.VISITOR))){
-                hd = walletInfo;
-                MyLog.i(TAG,String.format("name:%s", walletInfo.getName()));
-            }
-            RuntHTTPApi.printMap(walletInfo.toMap(),"");
-        }
-
     }
 
     /**
@@ -273,10 +286,18 @@ public class MnemonicActivity extends BaseActivity {
 
     @Override
     protected boolean onBackKeyDown() {
-        startActivity(new Intent(mContext,
-                MyWalletActivity.class));
-        ActivityManager.getInstance().finishAllActivity();
-        finish();
+
+        switch (mode) {
+            case 0:
+                startActivity(new Intent(mContext,
+                        MyWalletActivity.class));
+                ActivityManager.getInstance().finishAllActivity();
+                finish();
+                break;
+            case 1:
+                onBackPressed();
+                break;
+        }
 
         return true;
     }

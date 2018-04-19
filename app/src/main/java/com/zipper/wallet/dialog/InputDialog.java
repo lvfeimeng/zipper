@@ -3,6 +3,7 @@ package com.zipper.wallet.dialog;
 import android.content.Context;
 import android.text.InputType;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseDialog;
@@ -21,16 +22,33 @@ public class InputDialog extends BaseDialog {
     private String hint,text;
     private int input;
 
-    public InputDialog(Context context, String title, String tip,String hint,String text, String left, String right,int inputType, RuntHTTPApi.ResPonse rp) {
+
+    /**
+     *
+     * @param context
+     * @param title
+     * @param tip
+     * @param hint
+     * @param text
+     * @param left
+     * @param right
+     * @param inputType
+     * @param backdown
+     * @param rp
+     */
+    public InputDialog(Context context, String title, String tip,String hint,String text, String left, String right,int inputType,boolean backdown, RuntHTTPApi.ResPonse rp) {
         super(context, title, tip, left, right, rp);
+        setCanceledOnTouchOutside(backdown);//调用这个方法时，按对话框以外的地方不起作用。按返回键还起作用；
+        setCancelable(backdown);// 调用这个方法时，按对话框以外的地方不起作用。按返回键也不起作用
         this.hint = hint;
         this.text = text;
         this.input = inputType;
         setContentViewId(R.layout.dialog_input);
     }
 
-
-
+    public InputDialog(Context context, String title, String tip,String hint,String text, String left, String right,int inputType, RuntHTTPApi.ResPonse rp) {
+        this(context,title,tip,hint,text,left,right,inputType,true,rp);
+    }
 
     public InputDialog(Context context, String title, String tip,String hint,String text,String right, int inputType,RuntHTTPApi.ResPonse rp) {
         this(context,title,tip,hint,text,"",right,inputType,rp);
@@ -65,6 +83,24 @@ public class InputDialog extends BaseDialog {
     }
 
 
+    public InputDialog(Context context, String title, String tip,String hint,String text,String left,String right,boolean backdown, RuntHTTPApi.ResPonse rp) {
+        this(context,title,tip,hint,text,left,right,InputType.TYPE_TEXT_VARIATION_NORMAL,backdown,rp);
+    }
+    public InputDialog(Context context, String title, String tip,String hint,String text,String right,boolean backdown, RuntHTTPApi.ResPonse rp) {
+        this(context,title,tip,hint,text,"",right,backdown,rp);
+    }
+    public InputDialog(Context context, String title, String tip, String hint, String right,boolean backdown, RuntHTTPApi.ResPonse rp) {
+        this(context,title,tip,hint,"",right,backdown,rp);
+    }
+    public InputDialog(Context context, String tip,String hint,String right,boolean backdown, RuntHTTPApi.ResPonse rp) {
+        this(context,null,tip,hint,right,backdown,rp);
+    }
+    public InputDialog(Context context, String tip,String hint,String right,boolean backdown) {
+        this(context,tip,hint,right,backdown,null);
+    }
+
+
+
     @Override
     public void initComponent() {
         super.initComponent();
@@ -84,7 +120,12 @@ public class InputDialog extends BaseDialog {
         dismiss();
         Map map = new HashMap();
         map.put(INPUT_TEXT, editText.getText());
-        if (rp != null) {
+        if(editText.getText() == null || editText.getText().toString().length() == 0 || editText.getText().equals("")){
+            if (rp != null) {
+                Toast.makeText(mContext,"输入的文字不能为空",Toast.LENGTH_SHORT).show();
+                rp.doErrorThing(map);
+            }
+        } else if (rp != null) {
             rp.doSuccessThing(map);
         }
     }

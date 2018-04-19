@@ -3,6 +3,7 @@ package com.zipper.wallet.fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,16 +12,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.activity.ExportWalletActivity;
+import com.zipper.wallet.activity.MnemonicActivity;
 import com.zipper.wallet.base.BaseFragment;
-import com.zipper.wallet.database.WalletInfo;
-import com.zipper.wallet.utils.CreateAcountUtils;
-import com.zipper.wallet.utils.SqliteUtils;
-
-import net.bither.bitherj.crypto.EncryptedData;
+import com.zipper.wallet.utils.RuntListSeria;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 导出钱包
@@ -73,6 +71,7 @@ public class ExportWalletFragment extends BaseFragment {
             type = getArguments().getInt(ARG_PARAM);
             switch (type) {
                 case 0:
+                    ((ExportWalletActivity)getActivity()).showTipDialog("请勿截图","如果有人获取你的助记词将直接获取你的资产！请抄写下助记词并存放在安全地方.",R.mipmap.no_photo,null);
                     resultStr = getArguments().getString(ARG_PARAM2);
                     break;
                 case 1:
@@ -116,6 +115,14 @@ public class ExportWalletFragment extends BaseFragment {
     private void onClick() {
         switch (type) {
             case 0:
+                Intent intent = new Intent(getContext(), MnemonicActivity.class);
+                intent.putExtra("mode",1);
+                List<String> list = new ArrayList<>();
+                for(String str : resultStr.split("   ")){
+                    list.add(str.trim());
+                }
+                intent.putExtra("list",new RuntListSeria<String>(list));
+                startActivity(intent);
                 break;
             case 1:
             case 2:
@@ -226,14 +233,14 @@ public class ExportWalletFragment extends BaseFragment {
         switch (type) {
             case 0:
                 textContent.setText(info);
-                button.setText("确认");
+                button.setText("下一步");
                 textMnemonicExplain.setVisibility(View.VISIBLE);
                 textPrimaryKeyExplain.setVisibility(View.GONE);
                 break;
             case 1:
                 textContent.setText(info);
                 setPriKeyInfo();
-                break;
+             break;
             case 2:
                 textContent.setText(info);
                 setPriKeyInfo();

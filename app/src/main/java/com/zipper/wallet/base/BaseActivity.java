@@ -118,24 +118,24 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void showTipDialog( String tip, RuntHTTPApi.ResPonse rp) {
         showTipDialog(tip,"OK",rp);
     }
-    protected void showTipDialog( String tip,String right,  RuntHTTPApi.ResPonse rp) {
+    public void showTipDialog( String tip,String right,  RuntHTTPApi.ResPonse rp) {
         showTipDialog(tip,null,right,rp);
     }
-    protected void showTipDialog(String title, String tip,int img,  RuntHTTPApi.ResPonse rp) {
+    public void showTipDialog(String title, String tip, int img, RuntHTTPApi.ResPonse rp) {
         showTipDialog(title,tip,"","OK",img,rp);
     }
-    protected void showTipDialog( String tip,String left,String right,  RuntHTTPApi.ResPonse rp) {
+    public void showTipDialog( String tip,String left,String right,  RuntHTTPApi.ResPonse rp) {
         showTipDialog(null,tip,left,right, rp);
 
     }
     public void showTipDialog(String title,String tip,String left,String right,  RuntHTTPApi.ResPonse rp) {
         showTipDialog(title,tip,left,right,0, rp);
     }
-    protected void showTipDialog(String title,String tip,String left,String right,int img,  RuntHTTPApi.ResPonse rp) {
+    public void showTipDialog(String title,String tip,String left,String right,int img,  RuntHTTPApi.ResPonse rp) {
         showTipDialog(title,tip,left,right,img, TipDialog.TipType.TIP, rp);
     }
 
-    protected void showTipDialog( String title,  String tip,String left, String right,  int image, TipDialog.TipType tipType,  RuntHTTPApi.ResPonse rp) {
+    public void showTipDialog( String title,  String tip,String left, String right,  int image, TipDialog.TipType tipType,  RuntHTTPApi.ResPonse rp) {
         alertDialog = new TipDialog(mContext, title, tip,left,right, image,tipType, rp);
         alertDialog.show();
     }
@@ -145,48 +145,48 @@ public abstract class BaseActivity extends AppCompatActivity {
      *
      * @param Rp        按钮执行的方法
      */
-    protected void showInputDialog( String tip, final RuntHTTPApi.ResPonse Rp) {
+    public void showInputDialog( String tip, final RuntHTTPApi.ResPonse Rp) {
         showInputDialog("",tip, Rp);
     }
-    protected void showInputDialog(String tip,  int inputType, final RuntHTTPApi.ResPonse Rp) {
+    public void showInputDialog(String tip,  int inputType, final RuntHTTPApi.ResPonse Rp) {
         showInputDialog("",tip,inputType,Rp);
 
     }
-    protected void showInputDialog(String title,String tip,  final RuntHTTPApi.ResPonse Rp) {
+    public void showInputDialog(String title,String tip,  final RuntHTTPApi.ResPonse Rp) {
         showInputDialog(title,tip,"",Rp);
 
     }
-    protected void showInputDialog(String title,String tip, int inputType, final RuntHTTPApi.ResPonse Rp) {
+    public void showInputDialog(String title,String tip, int inputType, final RuntHTTPApi.ResPonse Rp) {
         showInputDialog(title,tip,"",inputType,Rp);
 
     }
-    protected void showInputDialog(String title,String tip, String hint,  final RuntHTTPApi.ResPonse Rp) {
+    public void showInputDialog(String title,String tip, String hint,  final RuntHTTPApi.ResPonse Rp) {
         showInputDialog(title,tip,hint,"",Rp);
 
     }
-    protected void showInputDialog(String title,String tip, String hint, int inputType,  final RuntHTTPApi.ResPonse Rp) {
+    public void showInputDialog(String title,String tip, String hint, int inputType,  final RuntHTTPApi.ResPonse Rp) {
         showInputDialog(title,tip,hint,"",inputType,Rp);
 
     }
-    protected void showInputDialog(String title,String tip, String hint, String text,  final RuntHTTPApi.ResPonse Rp) {
+    public void showInputDialog(String title,String tip, String hint, String text,  final RuntHTTPApi.ResPonse Rp) {
         showInputDialog(title,tip,hint,text,"OK",Rp);
 
     }
-    protected void showInputDialog(String title,String tip, String hint, String text, int inputType, final RuntHTTPApi.ResPonse Rp) {
+    public void showInputDialog(String title,String tip, String hint, String text, int inputType, final RuntHTTPApi.ResPonse Rp) {
         showInputDialog(title,tip,hint,text,"OK",inputType,Rp);
     }
 
 
-    protected void showInputDialog(String title,String tip, String hint, String text,String right,  final RuntHTTPApi.ResPonse Rp) {
+    public void showInputDialog(String title,String tip, String hint, String text,String right,  final RuntHTTPApi.ResPonse Rp) {
         showInputDialog(title,tip,hint,text,"",right,Rp);
     }
-    protected void showInputDialog(String title,String tip, String hint, String text,String right, int inputType, final RuntHTTPApi.ResPonse Rp) {
+    public void showInputDialog(String title,String tip, String hint, String text,String right, int inputType, final RuntHTTPApi.ResPonse Rp) {
         showInputDialog(title,tip,hint,text,"",right,inputType,Rp);
     }
-    protected void showInputDialog(String title,String tip, String hint, String text,String left,String right, final RuntHTTPApi.ResPonse Rp) {
+    public void showInputDialog(String title,String tip, String hint, String text,String left,String right, final RuntHTTPApi.ResPonse Rp) {
         showInputDialog(title,tip,hint,text,left,right,InputType.TYPE_TEXT_VARIATION_NORMAL,Rp);
     }
-    protected void showInputDialog(String title,String tip, String hint, String text,String left,String right, int inputType, final RuntHTTPApi.ResPonse Rp) {
+    public void showInputDialog(String title,String tip, String hint, String text,String left,String right, int inputType, final RuntHTTPApi.ResPonse Rp) {
         alertDialog = new InputDialog(mContext,title,tip,hint,text,left,right,inputType,Rp);
         alertDialog.show();
     }
