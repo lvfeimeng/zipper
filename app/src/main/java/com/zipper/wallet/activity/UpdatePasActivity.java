@@ -164,7 +164,8 @@ public class UpdatePasActivity extends BaseActivity implements View.OnClickListe
                     runOnUiThread(() ->
                     {
                         hideProgressDialog();
-                        showTipDialog("更改成功", null);
+//                        showTipDialog("更改成功", null);
+                        toast("密码修改成功");
                         finish();
                     });
                 } catch (Exception e) {
