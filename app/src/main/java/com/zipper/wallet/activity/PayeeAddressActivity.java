@@ -48,32 +48,10 @@ public class PayeeAddressActivity extends BaseActivity {
 
     private void requestList() {
         items = new ArrayList<>();
-        CoinsBean bean = null;
-        for (int i = 0; i < 10; i++) {
-            bean = new CoinsBean();
-            if (i == 0) {
-                bean.setShortName("全站钱包地址");
-                bean.setSelected(true);
-            } else if (i == 1) {
-                bean.setShortName("IOST");
-            } else if (i == 2) {
-                bean.setShortName("ETH");
-            } else if (i == 3) {
-                bean.setShortName("BTC");
-            } else if (i == 4) {
-                bean.setShortName("SmartMesh");
-            } else if (i == 5) {
-                bean.setShortName("HT");
-            } else {
-                bean.setShortName("BEH");
-            }
 
-            items.add(bean);
-        }
         if (coinsDialog == null) {
             coinsDialog = new SelectCoinsDialog(this, items);
             coinsDialog.setCallback(item -> {
-                toast(item.getShortName());
                 coinsDialog.dismiss();
             });
         }

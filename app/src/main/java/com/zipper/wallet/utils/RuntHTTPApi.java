@@ -2,9 +2,10 @@ package com.zipper.wallet.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
+import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -26,6 +27,7 @@ import java.util.Random;
 import java.util.TreeMap;
 
 import okhttp3.Call;
+import okhttp3.MediaType;
 
 /**
  * 网络请求api
@@ -39,38 +41,16 @@ public class RuntHTTPApi {
 
     public final static String IP = "120.92.34.88",//  http://172.16.4.76:8080/coin/getcoininfos
     // www.soarsan.com
-    PORT = ":8081",
+    PORT = ":80",
             CHARSET = "utf-8",
             PROJECT_URL = "http://" + IP + PORT + "/",
             SERVER_URL = "http://" + IP + PORT + "/",
             URL_GET_COINS = "coin/getcoininfos",//获取币种列表信息
-            URL_ADD_ADDRESS = "appapi/user/add_address",  //添加收货地址
-            URL_DEL_ADDRESS = "appapi/user/delete_address/",    //删除收货地址
-            URL_EDIT_ADDRESS = "appapi/user/change_address/",    //修改收货地址
-            URL_ADDRESS_LIST = "appapi/user/address_list",//获取收货地址列表
-            URL_VERIFYCODE = "Appapi/user/verify_mobile_code", // 验证手机号
-            URL_PHONE_SET_PWD = "Appapi/user/mobile_find_pwd", // 手机号修改密码
-            URL_GETCODE = "Appapi/user/send_message", // 获取手机验证码
-            URL_EDITPWD = "Appapi/user/old_new_login_pwd", // 修改密码
-            URL_EDITPHONE = "Appapi/user/modify_bind_mobile", // 修改手机
-            URL_IS_IDENTIFY = "Appapi/user/is_identify_certification",//是否实名认证
-            URL_DO_IDENTIFY = "Appapi/user/apply_identify_certification",//提交实名认证
-            URL_GET_BANKCARDS = "appapi/user/bank_list",//获取绑定的银行卡列表
-            URL_ADD_BACKCARD = "appapi/user/add_bank_card",//添加银行卡
-            URL_GET_CARD_BANK_INFO = "appapi/user/bank_card_info",//查询卡号所属银行
-            URL_UNBIND_CARD = "Appapi/user/remove_bind_bank",//解除绑定银行卡
-            URL_GET_CASH = "Appapi/pay/withdraw_cash",//提现
-            URL_SET_PAY_PWD = "Appapi/pay/set_pwd",//设置支付密码
-            URL_GET_INTEGRAL_EXPENSE_RECORD = "appapi/integration/points_record/",//积分兑换记录
-            URL_GET_BALANCE = "Appapi/user/get_account_balance",//获取余额
-            URL_GET_INTEGRAL = "appapi/integration/index",//获取积分
-            URL_CREATE_ORDER = "Appapi/pay/create_order",//创建订单
-            URL_WALLETPAY = "Appapi/pay/coinspay",//创建订单
-            URL_CATEGORY = "Appapi/shop/category_list",//获取经营类目
-            URL_APPLY_STORE = "Appapi/shop/apply_shop",//申请店铺
-            URL_APPLY_STORE_STATUS = "Appapi/shop/is_audit_pass",//店铺审核状态
-            URL_QUIT_ROOM = "quit_room";
+            URL_BTC_BALANCE="btc/getaddressinfo";//获取btc余额信息
 
+    public static String getImagePath(String name) {
+        return SERVER_URL + "icon/andriod/" + name;
+    }
 
     /**
      * okhttp访问接口,多文件加参数传递
@@ -104,6 +84,54 @@ public class RuntHTTPApi {
         }
     }
 
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+    //以json为参数传递
+    public static void request(String lastUrl, String json, StringCallback callback) {
+        String url = SERVER_URL + lastUrl;
+        if (json == null) {
+            return;
+        }
+        OkHttpUtils.postString()
+                .url(url)
+                .content(json)
+                .mediaType(JSON)
+                .build()
+                .execute(callback);
+    }
+
+    //以Map为参数传递
+    public static void request(String lastUrl, Map<String, String> map, StringCallback callback) {
+        if (map == null) {
+            return;
+        }
+        String json = new Gson().toJson(map);
+        String url = SERVER_URL + lastUrl;
+        OkHttpUtils.postString()
+                .url(url)
+                .content(json)
+                .mediaType(JSON)
+                .build()
+                .execute(callback);
+    }
+
+//    public static void request2(String lastUrl, Map<String, Object> params, StringCallback callback) {
+//        String url = SERVER_URL + lastUrl;
+//        PostFormBuilder builder = OkHttpUtils.post().url(url);
+//        if (params != null) {
+//            for (Map.Entry<String, Object> entry : params.entrySet()) {
+//                if (entry.getValue() instanceof File) {
+//                    File file = (File) entry.getValue();
+//                    builder.addFile(entry.getKey(), file.getName(), file);
+//                } else if (entry.getValue() instanceof String) {
+//                    builder.addParams(entry.getKey(), entry.getValue().toString());
+//                }
+//            }
+//        }
+//        if (callback != null) {
+//            builder.build().execute(callback);
+//        }
+//    }
 
     /**
      * 解析json字符串
@@ -238,7 +266,7 @@ public class RuntHTTPApi {
         words += words.toUpperCase();
         words += "0123456789";
         base = words;
-        return base.charAt(number%base.length());
+        return base.charAt(number % base.length());
     }
 
     public static String getRandomTime() {
@@ -259,13 +287,13 @@ public class RuntHTTPApi {
                     System.out.print(" ");
                     list.add(String.valueOf(Character.toChars(Integer
                             .parseInt(a))));
-                }else if (intB > 64 && intB < 91
+                } else if (intB > 64 && intB < 91
                         || intB > 96 && intB < 123) {
                     System.out.print(Character.toChars(Integer.parseInt(b)));
                     System.out.print(" ");
                     list.add(String.valueOf(Character.toChars(Integer
                             .parseInt(b))));
-                }else {
+                } else {
                     String randomStr = getRandomString(1);
                     System.out.print(" " + randomStr + " ");
                     list.add(randomStr);
@@ -273,10 +301,10 @@ public class RuntHTTPApi {
             }
         }
         String re = "";
-        for(String s : list){
-            re+=s;
+        for (String s : list) {
+            re += s;
         }
-        return  re;
+        return re;
     }
 
 
@@ -351,7 +379,7 @@ public class RuntHTTPApi {
             if (resPonse != null) {
                 //showTipDialog(message.toString());
                 Map<String, Object> param = new HashMap<String, Object>();
-                param.put("error",MESS_TIP_NET_ERROR);
+                param.put("error", MESS_TIP_NET_ERROR);
                 resPonse.doErrorThing(param);
             }
         }
@@ -382,7 +410,7 @@ public class RuntHTTPApi {
                             Toast.makeText(mContext, message + "", Toast.LENGTH_SHORT).show();
                             if (resPonse != null) {
                                 //showTipDialog(message.toString());
-                                param.put("error","没有数据");
+                                param.put("error", "没有数据");
                                 resPonse.doErrorThing(param);
                             }
                         }

@@ -27,7 +27,7 @@ public class DialogSelectCoinsAdapter extends CommonAdapter<CoinsBean> {
         View rootView = viewHolder.getConvertView();
         RadioButton radioButton = (RadioButton) rootView.findViewById(R.id.radio_button);
         radioButton.setChecked(item.isSelected());
-        radioButton.setText(item.getShortName());
+        //radioButton.setText(item.getShortName());
         radioButton.setOnClickListener(v -> {
             item.setSelected(true);
             for (CoinsBean mData : mDatas) {

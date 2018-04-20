@@ -240,7 +240,7 @@ public class ExportWalletFragment extends BaseFragment {
             case 1:
                 textContent.setText(info);
                 setPriKeyInfo();
-             break;
+                break;
             case 2:
                 textContent.setText(info);
                 setPriKeyInfo();

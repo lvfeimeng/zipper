@@ -139,7 +139,7 @@
                         android:layout_marginRight="10dp"
                         android:padding="12dp"
                         android:src="@mipmap/home_qr_code"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
 
                     <ImageView
                         android:id="@+id/img_switch"
@@ -149,7 +149,7 @@
                         android:layout_toLeftOf="@+id/img_qr_code"
                         android:padding="12dp"
                         android:src="@mipmap/home_switch"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
 
                     <TextView
                         android:id="@+id/text_title"
@@ -168,32 +168,16 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical">-->
 
-        <android.support.v7.widget.RecyclerView
+        <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none" />
-
-    </LinearLayout>
-    <!--<android.support.v4.widget.NestedScrollView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="vertical">-->
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/recycler_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
+            android:layout_height="wrap_content"
+            android:fadingEdge="none"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     <!--</LinearLayout>-->
-    <!--</android.support.v4.widget.NestedScrollView>-->
-
 </android.support.design.widget.CoordinatorLayout>

@@ -73,8 +73,8 @@ public class ExportWalletActivity extends BaseActivity {
         if(!TextUtils.isEmpty(mnemonicWord)){
             list.add(ExportWalletFragment.newInstance(0,mnemonicWord));
         }
-        list.add(ExportWalletFragment.newInstance(1,cleartext));
-        list.add(ExportWalletFragment.newInstance(2,ciphertext));
+//        list.add(ExportWalletFragment.newInstance(1,cleartext));
+//        list.add(ExportWalletFragment.newInstance(2,ciphertext));
         viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), list));
         viewPager.setOffscreenPageLimit(list.size());
     }

@@ -117,7 +117,7 @@ public class WebActivity extends BaseActivity {
             finish();
         });
         textRight.setOnClickListener(v -> {
-            startActivity(new Intent(mContext, ImportWalletActivity.class));
+            startActivity(new Intent(mContext, CreateAccountActivity.class));
             finish();
         });
         layout = (RelativeLayout) findViewById(R.id.layout);

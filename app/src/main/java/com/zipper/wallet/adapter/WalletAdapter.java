@@ -34,10 +34,11 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (items == null) {
             return;
         }
-        if (mList == null) {
-            mList = new ArrayList<>();
-        }
-        mList.addAll(items);
+//        if (mList==null) {
+//            mList=new ArrayList<>();
+//        }
+//        mList.addAll(items);
+        mList=items;
     }
 
     @Override
@@ -92,19 +93,19 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void loadListData(RecViewHolder holder) {
-        holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        holder.recyclerView.addItemDecoration(
-                new HorizontalDividerItemDecoration
-                        .Builder(mContext)
-                        .color(mContext.getResources().getColor(R.color.line_input))
-                        .size(1)
-                        .margin(ScreenUtils.dp2px(mContext, 15), ScreenUtils.dp2px(mContext, 15))
-                        .build()
-        );
-        holder.recyclerView.setFocusableInTouchMode(false);
-        initSwipeSetting(holder.recyclerView);
-        holder.recyclerView.setNestedScrollingEnabled(false);
-        if (adapter == null) {
+        if (adapter==null) {
+            holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+            holder.recyclerView.addItemDecoration(
+                    new HorizontalDividerItemDecoration
+                            .Builder(mContext)
+                            .color(mContext.getResources().getColor(R.color.line_input))
+                            .size(1)
+                            .margin(ScreenUtils.dp2px(mContext, 15), ScreenUtils.dp2px(mContext, 15))
+                            .build()
+            );
+            holder.recyclerView.setFocusableInTouchMode(false);
+            initSwipeSetting(holder.recyclerView);
+
             adapter = new ConisAdapter(mContext, mList);
             holder.recyclerView.setAdapter(adapter);
         } else {

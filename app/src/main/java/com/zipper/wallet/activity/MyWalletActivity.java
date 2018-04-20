@@ -19,21 +19,29 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.readystatesoftware.viewbadger.BadgeView;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
-import com.zipper.wallet.adapter.WalletAdapter;
+import com.zipper.wallet.activity.home.bean.HomeCoinsBean;
+import com.zipper.wallet.activity.home.contract.HomeContract;
+import com.zipper.wallet.activity.home.presenter.HomePresenter;
+import com.zipper.wallet.adapter.ConisAdapter;
 import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.bean.CoinsBean;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.utils.PreferencesUtils;
+import com.zipper.wallet.utils.ScreenUtils;
 import com.zipper.wallet.utils.SqliteUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MyWalletActivity extends BaseActivity implements View.OnClickListener {
+public class MyWalletActivity extends BaseActivity implements View.OnClickListener, HomeContract.View {
+
+    private static final String TAG = "MyWalletActivity";
 
 //    public static final int REQUEST_CODE = 1000;
 
@@ -42,7 +50,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     protected AppBarLayout appBar;
     protected NavigationView navView;
     protected DrawerLayout drawerLayout;
-    protected RecyclerView recyclerView;
+    protected SwipeMenuRecyclerView recyclerView;
     protected TextView textSwitchAccount;
     protected TextView textCollectBill;
     protected ImageView imgHome;
@@ -60,13 +68,16 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     protected LinearLayout layoutLanguage;
     protected CheckBox checkboxGesturePassword;
 
-    private WalletAdapter adapter;
+    private ConisAdapter adapter;
     private List<CoinsBean> items;
+
+    private HomePresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_wallet);
+
         if (getIntent() != null) {
             if (getIntent().getBooleanExtra("isFromImportPage", false)) {
                 ActivityManager.getInstance().finishActivity(StartActivity.class);
@@ -75,6 +86,10 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         }
         initView();
         gesturePwdSetting();
+
+        presenter = new HomePresenter(this, this);
+        presenter.getCoins();
+        //presenter.getBtcBalance("{\"address\":\"1JBV1C2ifgFjFjEuzAQVj88y3UtKRYRfWU\"}");
     }
 
     private void gesturePwdSetting() {
@@ -92,7 +107,8 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         appBar = (AppBarLayout) findViewById(R.id.appBar);
         navView = (NavigationView) findViewById(R.id.nav_view);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
+//        nestedScrollView = (NestedScrollView) findViewById(R.id.nest_scroll_view);
 
         textName = (TextView) findViewById(R.id.text_name);
         textSwitchAccount = (TextView) findViewById(R.id.text_switch_account);
@@ -105,8 +121,17 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         imgQrCode.setOnClickListener(MyWalletActivity.this);
         imgSwitch = (ImageView) findViewById(R.id.img_switch);
         imgSwitch.setOnClickListener(MyWalletActivity.this);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        View view = inflate(R.layout.layout_wallet_center);
+        view.setLayoutParams(new LinearLayout.LayoutParams(-1, ScreenUtils.dp2px(mContext, 40)));
+        recyclerView.addHeaderView(view);
+
+        view.findViewById(R.id.image_add).setOnClickListener(v ->
+                mContext.startActivity(new Intent(mContext, AddPropertyActivity.class)));
+        view.findViewById(R.id.text_search).setOnClickListener(v ->
+                mContext.startActivity(new Intent(mContext, SearchPropertyActivity.class)
+                        .putExtra("isShowCheckBox", false)));
+
         recyclerView.addItemDecoration(
                 new HorizontalDividerItemDecoration
                         .Builder(this)
@@ -115,22 +140,21 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                         .margin(dp2px(15), dp2px(15))
                         .build()
         );
+        initSwipeSetting();
         items = new ArrayList<>();
-        testData();
-        adapter = new WalletAdapter(this, items);
-        recyclerView.setAdapter(adapter);//new ConisAdapter(this,items)
+        adapter = new ConisAdapter(this, items);
+        recyclerView.setAdapter(adapter);
+        addScrollListener();
+        initNavHeaderView();
+    }
 
+    private void addScrollListener() {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int distance = getScollYDistance();
-                if (distance >= dp2px(140)) {
+                if (distance >= 1) {
                     imgQrCode.setVisibility(View.VISIBLE);
                     imgSwitch.setVisibility(View.VISIBLE);
                 } else {
@@ -139,8 +163,31 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 }
             }
         });
+    }
 
-        initNavHeaderView();
+    private void initSwipeSetting() {
+        recyclerView.setItemViewSwipeEnabled(false);
+        recyclerView.setLongPressDragEnabled(false);
+        recyclerView.setSwipeMenuCreator((swipeLeftMenu, swipeRightMenu, viewType) -> {
+            SwipeMenuItem deleteItem = new SwipeMenuItem(mContext);
+            deleteItem.setBackgroundColorResource(R.color.btn_delete);
+            deleteItem.setText("移除");
+            deleteItem.setTextSize(16);
+            deleteItem.setTextColorResource(R.color.white);
+            deleteItem.setHeight(-1);
+            deleteItem.setWidth(ScreenUtils.dp2px(mContext, 80));
+            swipeRightMenu.addMenuItem(deleteItem);
+        });
+        recyclerView.setSwipeMenuItemClickListener(menuBridge -> {
+            menuBridge.closeMenu();
+            //int direction=menuBridge.getDirection();
+            int adapterPosition = menuBridge.getAdapterPosition();
+            int menuPosition = menuBridge.getPosition();
+            if (menuPosition == 0) {
+                items.remove(adapterPosition);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void initNavHeaderView() {
@@ -234,19 +281,6 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private void testData() {
-        String icon = "http://upload.news.cecb2b.com/2013/1211/1386729783853.jpg";
-        items.add(new CoinsBean("1", "ETH", "AAAAAAAAAAA", icon, "9999.9999"));
-        items.add(new CoinsBean("2", "BTC", "BBBBBBBBBB", icon, "20.3678"));
-        items.add(new CoinsBean("3", "ZIP", "CCCCCCCCCC", icon, "1200000"));
-        items.add(new CoinsBean("4", "ETH", "DDDDDDDDDD", icon, "789000"));
-        items.add(new CoinsBean("5", "ZIP", "FFFFFFFFFF", icon, "2312"));
-        items.add(new CoinsBean("6", "ETH", "GGGGGGGGGG", icon, "456"));
-        items.add(new CoinsBean("7", "BTC", "HHHHHHHHHHH", icon, "90"));
-        items.add(new CoinsBean("8", "ETH", "IIIIIIIIIIII", icon, "1234"));
-        items.add(new CoinsBean("9", "ZIP", "JJJJJJJJJJ", icon, "567.890"));
-        //adapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onBackPressed() {
@@ -338,4 +372,30 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         return (position) * itemHeight - firstVisiableChildView.getTop();
     }
 
+    @Override
+    public void doSuccess(int type, Object obj) {
+        if (obj == null) {
+            return;
+        }
+        switch (type) {
+            case HomePresenter.TYPE_GET_COINS:
+                HomeCoinsBean result = (HomeCoinsBean) obj;
+                if (result.getData() != null) {
+                    items.addAll(result.getData());
+                }
+                adapter.notifyDataSetChanged();
+                break;
+            case HomePresenter.TYPE_GET_BTC_BALANCE:
+                toast((String) obj);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    @Override
+    public void doFailure() {
+
+    }
 }

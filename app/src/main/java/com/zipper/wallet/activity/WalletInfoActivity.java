@@ -206,7 +206,7 @@ public class WalletInfoActivity extends BaseActivity {
                                                 .putExtra("cleartext", cleartext)
                                                 .putExtra("ciphertext", ciphertext));
                                         hideProgressDialog();
-                                        finish();
+                                        //finish();
                                     }
                             );
                         } catch (Exception e) {

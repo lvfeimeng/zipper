@@ -26,9 +26,9 @@ public class ConisAdapter extends CommonAdapter<CoinsBean> {
     protected void convert(ViewHolder holder, final CoinsBean bean, int position) {
         CoinsViewHolder vh = new CoinsViewHolder(holder.getConvertView());
         ImgUtil.loadCircleImage(bean.getIcon(), vh.imageView);
-        vh.textShortName.setText(bean.getShortName());
-        vh.textFullName.setText(bean.getFullName());
-        vh.textCoinsCount.setText(bean.getCount());
+        vh.textShortName.setText(bean.getName());
+        vh.textFullName.setText(bean.getFull_name());
+        vh.textCoinsCount.setText("0");
         holder.getConvertView()
                 .setOnClickListener(v ->
                         mContext.startActivity(new Intent(mContext, PropertyActvity.class)
