@@ -233,7 +233,7 @@ public class ExportWalletFragment extends BaseFragment {
         switch (type) {
             case 0:
                 textContent.setText(info);
-                button.setText("下一步");
+                button.setText("重新备份");
                 textMnemonicExplain.setVisibility(View.VISIBLE);
                 textPrimaryKeyExplain.setVisibility(View.GONE);
                 break;

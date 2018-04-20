@@ -122,7 +122,7 @@ public class InputDialog extends BaseDialog {
         map.put(INPUT_TEXT, editText.getText());
         if(editText.getText() == null || editText.getText().toString().length() == 0 || editText.getText().equals("")){
             if (rp != null) {
-                Toast.makeText(mContext,"输入的文字不能为空",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,"密码不能为空",Toast.LENGTH_SHORT).show();
                 rp.doErrorThing(map);
             }
         } else if (rp != null) {

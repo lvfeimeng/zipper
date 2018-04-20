@@ -2,7 +2,6 @@ package com.zipper.wallet.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -39,7 +38,7 @@ public class RuntHTTPApi {
     private static final String TAG = "uploadFile";
     private static final int TIME_OUT = 10 * 1000; // 超时时间
 
-    public final static String IP = "120.92.34.88",//  http://172.16.4.76:8080/coin/getcoininfos
+    public final static String IP = "120.131.13.167",//  http://172.16.4.76:8080/coin/getcoininfos
     // www.soarsan.com
     PORT = ":80",
             CHARSET = "utf-8",
