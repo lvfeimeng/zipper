@@ -27,13 +27,15 @@
     	defined in models will be mapped into columns.
     	For example:
     	<list>
-    		<mapping class="com.test.model.Reader" />
-    		<mapping class="com.test.model.Magazine" />
+    		<mapping class="a_testtest.model.Reader" />
+    		<mapping class="a_testtest.model.Magazine" />
     	</list>
     -->
     <list>
         <mapping class="com.zipper.wallet.database.CoinInfo" />
         <mapping class="com.zipper.wallet.database.WalletInfo" />
+        <mapping class="com.zipper.wallet.database.CoinBalance" />
+        <mapping class="com.zipper.wallet.database.PropertyRecord" />
     </list>
 
     <!--

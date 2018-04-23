@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:layout_marginLeft="5dp"
-                android:text="SMT"
+                android:text=""
                 android:textSize="14sp"/>
 
         </LinearLayout>

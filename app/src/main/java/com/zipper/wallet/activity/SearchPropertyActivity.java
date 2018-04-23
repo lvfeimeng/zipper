@@ -16,7 +16,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.PropertyAdapter;
 import com.zipper.wallet.base.BaseActivity;
-import com.zipper.wallet.bean.PropertyBean;
+import com.zipper.wallet.database.CoinInfo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,12 +30,12 @@ public class SearchPropertyActivity extends BaseActivity {
     protected LinearLayout layoutEmpty;
     protected FrameLayout frameLayout;
 
-    private List<PropertyBean> items;
+    private List<CoinInfo> items;
     private PropertyAdapter adapter;
 
     private boolean isShowCheckBox = false;
 
-    private List<PropertyBean> searchList = null;
+    private List<CoinInfo> searchList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +96,7 @@ public class SearchPropertyActivity extends BaseActivity {
                     } else {
                         searchList.clear();
                     }
-                    for (PropertyBean item : items) {
+                    for (CoinInfo item : items) {
                         if (item.isChecked()) {
                             searchList.add(item);
                         }
@@ -159,12 +159,12 @@ public class SearchPropertyActivity extends BaseActivity {
 
     private void testData() {
         String url = "http://img.mp.sohu.com/q_mini,c_zoom,w_640/upload/20170625/f76be47471c14f5ca6df64b94d02f648_th.jpg";
-        PropertyBean bean = null;
+        CoinInfo bean = null;
         for (int i = 0; i < 5; i++) {
-            bean = new PropertyBean();
+            bean = new CoinInfo();
             bean.setIcon(url);
-            bean.setShortName("ETH02");
-            bean.setFullName("Ethereum Foundation");
+            bean.setName("ETH02");
+            bean.setFull_name("Ethereum Foundation");
             items.add(bean);
         }
         adapter.notifyDataSetChanged();

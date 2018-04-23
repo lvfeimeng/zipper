@@ -3,7 +3,6 @@ package com.zipper.wallet.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,14 +11,18 @@ import android.widget.TextView;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
+import com.zipper.wallet.activity.home.contract.HomeContract;
+import com.zipper.wallet.activity.home.presenter.HomePresenter;
 import com.zipper.wallet.adapter.PropertyAdapter;
 import com.zipper.wallet.base.BaseActivity;
-import com.zipper.wallet.bean.PropertyBean;
+import com.zipper.wallet.database.CoinInfo;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddPropertyActivity extends BaseActivity {
+public class AddPropertyActivity extends BaseActivity implements HomeContract.View {
 
     protected ImageView imgBack;
     protected SwipeMenuRecyclerView recyclerView;
@@ -27,9 +30,11 @@ public class AddPropertyActivity extends BaseActivity {
     private View headerView;
 
     private PropertyAdapter adapter;
-    private List<PropertyBean> items;
+    private List<CoinInfo> items;
 
     private boolean isHeaderViewClicked = false;
+
+    private HomePresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,9 @@ public class AddPropertyActivity extends BaseActivity {
         super.setContentView(R.layout.activity_add_property);
         initView();
         initData();
+        presenter = new HomePresenter(this, this);
+        presenter.getCoins();
+        ;
     }
 
     @Override
@@ -96,29 +104,29 @@ public class AddPropertyActivity extends BaseActivity {
     }
 
     private void testData() {
-        String url = "http://img.mp.sohu.com/q_mini,c_zoom,w_640/upload/20170625/f76be47471c14f5ca6df64b94d02f648_th.jpg";
-        PropertyBean bean = null;
-        for (int i = 0; i < 10; i++) {
-            bean = new PropertyBean();
-            bean.setIcon(url);
-            bean.setShortName("ETH");
-            bean.setFullName("Ethereum Foundation");
-            items.add(bean);
-        }
-        adapter.notifyDataSetChanged();
+//        String url = "http://img.mp.sohu.com/q_mini,c_zoom,w_640/upload/20170625/f76be47471c14f5ca6df64b94d02f648_th.jpg";
+//        CoinInfo bean = null;
+//        for (int i = 0; i < 10; i++) {
+//            bean = new CoinInfo();
+//            bean.setIcon(url);
+//            bean.setShortName("ETH");
+//            bean.setFullName("Ethereum Foundation");
+//            items.add(bean);
+//        }
+//        adapter.notifyDataSetChanged();
     }
 
-    private List<PropertyBean> resultList = null;
+    private List<CoinInfo> resultList = null;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 100) {
             if (data != null) {
-                resultList = (List<PropertyBean>) data.getSerializableExtra("search_list");
+                resultList = (List<CoinInfo>) data.getSerializableExtra("search_list");
                 if (resultList != null) {
-                    List<PropertyBean> temp=new ArrayList<>();
-                    for (PropertyBean item : items) {
+                    List<CoinInfo> temp = new ArrayList<>();
+                    for (CoinInfo item : items) {
                         if (item.isChecked()) {
                             temp.add(item);
                         }
@@ -130,5 +138,32 @@ public class AddPropertyActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void doSuccess(int type, Object obj) {
+        if (obj==null) {
+            getLocalData();
+            return;
+        }
+        List<CoinInfo> list= (List<CoinInfo>) obj;
+        if (list!=null) {
+            items.addAll(list);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void doFailure() {
+        getLocalData();
+    }
+
+    private void getLocalData() {
+        items.clear();
+        List<CoinInfo> list = DataSupport.findAll(CoinInfo.class);
+        if (list != null) {
+            items.addAll(list);
+        }
+        adapter.notifyDataSetChanged();
     }
 }

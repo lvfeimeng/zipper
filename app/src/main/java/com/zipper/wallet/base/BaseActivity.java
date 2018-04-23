@@ -226,6 +226,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             mImmersionBar = ImmersionBar.with(this);
         }
         mImmersionBar.fitsSystemWindows(fits)
+                .statusBarColor(R.color.transparent)
                 .keyboardEnable(true)
                 .init();
     }

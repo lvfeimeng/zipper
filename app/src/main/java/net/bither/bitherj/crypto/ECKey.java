@@ -897,18 +897,18 @@ public class ECKey implements Serializable {
         try {
             ECKey rebornUnencryptedKey = encryptedKey.decrypt(keyCrypter, aesKey);
             if (rebornUnencryptedKey == null) {
-                log.error(genericErrorText + "The test decrypted key was missing.");
+                log.error(genericErrorText + "The a_test decrypted key was missing.");
                 return false;
             }
 
             byte[] originalPrivateKeyBytes = originalKey.getPrivKeyBytes();
             if (originalPrivateKeyBytes != null) {
                 if (rebornUnencryptedKey.getPrivKeyBytes() == null) {
-                    log.error(genericErrorText + "The test decrypted key was missing.");
+                    log.error(genericErrorText + "The a_test decrypted key was missing.");
                     return false;
                 } else {
                     if (originalPrivateKeyBytes.length != rebornUnencryptedKey.getPrivKeyBytes().length) {
-                        log.error(genericErrorText + "The test decrypted private key was a different length to the original.");
+                        log.error(genericErrorText + "The a_test decrypted private key was a different length to the original.");
                         return false;
                     } else {
                         for (int i = 0; i < originalPrivateKeyBytes.length; i++) {

@@ -1,6 +1,7 @@
 package com.zipper.wallet.activity.home.bean;
 
 import com.zipper.wallet.bean.CoinsBean;
+import com.zipper.wallet.database.CoinInfo;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class HomeCoinsBean {
      * is_default : true
      */
 
-    private List<CoinsBean> data;
+    private List<CoinInfo> data;
 
     public int getErrCode() {
         return errCode;
@@ -52,11 +53,11 @@ public class HomeCoinsBean {
         this.hash = hash;
     }
 
-    public List<CoinsBean> getData() {
+    public List<CoinInfo> getData() {
         return data;
     }
 
-    public void setData(List<CoinsBean> data) {
+    public void setData(List<CoinInfo> data) {
         this.data = data;
     }
 

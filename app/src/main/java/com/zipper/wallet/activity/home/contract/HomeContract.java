@@ -14,7 +14,8 @@ public interface HomeContract {
 
     interface Presenter {
         void getCoins();
-        void getBtcBalance(String json);
+        void getCoinBalance(int type, String json);
+        void getCoinHistory(int type, String json);
     }
 
 }

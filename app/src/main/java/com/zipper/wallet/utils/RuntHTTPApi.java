@@ -2,6 +2,7 @@ package com.zipper.wallet.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -38,6 +39,7 @@ public class RuntHTTPApi {
     private static final String TAG = "uploadFile";
     private static final int TIME_OUT = 10 * 1000; // 超时时间
 
+    //120.92.34.88
     public final static String IP = "120.131.13.167",//  http://172.16.4.76:8080/coin/getcoininfos
     // www.soarsan.com
     PORT = ":80",
@@ -45,7 +47,10 @@ public class RuntHTTPApi {
             PROJECT_URL = "http://" + IP + PORT + "/",
             SERVER_URL = "http://" + IP + PORT + "/",
             URL_GET_COINS = "coin/getcoininfos",//获取币种列表信息
-            URL_BTC_BALANCE="btc/getaddressinfo";//获取btc余额信息
+            URL_BTC_BALANCE="btc/getaddressinfo",//获取btc余额信息
+            URL_ETH_BALANCE="eth/getaddressinfo",//获取eth余额信息
+            URL_BTC_HISTORY="btc/gethistoryinfo",//获取btc历史记录
+            URL_ETH_HISTORY="eth/gethistoryinfo";//获取eth历史记录
 
     public static String getImagePath(String name) {
         return SERVER_URL + "icon/andriod/" + name;

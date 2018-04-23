@@ -3,6 +3,8 @@ package com.zipper.wallet.database;
 import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,15 +12,43 @@ import java.util.Map;
  * Created by Administrator on 2018/4/11.
  */
 
-public class CoinInfo extends DataSupport {
+public class CoinInfo extends DataSupport implements Serializable{
 
+    public boolean checked;
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
 
     @Column(unique = true, defaultValue = "unknown")
     private int id;
 
     private int type;
-    private String name,full_name,addr_algorithm,addr_algorithm_param,sign_algorithm,sing_algorithm_param,token_type,token_addr,addr;
+    private String name, full_name, addr_algorithm, addr_algorithm_param, sign_algorithm, sing_algorithm_param, token_type, token_addr, addr;
+
+    private String decimals;
+    private String icon;
+    private String amount;
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
     public CoinInfo() {
     }
@@ -31,38 +61,45 @@ public class CoinInfo extends DataSupport {
         this.addr = addr;
     }
 
-    public CoinInfo(Map map){
+    public CoinInfo(Map map) {
 
         try {
-            setId(Integer.parseInt(map.get("id")+""));
-            setType(Integer.parseInt(map.get("type")+""));
-            setName(map.get("name")+"");
-            setFull_name(map.get("full_name")+"");
-            setAddr_algorithm(map.get("addr_algorithm")+"");
-            setAddr_algorithm_param(map.get("addr_algorithm_param")+"");
-            setSign_algorithm(map.get("sign_algorithm")+"");
-            setSing_algorithm_param(map.get("sing_algorithm_param")+"");
-            setToken_type(map.get("token_type")+"");
-            setToken_addr(map.get("token_addr")+"");
-        }catch (Exception e){
+            setId(Integer.parseInt(map.get("id") + ""));
+            setType(Integer.parseInt(map.get("type") + ""));
+            setName(map.get("name") + "");
+            setFull_name(map.get("full_name") + "");
+            setAddr_algorithm(map.get("addr_algorithm") + "");
+            setAddr_algorithm_param(map.get("addr_algorithm_param") + "");
+            setSign_algorithm(map.get("sign_algorithm") + "");
+            setSing_algorithm_param(map.get("sing_algorithm_param") + "");
+            setToken_type(map.get("token_type") + "");
+            setToken_addr(map.get("token_addr") + "");
+            setAddr(map.get("addr")+"");
+            setDecimals(map.get("decimals") + "");
+            setIcon(map.get("icon") + "");
+            setAmount(map.get("amount") + "");
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public Map toMap(){
+    public Map toMap() {
         Map map = new HashMap();
-        map.put("id",getId());
-        map.put("type",getType());
-        map.put("name",getName());
-        map.put("full_name",getFull_name());
-        map.put("addr_algorithm",getAddr_algorithm());
-        map.put("addr_algorithm_param",getAddr_algorithm_param());
-        map.put("sign_algorithm",getSign_algorithm());
-        map.put("sing_algorithm_param",getSing_algorithm_param());
-        map.put("token_type",getToken_type());
-        map.put("token_addr",getToken_addr());
-        map.put("addr",getAddr());
+        map.put("id", getId());
+        map.put("type", getType());
+        map.put("name", getName());
+        map.put("full_name", getFull_name());
+        map.put("addr_algorithm", getAddr_algorithm());
+        map.put("addr_algorithm_param", getAddr_algorithm_param());
+        map.put("sign_algorithm", getSign_algorithm());
+        map.put("sing_algorithm_param", getSing_algorithm_param());
+        map.put("token_type", getToken_type());
+        map.put("token_addr", getToken_addr());
+        map.put("addr", getAddr());
+        map.put("decimals", getDecimals());
+        map.put("icon", getIcon());
+        map.put("amount", getAmount());
         return map;
     }
 
@@ -160,5 +197,13 @@ public class CoinInfo extends DataSupport {
 
     public void setToken_addr(String token_addr) {
         this.token_addr = token_addr;
+    }
+
+    public String getDecimals() {
+        return decimals;
+    }
+
+    public void setDecimals(String decimals) {
+        this.decimals = decimals;
     }
 }

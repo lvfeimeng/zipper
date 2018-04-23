@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.gyf.barlibrary.ImmersionBar;
 import com.readystatesoftware.viewbadger.BadgeView;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
@@ -29,13 +30,19 @@ import com.zipper.wallet.activity.home.presenter.HomePresenter;
 import com.zipper.wallet.adapter.ConisAdapter;
 import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
-import com.zipper.wallet.bean.CoinsBean;
+import com.zipper.wallet.database.CoinBalance;
+import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
+import com.zipper.wallet.definecontrol.AppBarStateChangeListener;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.ScreenUtils;
 import com.zipper.wallet.utils.SqliteUtils;
 
+import org.litepal.crud.DataSupport;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +76,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     protected CheckBox checkboxGesturePassword;
 
     private ConisAdapter adapter;
-    private List<CoinsBean> items;
+    private List<CoinInfo> items;
 
     private HomePresenter presenter;
 
@@ -89,7 +96,6 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
 
         presenter = new HomePresenter(this, this);
         presenter.getCoins();
-        //presenter.getBtcBalance("{\"address\":\"1JBV1C2ifgFjFjEuzAQVj88y3UtKRYRfWU\"}");
     }
 
     private void gesturePwdSetting() {
@@ -144,8 +150,26 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         items = new ArrayList<>();
         adapter = new ConisAdapter(this, items);
         recyclerView.setAdapter(adapter);
-        addScrollListener();
+//        addScrollListener();
         initNavHeaderView();
+        appBar.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout, State state) {
+                if (state == State.EXPANDED) {
+                    //展开状态
+                    imgQrCode.setVisibility(View.GONE);
+                    imgSwitch.setVisibility(View.GONE);
+                } else if (state == State.COLLAPSED) {
+                    //折叠状态
+                    imgQrCode.setVisibility(View.VISIBLE);
+                    imgSwitch.setVisibility(View.VISIBLE);
+                } else {
+                    //中间状态
+                    imgQrCode.setVisibility(View.GONE);
+                    imgSwitch.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private void addScrollListener() {
@@ -372,21 +396,61 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         return (position) * itemHeight - firstVisiableChildView.getTop();
     }
 
+    private boolean isResponse = false;
+
     @Override
     public void doSuccess(int type, Object obj) {
         if (obj == null) {
+            getLocalData();
             return;
         }
+        isResponse = true;
         switch (type) {
             case HomePresenter.TYPE_GET_COINS:
-                HomeCoinsBean result = (HomeCoinsBean) obj;
-                if (result.getData() != null) {
-                    items.addAll(result.getData());
+                List<CoinInfo> list= (List<CoinInfo>) obj;
+                if (list != null) {
+                    items.addAll(list);
+                }
+
+                for (CoinInfo item : items) {
+                    //CoinInfo info = DataSupport.find(CoinInfo.class, item.getId());
+                    //item.setAddr(info.getAddr());
+                    Map<String, String> map = new HashMap<>();
+                    if ("btc".equalsIgnoreCase(item.getName())) {
+                        map.put("address", "159FTr7Gjs2Qbj4Q5q29cvmchhqymQA7of");//info.getAddr());
+                        item.setAddr("159FTr7Gjs2Qbj4Q5q29cvmchhqymQA7of");
+                        presenter.getCoinBalance(HomePresenter.TYPE_GET_BTC_BALANCE, new Gson().toJson(map));
+                    } else if ("eth".equalsIgnoreCase(item.getName())) {
+                        map.put("address", "0xea674fdde714fd979de3edf0f56aa9716b898ec8");
+                        item.setAddr("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
+                        presenter.getCoinBalance(HomePresenter.TYPE_GET_ETH_BALANCE, new Gson().toJson(map));
+                    }
+                }
+                //adapter.notifyDataSetChanged();
+                break;
+            case HomePresenter.TYPE_GET_BTC_BALANCE:
+                CoinBalance balance = (CoinBalance) obj;
+                balance.save();
+                DataSupport.deleteAll(CoinInfo.class, "name = ?", "btc");
+                for (CoinInfo item : items) {
+                    if ("btc".equalsIgnoreCase(item.getName())) {
+                        item.setAmount(getFormatData(balance.getAmount(), item.getDecimals()));
+                        item.save();
+                    }
                 }
                 adapter.notifyDataSetChanged();
                 break;
-            case HomePresenter.TYPE_GET_BTC_BALANCE:
-                toast((String) obj);
+            case HomePresenter.TYPE_GET_ETH_BALANCE:
+                CoinBalance balance2 = (CoinBalance) obj;
+                balance2.save();
+                DataSupport.deleteAll(CoinInfo.class, "name = ?", "eth");
+                for (CoinInfo item : items) {
+                    if ("eth".equalsIgnoreCase(item.getName())) {
+                        item.setAmount(getFormatData(balance2.getAmount(), item.getDecimals()));
+                        item.save();
+                    }
+                }
+                adapter.notifyDataSetChanged();
                 break;
             default:
                 break;
@@ -396,6 +460,27 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void doFailure() {
-
+        //toast("网络连接失败，已从本地获取数据");
+        if (!isResponse) {
+            getLocalData();
+        }
     }
+
+    private void getLocalData() {
+        items.clear();
+        List<CoinInfo> list = DataSupport.findAll(CoinInfo.class);
+        if (list != null) {
+            items.addAll(list);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    private String getFormatData(String amount, String decimals) {
+        if (TextUtils.isEmpty(amount) || TextUtils.isEmpty(decimals)||"null".equalsIgnoreCase(amount)||"null".equalsIgnoreCase(decimals)) {
+            return "0";
+        }
+        double result = Double.parseDouble(amount) / Double.parseDouble(decimals);
+        return new DecimalFormat("0.00000000").format(result);
+    }
+
 }

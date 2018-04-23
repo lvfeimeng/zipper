@@ -18,6 +18,7 @@ import com.zipper.wallet.R;
 import com.zipper.wallet.activity.AddPropertyActivity;
 import com.zipper.wallet.activity.SearchPropertyActivity;
 import com.zipper.wallet.bean.CoinsBean;
+import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.utils.ScreenUtils;
 
 import java.util.ArrayList;
@@ -26,10 +27,10 @@ import java.util.List;
 public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private List<CoinsBean> mList;
+    private List<CoinInfo> mList;
     private ConisAdapter adapter;
 
-    public WalletAdapter(Context context, List<CoinsBean> items) {
+    public WalletAdapter(Context context, List<CoinInfo> items) {
         this.mContext = context;
         if (items == null) {
             return;

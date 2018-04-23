@@ -12,25 +12,26 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 import com.zipper.wallet.R;
 import com.zipper.wallet.activity.AddPropertyActivity;
 import com.zipper.wallet.bean.PropertyBean;
+import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.utils.ImgUtil;
 
 import java.util.List;
 
-public class PropertyAdapter extends CommonAdapter<PropertyBean> {
+public class PropertyAdapter extends CommonAdapter<CoinInfo> {
 
     private boolean isShowCheckBox;
 
-    public PropertyAdapter(Context context, boolean isShowCheckBox, List<PropertyBean> datas) {
+    public PropertyAdapter(Context context, boolean isShowCheckBox, List<CoinInfo> datas) {
         super(context, R.layout.item_property, datas);
         this.isShowCheckBox = isShowCheckBox;
     }
 
     @Override
-    protected void convert(ViewHolder holder, PropertyBean bean, int position) {
+    protected void convert(ViewHolder holder, CoinInfo bean, int position) {
         PropertyViewHolder vh = new PropertyViewHolder(holder.getConvertView());
         ImgUtil.loadCircleImage(bean.getIcon(), vh.imageView);
-        vh.textShortName.setText(bean.getShortName());
-        vh.textFullName.setText(bean.getFullName());
+        vh.textShortName.setText(bean.getName());
+        vh.textFullName.setText(bean.getFull_name());
         if (isShowCheckBox) {
             vh.checkBox.setVisibility(View.VISIBLE);
             vh.checkBox.setChecked(bean.isChecked());
