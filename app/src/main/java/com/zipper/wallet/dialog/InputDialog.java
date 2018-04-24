@@ -18,13 +18,12 @@ import java.util.Map;
  */
 
 public class InputDialog extends BaseDialog {
-    EditText  editText;
-    private String hint,text;
+    EditText editText;
+    private String hint, text;
     private int input;
 
 
     /**
-     *
      * @param context
      * @param title
      * @param tip
@@ -36,7 +35,7 @@ public class InputDialog extends BaseDialog {
      * @param backdown
      * @param rp
      */
-    public InputDialog(Context context, String title, String tip,String hint,String text, String left, String right,int inputType,boolean backdown, RuntHTTPApi.ResPonse rp) {
+    public InputDialog(Context context, String title, String tip, String hint, String text, String left, String right, int inputType, boolean backdown, RuntHTTPApi.ResPonse rp) {
         super(context, title, tip, left, right, rp);
         setCanceledOnTouchOutside(backdown);//调用这个方法时，按对话框以外的地方不起作用。按返回键还起作用；
         setCancelable(backdown);// 调用这个方法时，按对话框以外的地方不起作用。按返回键也不起作用
@@ -46,83 +45,99 @@ public class InputDialog extends BaseDialog {
         setContentViewId(R.layout.dialog_input);
     }
 
-    public InputDialog(Context context, String title, String tip,String hint,String text, String left, String right,int inputType, RuntHTTPApi.ResPonse rp) {
-        this(context,title,tip,hint,text,left,right,inputType,true,rp);
+    public InputDialog(Context context, String title, String tip, String hint, String text, String left, String right, int inputType, RuntHTTPApi.ResPonse rp) {
+        this(context, title, tip, hint, text, left, right, inputType, true, rp);
     }
 
-    public InputDialog(Context context, String title, String tip,String hint,String text,String right, int inputType,RuntHTTPApi.ResPonse rp) {
-        this(context,title,tip,hint,text,"",right,inputType,rp);
+    public InputDialog(Context context, String title, String tip, String hint, String text, String right, int inputType, RuntHTTPApi.ResPonse rp) {
+        this(context, title, tip, hint, text, "", right, inputType, rp);
     }
 
-    public InputDialog(Context context, String title, String tip,String hint,String right, int inputType,RuntHTTPApi.ResPonse rp) {
-        this(context,title,tip,hint,"",right,inputType,rp);
+    public InputDialog(Context context, String title, String tip, String hint, String right, int inputType, RuntHTTPApi.ResPonse rp) {
+        this(context, title, tip, hint, "", right, inputType, rp);
     }
 
-    public InputDialog(Context context, String tip,String hint,String right,int inputType, RuntHTTPApi.ResPonse rp) {
-        this(context,null,tip,hint,right,inputType,rp);
+    public InputDialog(Context context, String tip, String hint, String right, int inputType, RuntHTTPApi.ResPonse rp) {
+        this(context, null, tip, hint, right, inputType, rp);
     }
 
-    public InputDialog(Context context, String tip, String hint,String right, int inputType) {
-        this(context,tip,hint,right,inputType,null);
+    public InputDialog(Context context, String tip, String hint, String right, int inputType) {
+        this(context, tip, hint, right, inputType, null);
     }
 
-    public InputDialog(Context context, String title, String tip,String hint,String text,String left,String right, RuntHTTPApi.ResPonse rp) {
-        this(context,title,tip,hint,text,left,right,InputType.TYPE_TEXT_VARIATION_NORMAL,rp);
+    public InputDialog(Context context, String title, String tip, String hint, String text, String left, String right, RuntHTTPApi.ResPonse rp) {
+        this(context, title, tip, hint, text, left, right, InputType.TYPE_TEXT_VARIATION_NORMAL, rp);
     }
-    public InputDialog(Context context, String title, String tip,String hint,String text,String right, RuntHTTPApi.ResPonse rp) {
-        this(context,title,tip,hint,text,"",right,rp);
+
+    public InputDialog(Context context, String title, String tip, String hint, String text, String right, RuntHTTPApi.ResPonse rp) {
+        this(context, title, tip, hint, text, "", right, rp);
     }
+
     public InputDialog(Context context, String title, String tip, String hint, String right, RuntHTTPApi.ResPonse rp) {
-        this(context,title,tip,hint,"",right,rp);
+        this(context, title, tip, hint, "", right, rp);
     }
-    public InputDialog(Context context, String tip,String hint,String right, RuntHTTPApi.ResPonse rp) {
-        this(context,null,tip,hint,right,rp);
+
+    public InputDialog(Context context, String tip, String hint, String right, RuntHTTPApi.ResPonse rp) {
+        this(context, null, tip, hint, right, rp);
     }
-    public InputDialog(Context context, String tip,String hint,String right) {
-        this(context,tip,hint,right,null);
+
+    public InputDialog(Context context, String tip, String hint, String right) {
+        this(context, tip, hint, right, null);
     }
 
 
-    public InputDialog(Context context, String title, String tip,String hint,String text,String left,String right,boolean backdown, RuntHTTPApi.ResPonse rp) {
-        this(context,title,tip,hint,text,left,right,InputType.TYPE_TEXT_VARIATION_NORMAL,backdown,rp);
-    }
-    public InputDialog(Context context, String title, String tip,String hint,String text,String right,boolean backdown, RuntHTTPApi.ResPonse rp) {
-        this(context,title,tip,hint,text,"",right,backdown,rp);
-    }
-    public InputDialog(Context context, String title, String tip, String hint, String right,boolean backdown, RuntHTTPApi.ResPonse rp) {
-        this(context,title,tip,hint,"",right,backdown,rp);
-    }
-    public InputDialog(Context context, String tip,String hint,String right,boolean backdown, RuntHTTPApi.ResPonse rp) {
-        this(context,null,tip,hint,right,backdown,rp);
-    }
-    public InputDialog(Context context, String tip,String hint,String right,boolean backdown) {
-        this(context,tip,hint,right,backdown,null);
+    public InputDialog(Context context, String title, String tip, String hint, String text, String left, String right, boolean backdown, RuntHTTPApi.ResPonse rp) {
+        this(context, title, tip, hint, text, left, right, InputType.TYPE_TEXT_VARIATION_NORMAL, backdown, rp);
     }
 
+    public InputDialog(Context context, String title, String tip, String hint, String text, String right, boolean backdown, RuntHTTPApi.ResPonse rp) {
+        this(context, title, tip, hint, text, "", right, backdown, rp);
+    }
+
+    public InputDialog(Context context, String title, String tip, String hint, String right, boolean backdown, RuntHTTPApi.ResPonse rp) {
+        this(context, title, tip, hint, "", right, backdown, rp);
+    }
+
+    public InputDialog(Context context, String tip, String hint, String right, boolean backdown, RuntHTTPApi.ResPonse rp) {
+        this(context, null, tip, hint, right, backdown, rp);
+    }
+
+    public InputDialog(Context context, String tip, String hint, String right, boolean backdown) {
+        this(context, tip, hint, right, backdown, null);
+    }
 
 
     @Override
     public void initComponent() {
         super.initComponent();
-        editText = (EditText)findViewById(R.id.edit_input);
+        editText = (EditText) findViewById(R.id.edit_input);
         editText.setHint(hint);
         editText.setText(text);
-        if (input == InputType.TYPE_TEXT_VARIATION_PASSWORD) {
-            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        }else{
-            editText.setInputType(input);
+        switch (input) {
+            case InputType.TYPE_NUMBER_FLAG_DECIMAL:
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER | input);
+                break;
+            case InputType.TYPE_NUMBER_VARIATION_PASSWORD:
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER | input);
+                break;
+            case InputType.TYPE_TEXT_VARIATION_PASSWORD:
+                editText.setInputType(InputType.TYPE_CLASS_TEXT | input);
+                break;
+            default:
+                editText.setInputType(input);
+                break;
         }
     }
 
     @Override
     public void btnOkClick() {
-        MyLog.i(TAG,"btnOkClick()");
+        MyLog.i(TAG, "btnOkClick()");
         dismiss();
         Map map = new HashMap();
         map.put(INPUT_TEXT, editText.getText());
-        if(editText.getText() == null || editText.getText().toString().length() == 0 || editText.getText().equals("")){
+        if (editText.getText() == null || editText.getText().toString().length() == 0 || editText.getText().equals("")) {
             if (rp != null) {
-                Toast.makeText(mContext,"密码不能为空",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "密码不能为空", Toast.LENGTH_SHORT).show();
                 rp.doErrorThing(map);
             }
         } else if (rp != null) {

@@ -73,12 +73,6 @@ public class TransactionActivity extends BaseActivity {
         }
         items = new ArrayList<>();
         items.addAll(list);
-        for (PropertyRecord item : items) {
-            if(!item.getFrom().equals(((TransactionActivity) mContext).mAddress) || !item.getTo().equals(((TransactionActivity) mContext).mAddress)) {
-                mRecyclehistory.setVisibility(View.GONE);
-            }
-            item.setUnit("");
-        }
         isAdapter();
     }
 

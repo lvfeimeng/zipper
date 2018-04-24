@@ -16,7 +16,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.SelectCoinsAdapter;
 import com.zipper.wallet.base.BaseActivity;
-import com.zipper.wallet.bean.CoinsBean2;
+import com.zipper.wallet.database.CoinInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +29,29 @@ public class SearchCoinsActivity extends BaseActivity {
     protected LinearLayout layoutEmpty;
     protected FrameLayout frameLayout;
 
-    private List<CoinsBean2> items;
+    private List<CoinInfo> items;
     private SelectCoinsAdapter adapter;
+    private String full_address = "";
+
+    private List<CoinInfo> temps = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_search_coins);
+        if (getIntent() != null) {
+            full_address = getIntent().getStringExtra("full_address");
+            temps = (List<CoinInfo>) getIntent().getSerializableExtra("list");
+        }
         initView();
         initData();
     }
 
     private void initData() {
         items = new ArrayList<>();
+        if (temps != null) {
+            items.addAll(temps);
+        }
         adapter = new SelectCoinsAdapter(this, items);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.addItemDecoration(
@@ -53,10 +63,14 @@ public class SearchCoinsActivity extends BaseActivity {
                         .build()
         );
         recyclerView.setSwipeItemClickListener((itemView, position) -> {
-            Intent data = new Intent();
-            data.putExtra("coin_type", items.get(position));
-            setResult(RESULT_OK, data);
-            finish();
+            CoinInfo bean = items.get(position);
+            startActivity(new Intent(this, PropertyDetailActivity.class)
+                    .putExtra("full_address", full_address)
+                    .putExtra("address", bean.getAddr())
+                    .putExtra("deciamls", bean.getDecimals())
+                    .putExtra("amount", bean.getAmount())
+                    .putExtra("name", bean.getName())
+                    .putExtra("full_name", bean.getFull_name()));
         });
         recyclerView.setAdapter(adapter);
     }
@@ -91,18 +105,29 @@ public class SearchCoinsActivity extends BaseActivity {
                     setPageBg(0);
                     recyclerView.setVisibility(View.GONE);
                     layoutEmpty.setVisibility(View.GONE);
+                    items.clear();
+                    items.addAll(temps);
                 } else {
                     setPageBg(1);
-                    requestData();
+                    requestData(s.toString());
                 }
             }
         });
     }
 
-    private void requestData() {
+    private List<CoinInfo> result = null;
+
+    private void requestData(String text) {
         //根据请求结果显示
         items.clear();
-        testData();
+        result = new ArrayList<>();
+        for (CoinInfo item : temps) {
+            if (item.getName().contains(text.toLowerCase())||item.getName().contains(text.toUpperCase())) {
+                result.add(item);
+            }
+        }
+        items.addAll(result);
+        adapter.notifyDataSetChanged();
         if (items.size() == 0) {
             recyclerView.setVisibility(View.GONE);
             layoutEmpty.setVisibility(View.VISIBLE);
@@ -110,13 +135,6 @@ public class SearchCoinsActivity extends BaseActivity {
             recyclerView.setVisibility(View.VISIBLE);
             layoutEmpty.setVisibility(View.GONE);
         }
-    }
-
-    private void testData() {
-        for (int i = 0; i < 10; i++) {
-            items.add(new CoinsBean2("" + i, "ETH", "100"));
-        }
-        adapter.notifyDataSetChanged();
     }
 
     private void setPageBg(int type) {

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.DialogSelectCoinsAdapter;
-import com.zipper.wallet.bean.CoinsBean;
+import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.utils.ScreenUtils;
 
 import java.util.ArrayList;
@@ -31,16 +31,16 @@ public class SelectCoinsDialog extends Dialog {
     private ListView listView;
 
     private DialogSelectCoinsAdapter adapter;
-    private List<CoinsBean> items;
+    private List<CoinInfo> items;
 
     private Callback callback;
 
-    public SelectCoinsDialog(@NonNull Context context, List<CoinsBean> list) {
+    public SelectCoinsDialog(@NonNull Context context, List<CoinInfo> list) {
         super(context, R.style.BottomDialog);
         View rootView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_select_coins, null);
         initView(rootView);
-
         items = new ArrayList<>();
+
         if (list != null) {
             items.addAll(list);
         }
@@ -70,9 +70,9 @@ public class SelectCoinsDialog extends Dialog {
     }
 
     private void confim() {
-        CoinsBean bean = null;
-        for (CoinsBean item : items) {
-            if (item.isSelected()) {
+        CoinInfo bean = null;
+        for (CoinInfo item : items) {
+            if (item.isChecked()) {
                 bean = item;
                 break;
             }
@@ -87,7 +87,7 @@ public class SelectCoinsDialog extends Dialog {
     }
 
     public interface Callback {
-        void confirmCoinType(CoinsBean bean);
+        void confirmCoinType(CoinInfo bean);
     }
 
 }

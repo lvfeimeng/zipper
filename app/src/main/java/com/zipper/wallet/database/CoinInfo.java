@@ -13,7 +13,7 @@ import java.util.Map;
  */
 
 public class CoinInfo extends DataSupport implements Serializable{
-
+    @Column(ignore = true)
     public boolean checked;
 
     public boolean isChecked() {

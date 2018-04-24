@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 import com.zipper.wallet.R;
-import com.zipper.wallet.bean.CoinsBean2;
+import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.utils.ScreenUtils;
 
 import java.util.List;
@@ -18,17 +18,17 @@ import java.util.List;
  * Created by AlMn on 2018/04/08.
  */
 
-public class SelectCoinsAdapter extends CommonAdapter<CoinsBean2> {
+public class SelectCoinsAdapter extends CommonAdapter<CoinInfo> {
 
-    public SelectCoinsAdapter(Context context, List<CoinsBean2> datas) {
+    public SelectCoinsAdapter(Context context, List<CoinInfo> datas) {
         super(context, R.layout.item_select_coins, datas);
     }
 
     @Override
-    protected void convert(ViewHolder holder, CoinsBean2 bean, int position) {
+    protected void convert(ViewHolder holder, CoinInfo bean, int position) {
         SelectViewHolder vh = new SelectViewHolder(holder.getConvertView());
-        vh.textName.setText(bean.getShortName());
-        vh.textBalance.setText(bean.getCount());
+        vh.textName.setText(bean.getName());
+        vh.textBalance.setText(bean.getAmount());
         CardView.LayoutParams params = new CardView.LayoutParams(-1,
                 ScreenUtils.dp2px(mContext, 80));
         if (position % 2 == 1) {

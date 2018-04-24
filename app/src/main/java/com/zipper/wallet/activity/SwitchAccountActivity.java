@@ -1,7 +1,6 @@
 package com.zipper.wallet.activity;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -10,18 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.TextureView;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -29,11 +21,14 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
-import com.zipper.wallet.bean.CoinsBean2;
 import com.zipper.wallet.bean.SwitchAccountBean;
+import com.zipper.wallet.bean.WalletBean;
+import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.dialog.ConfirmSwitchAccountDialog;
 import com.zipper.wallet.dialog.MinerCostTypeDialog;
-import com.zipper.wallet.utils.ToastUtils;
+import com.zipper.wallet.number.BigNumber;
+import com.zipper.wallet.utils.AlgorithmUtils;
+import com.zipper.wallet.utils.MyLog;
 
 import java.text.DecimalFormat;
 
@@ -61,6 +56,7 @@ public class SwitchAccountActivity extends BaseActivity {
     private TextView textRealAmount;
     private TextView textHelp;
 
+    private BigNumber realCount = new BigNumber("0.0"), totalCount = new BigNumber("0.0"), cast = new BigNumber("0.0");
     private String payerAddress, payeeName, payeeAddress, unit, totalAmount, realAmount, minerCost, remark;
     private int coinsType, minerCostType;
 
@@ -68,6 +64,8 @@ public class SwitchAccountActivity extends BaseActivity {
     ConfirmSwitchAccountDialog confirmDialog;
 
     MinerCostTypeDialog minerDialog;
+    CoinInfo coinsChoosed;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +124,20 @@ public class SwitchAccountActivity extends BaseActivity {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                textMinerCost.setText(new DecimalFormat("0.00000").format(1.0 * progress / seekBar.getMax()));
+                String str = new DecimalFormat("0.00000000").format(1.0 * progress / seekBar.getMax());
+                MyLog.i(TAG, "str:" + str);
+                cast = new BigNumber(str);
+                MyLog.i(TAG, "cast:" + cast);
+                if (totalAmount == null || totalAmount.equals("")) {
+                    return;
+                }
+                minerCost = totalCount.multiply(cast).toString();
+                MyLog.i(TAG, "totalCount:" + totalCount);
+                textMinerCost.setText(minerCost);
+
+                realCount = totalCount.subtract(totalCount.multiply(cast));
+                realAmount = realCount.toString();
+                textRealAmount.setText("到账金额：" + realAmount);
             }
 
             @Override
@@ -144,19 +155,19 @@ public class SwitchAccountActivity extends BaseActivity {
     //    private String payerAddress, payeeName, payeeAddress, unit, totalAmount, realAmount, minerCost, remark;
 //    private int coinsType, minerCostType;
     private void submit() {
-        payerAddress = "sfsdfsdfwerwrewrw";//获取自己的钱包地址
-        payeeName = "张三";//收款人姓名
         payeeAddress = editWalletAddress.getText().toString().trim();
         if (TextUtils.isEmpty(payeeAddress)) {
             toast("请输入收款人钱包地址");
             return;
         }
-        String coin = textShowCoin.getText().toString().trim();
-//        if (TextUtils.isEmpty(coin)) {
-//            toast("请选择币种");
-//            return;
-//        }
-        totalAmount = editCount.getText().toString().trim();
+        if (!AlgorithmUtils.validAddress(payeeAddress)) {
+            toast("收款人钱包地址错误");
+            return;
+        }
+        if (coinsChoosed == null) {
+            toast("请选择币种");
+            return;
+        }
         if (TextUtils.isEmpty(totalAmount)) {
             toast("请输入转账金额");
             return;
@@ -165,13 +176,11 @@ public class SwitchAccountActivity extends BaseActivity {
         if (TextUtils.isEmpty(remark)) {
             remark = "无";
         }
-        minerCost = textMinerCost.getText().toString().trim();
+        /*minerCost = textMinerCost.getText().toString().trim();
         if (TextUtils.isEmpty(minerCost)) {
             toast("请选择需要支付的矿工费用");
             return;
-        }
-        realAmount = String.valueOf(Double.parseDouble(totalAmount) - Double.parseDouble(minerCost));
-        textRealAmount.setText("到账金额：" + realAmount);
+        }*/
         bean = new SwitchAccountBean();
         bean.setUnit(unit);
         bean.setTotalAmount(totalAmount);
@@ -179,7 +188,8 @@ public class SwitchAccountActivity extends BaseActivity {
         bean.setRealAmount(realAmount);
         bean.setPayeeName(payeeName);
         bean.setPayeeAddress(payeeAddress);
-        bean.setPayerAddress(payerAddress);
+        bean.setPayerAddress("zp" + WalletBean.getAddress());
+        bean.setType(coinsChoosed.getName());
         bean.setRemark(remark);
         confirmDialog = new ConfirmSwitchAccountDialog(this, bean);
         confirmDialog.show();
@@ -240,14 +250,16 @@ public class SwitchAccountActivity extends BaseActivity {
                 }
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    toast("解析结果:" + result);
+                    editWalletAddress.setText(result);
+                    //toast("解析结果:" + result);
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     toast("解析二维码失败");
                 }
                 break;
             case 100://选择币种
-                CoinsBean2 item = (CoinsBean2) data.getSerializableExtra("coin_type");
-                toast("name=" + item.getShortName());
+                coinsChoosed = (CoinInfo) data.getSerializableExtra("coin_type");
+                textSelectCoins.setText(coinsChoosed.getName());
+                //toast("name=" + item.getShortName());
                 break;
             case 200://选择联系人
                 break;
@@ -276,6 +288,23 @@ public class SwitchAccountActivity extends BaseActivity {
                     payeeAddress = text.substring(text.lastIndexOf("】") + 1);
                 } else if (editText == editCount) {
                     totalAmount = s.toString().trim();
+                    try {
+                        MyLog.i(TAG, "totalAmount:" + totalAmount);
+                        totalCount = new BigNumber(totalAmount);
+                        MyLog.i(TAG, "totalCount:" + totalCount);
+
+                        minerCost = totalCount.multiply(cast).toString();
+                        MyLog.i(TAG, "totalCount:" + totalCount);
+                        textMinerCost.setText(minerCost);
+
+                        realCount = totalCount.subtract(totalCount.multiply(cast));
+                        MyLog.i(TAG, "realCount:" + realCount);
+                        realAmount = realCount.toString();
+                        MyLog.i(TAG, "realAmount:" + realAmount);
+                        textRealAmount.setText("到账金额：" + realAmount);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
                 }
                 if (TextUtils.isEmpty(payeeAddress) || TextUtils.isEmpty(totalAmount)) {
                     btnNext.setEnabled(false);
@@ -285,6 +314,7 @@ public class SwitchAccountActivity extends BaseActivity {
             }
         });
     }
+
 
     private MinerCostTypeDialog.Callback minerCallback = new MinerCostTypeDialog.Callback() {
         @Override

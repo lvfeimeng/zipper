@@ -11,7 +11,6 @@ import android.widget.EditText;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.CreateActvity;
-import com.zipper.wallet.bean.WalletBean;
 import com.zipper.wallet.utils.PreferencesUtils;
 
 /**
@@ -27,8 +26,8 @@ public class CreateAccountActivity extends CreateActvity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_create_account);
         super.onCreate(savedInstanceState);
-        edName = (EditText)findViewById(R.id.ed_name);
-        btnCreate = (Button)findViewById(R.id.btn_next);
+        edName = (EditText) findViewById(R.id.ed_name);
+        btnCreate = (Button) findViewById(R.id.btn_next);
         edName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -43,9 +42,9 @@ public class CreateAccountActivity extends CreateActvity {
             @Override
             public void afterTextChanged(Editable editable) {
                 String str = edName.getText().toString();
-                if(str.equals("")){
+                if (str.equals("")) {
                     btnCreate.setEnabled(false);
-                }else{
+                } else {
                     btnCreate.setEnabled(true);
                 }
 
@@ -59,8 +58,8 @@ public class CreateAccountActivity extends CreateActvity {
                     return;
                 }
                 PreferencesUtils.putString(mContext, KEY_WALLET_NAME, edName.getText().toString(), PreferencesUtils.VISITOR);
-                WalletBean.getWalletBean().setName(edName.getText().toString());
-                Intent intent = new Intent(mContext,CreatePwdAcitivty.class);
+
+                Intent intent = new Intent(mContext, CreatePwdAcitivty.class);
                 startActivity(intent);
                 finish();
             }

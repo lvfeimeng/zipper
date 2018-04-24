@@ -19,6 +19,7 @@ import com.zipper.wallet.database.CoinInfo;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class AddPropertyActivity extends BaseActivity implements HomeContract.Vi
 
     private PropertyAdapter adapter;
     private List<CoinInfo> items;
+    private List<CoinInfo> ownList;
 
     private boolean isHeaderViewClicked = false;
 
@@ -40,11 +42,13 @@ public class AddPropertyActivity extends BaseActivity implements HomeContract.Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_add_property);
+        if (getIntent() != null) {
+            ownList = (List<CoinInfo>) getIntent().getSerializableExtra("own_list");
+        }
         initView();
         initData();
         presenter = new HomePresenter(this, this);
         presenter.getCoins();
-        ;
     }
 
     @Override
@@ -72,7 +76,28 @@ public class AddPropertyActivity extends BaseActivity implements HomeContract.Vi
         recyclerView = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
         textSubmit = (TextView) findViewById(R.id.text_submit);
         textSubmit.setOnClickListener(v -> {
+            getUsableData();
         });
+    }
+
+    private void getUsableData() {
+        List<CoinInfo> resultList = new ArrayList<>();
+        for (CoinInfo item : items) {
+            if (item.isChecked()) {
+                resultList.add(item);
+            }
+        }
+        if (ownList != null && ownList.size() > 0) {
+            resultList.removeAll(ownList);
+        }
+        if (resultList.isEmpty()) {
+            toast("该币种已经添加过了");
+            return;
+        }
+        Intent intent = new Intent();
+        intent.putExtra("result_list", (Serializable) resultList);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void initData() {
@@ -142,12 +167,12 @@ public class AddPropertyActivity extends BaseActivity implements HomeContract.Vi
 
     @Override
     public void doSuccess(int type, Object obj) {
-        if (obj==null) {
+        if (obj == null) {
             getLocalData();
             return;
         }
-        List<CoinInfo> list= (List<CoinInfo>) obj;
-        if (list!=null) {
+        List<CoinInfo> list = (List<CoinInfo>) obj;
+        if (list != null) {
             items.addAll(list);
         }
         adapter.notifyDataSetChanged();

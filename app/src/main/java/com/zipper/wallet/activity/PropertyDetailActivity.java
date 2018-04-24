@@ -7,6 +7,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,6 +20,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.zipper.wallet.R;
 import com.zipper.wallet.activity.home.contract.HomeContract;
@@ -29,14 +31,21 @@ import com.zipper.wallet.database.PropertyRecord;
 import com.zipper.wallet.definecontrol.AppBarStateChangeListener;
 import com.zipper.wallet.definecontrol.TestPopupWindow;
 
-import org.litepal.crud.DataSupport;
+import net.bither.bitherj.utils.Utils;
 
+import org.litepal.LitePalDB;
+import org.litepal.crud.DataSupport;
+import org.litepal.parser.LitePalConfig;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PropertyDetailActivity extends BaseActivity implements HomeContract.View {
+
+    private static final String TAG = "PropertyDetailActivity";
 
     protected TextView txtName;
     protected TextView txtFullName;
@@ -57,6 +66,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
     protected TextView textSubTitle;
     private String name = "";
     private String full_name = "";
+    private String full_address = "";
 
     private List<PropertyRecord> items = null;
     private PropertyRecordAdapter adapter;
@@ -70,6 +80,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_property_detail);
+        //Utils.validBicoinAddress()
         if (getIntent() == null) {
             return;
         }
@@ -78,6 +89,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         address = getIntent().getStringExtra("address");
         name = getIntent().getStringExtra("name");
         full_name = getIntent().getStringExtra("full_name");
+        full_address = getIntent().getStringExtra("full_address");
 
         initView();
         try {
@@ -134,7 +146,8 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         appBar = (AppBarLayout) findViewById(R.id.appBar);
         recyclerView = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
         imgQrCode.setOnClickListener(v -> {
-            startActivity(new Intent(this, PayeeAddressActivity.class));
+            startActivity(new Intent(this, PayeeAddressActivity.class)
+                    .putExtra("full_address", full_address));
         });
         imgSwitch.setOnClickListener(v -> {
             startActivity(new Intent(this, SwitchAccountActivity.class));
@@ -145,6 +158,10 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         View chooseView = view.findViewById(R.id.txt_choose);
         initPop(chooseView);
         recyclerView.addHeaderView(view);
+        recyclerView.setSwipeItemClickListener((itemView, position) -> {
+            startActivity(new Intent(mContext, TransactionDefailsActivity.class)
+                    .putExtra("currency", (Serializable) (items.get(position))));
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         items = new ArrayList<>();
         adapter = new PropertyRecordAdapter(this, items);
@@ -234,8 +251,10 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         List<PropertyRecord> list = (List<PropertyRecord>) obj;
         for (PropertyRecord record : list) {
             record.setName(name);
+            record.setAddr(address);
+            record.setDeciamls(deciamls);
         }
-        DataSupport.deleteAll(PropertyRecord.class);
+        DataSupport.deleteAll(PropertyRecord.class, "addr = ?", address);
         DataSupport.saveAll(list);
         loadData(list);
     }
@@ -258,7 +277,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         List<PropertyRecord> list = DataSupport.findAll(PropertyRecord.class);
         List<PropertyRecord> list2 = new ArrayList<>();
         for (PropertyRecord record : list) {
-            if (name.equalsIgnoreCase(record.getName())) {
+            if (address.equalsIgnoreCase(record.getAddr())) {
                 list2.add(record);
             }
         }

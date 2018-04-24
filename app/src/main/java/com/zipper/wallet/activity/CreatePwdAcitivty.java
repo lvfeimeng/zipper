@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.zipper.wallet.R;
 import com.zipper.wallet.WebBrowserActivity;
 import com.zipper.wallet.base.CreateActvity;
-import com.zipper.wallet.bean.WalletBean;
+import com.zipper.wallet.utils.AlgorithmUtils;
 import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.PreferencesUtils;
 
@@ -95,8 +95,6 @@ public class CreatePwdAcitivty extends CreateActvity {
                     showProgressDialog(getString(R.string.creating));
                     PreferencesUtils.putString(mContext,KEY_WALLET_PWD,edPwd.getText().toString(),PreferencesUtils.VISITOR);
                     PreferencesUtils.putString(mContext,KEY_WALLET_PWD_TIP,edTip.getText().toString(),PreferencesUtils.VISITOR);
-                    WalletBean.getWalletBean().setPwd(edPwd.getText().toString());
-                    WalletBean.getWalletBean().setPwdTip(edTip.getText().toString());
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -161,50 +159,29 @@ public class CreatePwdAcitivty extends CreateActvity {
                 linWarining.setVisibility(View.INVISIBLE);
             }else{
                 String pwd = edPwd.getText().toString();
-                boolean flag = false;
-                try{
-                    Integer.parseInt(pwd);
-                }catch (Exception e){
-                    flag =true;
-                }
-
-
-                boolean isHigh = false;
-                boolean hasUp = false;
-                boolean hasLow = false;
-                for(int i = 0 ; i < pwd.length(); i ++ ){
-                    int chars = (int)pwd.toCharArray()[i];
-                    if(chars>64 && chars<91){
-                        hasUp = true;
-                    }else if(chars>96 && chars<123){
-                        hasLow = true;
-                    }else if(chars>9){
-                        isHigh = true;
-                    }
-                }
-
-                MyLog.i(TAG,"pwdWatcher isHigh:"+isHigh+" hasLow:"+hasLow+" hasUp:"+hasUp+" flag:"+flag+" pwd.length():"+(pwd.length()));
-
-                if(pwd.length()>7 && isHigh && hasLow && hasUp && flag){
-                    linSign.setVisibility(View.VISIBLE);
-                    imgPwdSign.setImageResource(R.mipmap.pwd_good);
-                    txtStrong.setTextColor(getResources().getColor(R.color.text_link));
-                    txtStrong.setText("很好");
-                    linWarining.setVisibility(View.INVISIBLE);
-                }else if(pwd.length()>7 && flag){
-                    MyLog.i(TAG,"pwdWatcher "+" 一般:"+(pwd.length()>6 && flag));
-                    linSign.setVisibility(View.VISIBLE);
-                    imgPwdSign.setImageResource(R.mipmap.pwd_well);
-                    txtStrong.setTextColor(getResources().getColor(R.color.text_link));
-                    txtStrong.setText("一般");
-                    linWarining.setVisibility(View.INVISIBLE);
-                }else if(pwd.length()<8 || !flag){
-                    linSign.setVisibility(View.VISIBLE);
-                    imgPwdSign.setImageResource(R.mipmap.pwd_low);
-                    txtStrong.setTextColor(getResources().getColor(R.color.btn_delete));
-                    ((View)txtStrong.getParent()).setVisibility(View.VISIBLE);
-                    linWarining.setVisibility(View.VISIBLE);
-                    txtStrong.setText("弱");
+                switch (AlgorithmUtils.pwdLevel(pwd)){
+                    case 0 :
+                        linSign.setVisibility(View.VISIBLE);
+                        imgPwdSign.setImageResource(R.mipmap.pwd_low);
+                        txtStrong.setTextColor(getResources().getColor(R.color.btn_delete));
+                        ((View)txtStrong.getParent()).setVisibility(View.VISIBLE);
+                        linWarining.setVisibility(View.VISIBLE);
+                        txtStrong.setText("弱");
+                        break;
+                    case 1:
+                        linSign.setVisibility(View.VISIBLE);
+                        imgPwdSign.setImageResource(R.mipmap.pwd_well);
+                        txtStrong.setTextColor(getResources().getColor(R.color.text_link));
+                        txtStrong.setText("一般");
+                        linWarining.setVisibility(View.INVISIBLE);
+                        break;
+                    case 2:
+                        linSign.setVisibility(View.VISIBLE);
+                        imgPwdSign.setImageResource(R.mipmap.pwd_good);
+                        txtStrong.setTextColor(getResources().getColor(R.color.text_link));
+                        txtStrong.setText("很好");
+                        linWarining.setVisibility(View.INVISIBLE);
+                        break;
                 }
             }
 

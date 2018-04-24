@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.PropertyRecord;
+
+import java.text.DecimalFormat;
 
 public class TransactionDefailsActivity extends BaseActivity implements View.OnClickListener {
 
@@ -34,7 +37,6 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
             updateState(msg.what);
         }
     };
-    private String mAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,6 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
         setContentView(R.layout.activity_transaction_defails);
         Intent intent = getIntent();
         mCurrency = (PropertyRecord) intent.getSerializableExtra("currency");
-        mAddress = intent.getStringExtra("address");
         initView();
     }
 
@@ -58,16 +59,24 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
         mBack.setOnClickListener(this);
         mTextUpdate.setOnClickListener(this);
 
-        mDetailsCurrency.setText(mCurrency.getValue());
+        mDetailsCurrency.setText(getFormatData(mCurrency.getValue(),mCurrency.getDeciamls()));
 
-        if (mAddress.equals(mCurrency.getTo())) {
+        if (mCurrency.getAddr().equals(mCurrency.getTo())) {
             mTextState.setText("等待转入");
             handlerThread(IN);
-        } else if (mAddress.equals(mCurrency.getFrom())) {
+        } else if (mCurrency.getAddr().equals(mCurrency.getFrom())) {
             handlerThread(OUT);
         }
 
 
+    }
+
+    private String getFormatData(String amount, String decimals) {
+        if (TextUtils.isEmpty(amount) || TextUtils.isEmpty(decimals)||"null".equalsIgnoreCase(amount)||"null".equalsIgnoreCase(decimals)) {
+            return "0";
+        }
+        double result = Double.parseDouble(amount) / Double.parseDouble(decimals);
+        return new DecimalFormat("0.00000000").format(result);
     }
 
     private void handlerThread(int num) {

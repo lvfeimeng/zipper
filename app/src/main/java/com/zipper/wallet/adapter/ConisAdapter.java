@@ -17,6 +17,7 @@ import com.zipper.wallet.bean.CoinsBean;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.utils.ImgUtil;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class ConisAdapter extends CommonAdapter<CoinInfo> {
@@ -31,20 +32,20 @@ public class ConisAdapter extends CommonAdapter<CoinInfo> {
         ImgUtil.loadCircleImage(bean.getIcon(), vh.imageView);
         vh.textShortName.setText(bean.getName());
         vh.textFullName.setText(bean.getFull_name());
-        if (!TextUtils.isEmpty(bean.getAmount())) {
+        if (!TextUtils.isEmpty(bean.getAmount()) && !"null".equalsIgnoreCase(bean.getAmount())) {
             vh.textCoinsCount.setText(bean.getAmount());
-        }else{
-            vh.textCoinsCount.setText("0");
+        } else {
+            vh.textCoinsCount.setText("0.00000000");
         }
         //PropertyDetailActivity
-        holder.getConvertView()
-                .setOnClickListener(v ->
-                        mContext.startActivity(new Intent(mContext, PropertyDetailActivity.class)
-                                .putExtra("address", bean.getAddr())
-                                .putExtra("deciamls", bean.getDecimals())
-                                .putExtra("amount", bean.getAmount())
-                                .putExtra("name", bean.getName())
-                                .putExtra("full_name", bean.getFull_name())));
+//        holder.getConvertView()
+//                .setOnClickListener(v ->
+//                        mContext.startActivity(new Intent(mContext, PropertyDetailActivity.class)
+//                                .putExtra("address", bean.getAddr())
+//                                .putExtra("deciamls", bean.getDecimals())
+//                                .putExtra("amount", bean.getAmount())
+//                                .putExtra("name", bean.getName())
+//                                .putExtra("full_name", bean.getFull_name())));
     }
 
     static class CoinsViewHolder extends RecyclerView.ViewHolder {

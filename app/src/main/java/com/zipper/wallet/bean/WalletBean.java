@@ -1,12 +1,19 @@
 package com.zipper.wallet.bean;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Administrator on 2018/4/9.
  */
 
 public class WalletBean {
 
-    String name,pwd,pwdTip,randomSeed,mnemSeed,priKey,pubKey;
+    private static int id;
+
+    private static String  mnem_seed/**通过密码 和 初始生成助记词种子的加密而成*/,
+            address/**跟地址*/,
+            name/**钱包名称*/,tip/**密码提示*/,path/**分层path*/,esda_seed/**跟私钥密文*/;
     static WalletBean wallet;
 
     private WalletBean(){
@@ -20,60 +27,108 @@ public class WalletBean {
         return  wallet;
     }
 
-
-    public String getName() {
-        return name;
+    public static WalletBean getWalletBean(Map map){
+        if(wallet == null){
+            wallet = new WalletBean(map);
+        }
+        return  wallet;
     }
 
-    public void setName(String name) {
-        this.name = name;
+
+    private WalletBean( Map map){
+
+        try {
+            setId(Integer.parseInt(map.get("id")+""));
+            setAddress(map.get("address")+"");
+            setName(map.get("name")+"");
+            setTip(map.get("tip")+"");
+            setMnem_seed(map.get("mnem_seed")+"");
+            setEsda_seed(map.get("esda_seed")+"");
+            setPath(map.get("path")+"");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
-    public String getPwd() {
-        return pwd;
+
+    public static Map toMap(){
+        Map map = new HashMap();
+        map.put("id",getId());
+        map.put("name",getName());
+        map.put("address",getAddress());
+        map.put("tip",getTip());
+        map.put("mnem_seed",getMnem_seed());
+        map.put("esda_seed",getEsda_seed());
+        map.put("path",getPath());
+        return map;
     }
 
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
+    @Override
+    public  String toString() {
+        return "WalletInfo{" +
+                "id=" + getId() +
+                ", mnem_seed='" + getMnem_seed() + '\'' +
+                ", address='" + getAddress() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", tip='" + getTip() + '\'' +
+                ", path='" + getPath() + '\'' +
+                ", esda_seed='" + getEsda_seed() + '\'' +
+                '}';
     }
 
-    public String getPwdTip() {
-        return pwdTip;
+    public static int getId() {
+        return wallet.id;
     }
 
-    public void setPwdTip(String pwdTip) {
-        this.pwdTip = pwdTip;
+    public static void setId(int id) {
+        wallet.id = id;
     }
 
-    public String getRandomSeed() {
-        return randomSeed;
+    public static String getMnem_seed() {
+        return mnem_seed;
     }
 
-    public void setRandomSeed(String randomSeed) {
-        this.randomSeed = randomSeed;
+    public static void setMnem_seed(String mnem_seed) {
+        wallet.mnem_seed = mnem_seed;
     }
 
-    public String getMnemSeed() {
-        return mnemSeed;
+    public static String getAddress() {
+        return wallet.address;
     }
 
-    public void setMnemSeed(String mnemSeed) {
-        this.mnemSeed = mnemSeed;
+    public static void setAddress(String address) {
+        wallet.address = address;
     }
 
-    public String getPriKey() {
-        return priKey;
+    public static String getName() {
+        return wallet.name;
     }
 
-    public void setPriKey(String priKey) {
-        this.priKey = priKey;
+    public static void setName(String name) {
+        wallet.name = name;
     }
 
-    public String getPubKey() {
-        return pubKey;
+    public static String getTip() {
+        return wallet.tip;
     }
 
-    public void setPubKey(String pubKey) {
-        this.pubKey = pubKey;
+    public static void setTip(String tip) {
+        wallet.tip = tip;
+    }
+
+    public static String getPath() {
+        return wallet.path;
+    }
+
+    public static void setPath(String path) {
+        wallet.path = path;
+    }
+
+    public static String getEsda_seed() {
+        return wallet.esda_seed;
+    }
+
+    public static void setEsda_seed(String esda_seed) {
+        wallet.esda_seed = esda_seed;
     }
 }

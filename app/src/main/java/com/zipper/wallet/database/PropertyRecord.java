@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by AlMn on 2018/04/21.
  */
 
-public class PropertyRecord extends DataSupport implements Serializable {
+public class PropertyRecord extends DataSupport implements Serializable{
 
     /**
      * timestamp : 1524204129
@@ -30,6 +30,26 @@ public class PropertyRecord extends DataSupport implements Serializable {
 
     private String name;
     private String unit;
+
+    private String addr;
+
+    private String deciamls;
+
+    public String getDeciamls() {
+        return deciamls;
+    }
+
+    public void setDeciamls(String deciamls) {
+        this.deciamls = deciamls;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
 
     public String getName() {
         return name;

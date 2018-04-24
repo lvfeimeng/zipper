@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
@@ -21,6 +23,8 @@ import net.bither.bitherj.crypto.hd.HDKeyDerivation;
 import net.bither.bitherj.crypto.mnemonic.MnemonicCode;
 import net.bither.bitherj.crypto.mnemonic.MnemonicException;
 import net.bither.bitherj.utils.Utils;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -47,6 +51,7 @@ public class CreateAcountUtils {
 
     /**
      * 实例化MnemoniceCode
+     *
      * @param context
      */
     public static void instance(Context context) {
@@ -79,14 +84,13 @@ public class CreateAcountUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ToastUtils.showShort(mContext,"");
+            ToastUtils.showShort(mContext, "");
             MyLog.e("CreateAcountUtils", e + "");
         }
     }
 
 
-
-    public static void createAccountTest(Context context){
+    public static void createAccountTest(Context context) {
 
         try {
 
@@ -98,9 +102,9 @@ public class CreateAcountUtils {
             List<String> words = getMnemonicCode(randomSeed);//一局随机数获取助记词
 
             byte[] seed = createMnemSeed(words);//由助记词和密码生成种子,方法内含有转换512哈系数方式
-            MyLog.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
-            MyLog.i(TAG,"seed :"+Utils.bytesToHexString(MnemonicCode.toSeed(words,"")));
-            MyLog.i(TAG,"randomSeed :"+Utils.bytesToHexString(MnemonicCode.instance().toEntropy(words)));//利用助记词反推出随机数种子
+            MyLog.i(TAG, "randomSeed :" + Utils.bytesToHexString(randomSeed));
+            MyLog.i(TAG, "seed :" + Utils.bytesToHexString(MnemonicCode.toSeed(words, "")));
+            MyLog.i(TAG, "randomSeed :" + Utils.bytesToHexString(MnemonicCode.instance().toEntropy(words)));//利用助记词反推出随机数种子
 
 
             DeterministicKey master = CreateRootKey(seed);//生成根公私钥对象
@@ -113,26 +117,26 @@ public class CreateAcountUtils {
 
             //String firstAddr = getAddress(getAccount(master).deriveSoftened(AbstractHD.PathType.EXTERNAL_ROOT_PATH.getValue()),60);
 
-            EncryptedData encryptedData = new EncryptedData(seed,"abc",false);
+            EncryptedData encryptedData = new EncryptedData(seed, "abc", false);
             String encrypt = encryptedData.toEncryptedString();
-            MyLog.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
-            MyLog.i(TAG,"randomSeed Encrypt:"+encrypt);
-            MyLog.i(TAG,"randomSeed decrypt:"+Utils.bytesToHexString(new EncryptedData(encrypt).decrypt("abc")));//mnemonic
-            for(String str : words){
-                MyLog.i(TAG,"words :"+str);
+            MyLog.i(TAG, "randomSeed :" + Utils.bytesToHexString(randomSeed));
+            MyLog.i(TAG, "randomSeed Encrypt:" + encrypt);
+            MyLog.i(TAG, "randomSeed decrypt:" + Utils.bytesToHexString(new EncryptedData(encrypt).decrypt("abc")));//mnemonic
+            for (String str : words) {
+                MyLog.i(TAG, "words :" + str);
             }
-            MyLog.i(TAG,"mnemonicSeed :"+mnemonicSeed);
-            MyLog.i(TAG,"512PrivateKey:"+priKey);
-            MyLog.i(TAG,"512publicKey:"+pubkey);
+            MyLog.i(TAG, "mnemonicSeed :" + mnemonicSeed);
+            MyLog.i(TAG, "512PrivateKey:" + priKey);
+            MyLog.i(TAG, "512publicKey:" + pubkey);
             //MyLog.i(TAG,"firstAddr:"+firstAddr);
 
 
-            for(String str : MnemonicCode.instance().toMnemonic(MnemonicCode.instance().toEntropy(words))){
-                MyLog.i(TAG,"words :"+str);
+            for (String str : MnemonicCode.instance().toMnemonic(MnemonicCode.instance().toEntropy(words))) {
+                MyLog.i(TAG, "words :" + str);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            MyLog.e(TAG,e+"");
+            MyLog.e(TAG, e + "");
         }
 
     }
@@ -146,11 +150,12 @@ public class CreateAcountUtils {
 
     /**
      * 创建随机数种子
+     *
      * @return
      */
-    public static byte[] createRandomSeed(){
-        if(!isInstanced()){
-            MyLog.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+    public static byte[] createRandomSeed() {
+        if (!isInstanced()) {
+            MyLog.e("CreateAcountUtils", "doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }
         SecureRandom random = new SecureRandom();//创建随机类的实例
@@ -166,17 +171,18 @@ public class CreateAcountUtils {
 
 
     public static byte[] createMnemSeed(List<String> words) {
-        if(!isInstanced()){
-            MyLog.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+        if (!isInstanced()) {
+            MyLog.e("CreateAcountUtils", "doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }
-        return MnemonicCode.toSeed(words,"");//由助记词和密码生成种子,方法内含有转换512哈系数方式
+        return MnemonicCode.toSeed(words, "");//由助记词和密码生成种子,方法内含有转换512哈系数方式
         //return MnemonicCode.instance().toEntropy(words);//由助记词反推出随机数
 
     }
+
     public static List<String> getMnemonicCode(byte[] radomSeed) throws MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException, MnemonicException.MnemonicWordException {
-        if(!isInstanced()){
-            MyLog.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+        if (!isInstanced()) {
+            MyLog.e("CreateAcountUtils", "doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }
         //MnemonicCode.instance().toMnemonic()
@@ -185,8 +191,8 @@ public class CreateAcountUtils {
     }
 
     public static byte[] entropyRandomSeed(List<String> words) throws MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException, MnemonicException.MnemonicWordException {
-        if(!isInstanced()){
-            MyLog.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+        if (!isInstanced()) {
+            MyLog.e("CreateAcountUtils", "doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }//
         return MnemonicCode.instance().toEntropy(words);
@@ -195,32 +201,35 @@ public class CreateAcountUtils {
 
     /**
      * 获取统一地址
+     *
      * @param externalKey
      * @return
      */
-    public static String getFirstAddress(DeterministicKey externalKey){
-        return getAddress(externalKey,0);
+    public static String getFirstAddress(DeterministicKey externalKey) {
+        return getAddress(externalKey, 0);
     }
 
     /**
      * 获取指定的地址
+     *
      * @param externalKey
      * @param i
      * @return
      */
-    public static String getAddress(DeterministicKey externalKey,int i){
+    public static String getAddress(DeterministicKey externalKey, int i) {
         DeterministicKey key = externalKey.deriveSoftened(i);
-        return  key.toAddress();
+        return key.toAddress();
     }
 
     /**
      * 生成根公私钥对象
+     *
      * @param seed
      * @return
      */
-    public static DeterministicKey  CreateRootKey(byte[] seed){
-        if(!isInstanced()){
-            MyLog.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+    public static DeterministicKey CreateRootKey(byte[] seed) {
+        if (!isInstanced()) {
+            MyLog.e("CreateAcountUtils", "doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }
 
@@ -240,13 +249,14 @@ public class CreateAcountUtils {
 
 
     /**
-     *  获取内外部钥对象
+     * 获取内外部钥对象
+     *
      * @param master
      * @return
      */
-    public static DeterministicKey getAccount(DeterministicKey master,int coin_type) {
-        if(!isInstanced()){
-            MyLog.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+    public static DeterministicKey getAccount(DeterministicKey master, int coin_type) {
+        if (!isInstanced()) {
+            MyLog.e("CreateAcountUtils", "doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }
         DeterministicKey purpose = master.deriveHardened(44);
@@ -261,13 +271,14 @@ public class CreateAcountUtils {
 
 
     /**
-     *  获取内外部钥对象
+     * 获取内外部钥对象
+     *
      * @param master
      * @return
      */
-    public static String getWalletAddr(DeterministicKey master,int coin_type) {
-        if(!isInstanced()){
-            MyLog.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+    public static String getWalletAddr(DeterministicKey master, int coin_type) {
+        if (!isInstanced()) {
+            MyLog.e("CreateAcountUtils", "doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }
         DeterministicKey purpose = master.deriveHardened(44);
@@ -280,42 +291,70 @@ public class CreateAcountUtils {
         return account1.toAddress1();
     }
 
+    public static void saveCoins(DeterministicKey master, Context context,Callback callback) {
+        try {
+            try {
+                SqliteUtils.execSQL("drop table coininfo");
+            } catch (SQLiteException e) {
+                e.printStackTrace();
+            }
+            SqliteUtils.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42),addr VARCHAR(42),decimals VARCHAR(42),amount VARCHAR(42),icon VARCHAR(42));");
+            String json = CoinsUtil.getJson(context);
+            List<CoinInfo> list = new Gson().fromJson(json, new TypeToken<List<CoinInfo>>() {
+            }.getType());
+            if (list != null) {
+                for (CoinInfo coinInfo : list) {
+                    String addr = "";
+                    if ("btc".equalsIgnoreCase(coinInfo.getAddr_algorithm())) {
+                        addr = getAccount(master, coinInfo.getType()).toAddress();
+                    } else if ("eth".equalsIgnoreCase(coinInfo.getAddr_algorithm())) {
+                        addr = getWalletAddr(master, coinInfo.getType());
+                    }
+                    coinInfo.setAddr(addr);
+                }
+                DataSupport.saveAll(list);
+            }
+            callback.saveSuccess();
+        } catch (Exception e) {
+            callback.saveFailure();
+            e.printStackTrace();
+        }
+    }
 
+    public static void saveCoins(DeterministicKey master, RuntHTTPApi.ResPonse resPonse) {
 
-    public static void saveCoins(DeterministicKey master, RuntHTTPApi.ResPonse resPonse){
-
-        RuntHTTPApi.toReApi(RuntHTTPApi.URL_GET_COINS,new HashMap<>(),new RuntHTTPApi.MyStringCallBack(mContext,new RuntHTTPApi.ResPonse() {
+        RuntHTTPApi.toReApi(RuntHTTPApi.URL_GET_COINS, new HashMap<>(), new RuntHTTPApi.MyStringCallBack(mContext, new RuntHTTPApi.ResPonse() {
             @Override
             public void doSuccessThing(final Map<String, Object> param) {
-                new Thread(){
+                new Thread() {
                     @Override
                     public void run() {
                         try {
-                            try{
+                            try {
                                 SqliteUtils.execSQL("drop table coininfo");
-                            }catch (SQLiteException e){
+                            } catch (SQLiteException e) {
                                 e.printStackTrace();
                             }
                             SqliteUtils.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42),addr VARCHAR(42),decimals VARCHAR(42),amount VARCHAR(42),icon VARCHAR(42));");
                             //,decimals INTEGER,is_default BOOLEAN
                             SqliteUtils.test();
-                            MyLog.i("StartActivity",(param.get("data") instanceof Collection)+"");
-                            if(param.get("data") instanceof Collection){
-                                for(Map map :(List<Map>)param.get("data") ){
+                            MyLog.i("StartActivity", (param.get("data") instanceof Collection) + "");
+                            if (param.get("data") instanceof Collection) {
+                                for (Map map : (List<Map>) param.get("data")) {
                                     CoinInfo coinInfo = new CoinInfo(map);
-                                    MyLog.i(TAG,coinInfo.getName()+"信息正在保存");
-                                    if(coinInfo.getName().toLowerCase().equals("btc")){
-                                        String addr =  getAccount(master,coinInfo.getType()).toAddress();
-                                        MyLog.i(TAG,"addr:"+addr);
+                                    MyLog.i(TAG, coinInfo.getName() + "信息正在保存");
+                                    if (coinInfo.getName().toLowerCase().equals("btc")) {
+                                        String addr = getAccount(master, coinInfo.getType()).toAddress();
+                                        MyLog.i(TAG, "addr:" + addr);
                                         coinInfo.setAddr(addr);
-                                    }else if(coinInfo.getName().toLowerCase().equals("eth")){
-                                        String addr =  CreateAcountUtils.getWalletAddr(master,coinInfo.getType());
-                                        MyLog.i(TAG,"addr:"+addr);
+                                    } else if (coinInfo.getName().toLowerCase().equals("eth")) {
+                                        String addr = CreateAcountUtils.getWalletAddr(master, coinInfo.getType());
+                                        MyLog.i(TAG, "addr:" + addr);
                                         coinInfo.setAddr(addr);
-                                        param.put("firstAddr",addr);
+                                        param.put("firstAddr", addr);
                                     }
                                     coinInfo.save();
-                                    MyLog.i(TAG,"信息保存成功");
+                                    MyLog.i(TAG, "信息保存成功");
 
                                 }
 
@@ -323,7 +362,7 @@ public class CreateAcountUtils {
                             resPonse.doSuccessThing(param);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            param.put("error",e.getMessage());
+                            param.put("error", e.getMessage());
                             resPonse.doErrorThing(param);
                         }
                     }
@@ -338,44 +377,44 @@ public class CreateAcountUtils {
 
     }
 
-    public static void saveWallet(String randomSeed, String mnemonicSeed, String firstAddr, RuntHTTPApi.ResPonse resPonse){
+    public static void saveWallet(String randomSeed, String mnemonicSeed, String firstAddr, RuntHTTPApi.ResPonse resPonse) {
 
         try {
             Map<String, Object> param = new HashMap<>();
             List<WalletInfo> list = new ArrayList<>();
-            try{
+            try {
 
                 List<Map> maps = SqliteUtils.selecte("walletinfo");
                 for (Map map : maps) {
                     list.add(new WalletInfo(map));
                 }
-                if(list.size() > 0 && !list.get(0).getAddress().equals(firstAddr)){//判断生成的同一地址，是否与数据库相同
-                    if(randomSeed != null && !randomSeed.equals("") && !randomSeed.equals("null")) {
+                if (list.size() > 0 && !list.get(0).getAddress().equals(firstAddr)) {//判断生成的同一地址，是否与数据库相同
+                    if (randomSeed != null && !randomSeed.equals("") && !randomSeed.equals("null")) {
                         param.put("error", "助记词有误，请重新输入");
-                    }else{
+                    } else {
                         param.put("error", "私钥有误，请重新输入");
                     }
                     resPonse.doErrorThing(param);
                     return;
                 }
-                if(list.size() > 0) {
-                    PreferencesUtils.putString(mContext, BaseActivity.KEY_WALLET_NAME,list.get(0).getName(), PreferencesUtils.VISITOR);
-                    PreferencesUtils.putString(mContext, BaseActivity.KEY_WALLET_PWD_TIP,list.get(0).getTip(), PreferencesUtils.VISITOR);
+                if (list.size() > 0) {
+                    PreferencesUtils.putString(mContext, BaseActivity.KEY_WALLET_NAME, list.get(0).getName(), PreferencesUtils.VISITOR);
+                    PreferencesUtils.putString(mContext, BaseActivity.KEY_WALLET_PWD_TIP, list.get(0).getTip(), PreferencesUtils.VISITOR);
                     param.put("success", "密码修改成功");
                 }
                 SqliteUtils.execSQL("drop table walletinfo");
-            }catch (SQLiteException e){
+            } catch (SQLiteException e) {
                 e.printStackTrace();
 
             }
             WalletInfo walletInfo = new WalletInfo(mContext);
-            walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME,PreferencesUtils.VISITOR));
-            walletInfo.setTip(PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD_TIP,PreferencesUtils.VISITOR));
+            walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME, PreferencesUtils.VISITOR));
+            walletInfo.setTip(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD_TIP, PreferencesUtils.VISITOR));
             walletInfo.setEsda_seed(new EncryptedData(Utils.hexStringToByteArray(mnemonicSeed),
-                    PreferencesUtils.getString(mContext,BaseActivity.KEY_WALLET_PWD,PreferencesUtils.VISITOR),
+                    PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD, PreferencesUtils.VISITOR),
                     false)
                     .toEncryptedString());
-            if(randomSeed != null && !randomSeed.equals("") && randomSeed.indexOf("null") == -1) {
+            if (randomSeed != null && !randomSeed.equals("") && randomSeed.indexOf("null") == -1) {
                 walletInfo.setMnem_seed(new EncryptedData(Utils.hexStringToByteArray(randomSeed),
                         PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_PWD, PreferencesUtils.VISITOR),
                         false)
@@ -384,18 +423,18 @@ public class CreateAcountUtils {
             walletInfo.setAddress(firstAddr);
 
             ContentValues cValue = new ContentValues();
-            for(Object key : walletInfo.toMap().keySet()){
-                if(key.toString().indexOf("id")==-1) {
+            for (Object key : walletInfo.toMap().keySet()) {
+                if (key.toString().indexOf("id") == -1) {
                     cValue.put(key.toString(), walletInfo.toMap().get(key) + "");
                 }
             }
-            SqliteUtils.insert("walletinfo",cValue);
-            MyLog.i(TAG,"钱包数据保存成功");
+            SqliteUtils.insert("walletinfo", cValue);
+            MyLog.i(TAG, "钱包数据保存成功");
             resPonse.doSuccessThing(param);
-        }catch ( Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Map<String, Object> param = new HashMap<>();
-            param.put("error",e.getMessage());
+            param.put("error", e.getMessage());
             resPonse.doErrorThing(param);
         }
     }
@@ -404,7 +443,7 @@ public class CreateAcountUtils {
     /**
      * 读取词库
      */
-    private  static final class MnemonicCodeTestClass extends MnemonicCode {
+    private static final class MnemonicCodeTestClass extends MnemonicCode {
         private static final String WordListPath = "english.txt";
 
         public MnemonicCodeTestClass() throws IOException {
@@ -424,13 +463,14 @@ public class CreateAcountUtils {
 
     /**
      * 获取私钥
+     *
      * @param seed
      * @param pwd
      * @return
      */
-    public List<byte[]> getPrivateKey(byte[] seed , String pwd){
-        if(!isInstanced()){
-            MyLog.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+    public List<byte[]> getPrivateKey(byte[] seed, String pwd) {
+        if (!isInstanced()) {
+            MyLog.e("CreateAcountUtils", "doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }
         SecureRandom random = new SecureRandom();//创建随机类的实例
@@ -451,23 +491,20 @@ public class CreateAcountUtils {
         List<byte[]> list = new ArrayList<>();
         list.add(privateKey);
         list.add(publicKey);
-        return  list;
+        return list;
     }
 
 
-
-
-
-    public static HDAccount createADAccount(byte[] mnemseed,String pwd) throws MnemonicException.MnemonicLengthException {
-        if(!isInstanced()){
-            MyLog.e("CreateAcountUtils","doesn't new this class, please use the method 'instance()' first");
+    public static HDAccount createADAccount(byte[] mnemseed, String pwd) throws MnemonicException.MnemonicLengthException {
+        if (!isInstanced()) {
+            MyLog.e("CreateAcountUtils", "doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }
-        return new HDAccount(mnemseed,pwd);
+        return new HDAccount(mnemseed, pwd);
     }
 
 
-    private void nothing(String pwd){
+    private void nothing(String pwd) {
 
 
         /*PasswordSeed passwordSeed = new PasswordSeed(pwd);
@@ -710,14 +747,16 @@ public class CreateAcountUtils {
     }
 
 
-    private static boolean isInstanced(){
-        if(mContext == null){
+    private static boolean isInstanced() {
+        if (mContext == null) {
             return false;
         }
         return true;
     }
 
-
-
+    public interface Callback{
+        void saveSuccess();
+        void saveFailure();
+    }
 
 }

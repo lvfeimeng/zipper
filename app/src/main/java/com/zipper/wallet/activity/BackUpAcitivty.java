@@ -146,25 +146,15 @@ public class BackUpAcitivty extends CreateActvity {
 
 
             DeterministicKey master = CreateAcountUtils.CreateRootKey(mnemonicSeed);//生成根公私钥对象
-
-            CreateAcountUtils.saveCoins(master, new RuntHTTPApi.ResPonse() {
+            CreateAcountUtils.saveCoins(master, mContext, new CreateAcountUtils.Callback() {
                 @Override
-                public void doSuccessThing(Map<String, Object> param) {
-                    String firstAddr = param.get("firstAddr").toString();
-                    CreateAcountUtils.saveWallet(Utils.bytesToHexString(randomSeed), Utils.bytesToHexString(mnemonicSeed), firstAddr, new RuntHTTPApi.ResPonse() {
+                public void saveSuccess() {
+                    String full_address = "zp" + CreateAcountUtils.getWalletAddr(master, 60);
+                    //putString("full_address",full_address);
+                    CreateAcountUtils.saveWallet(Utils.bytesToHexString(randomSeed), Utils.bytesToHexString(mnemonicSeed), full_address, new RuntHTTPApi.ResPonse() {
                         @Override
                         public void doSuccessThing(Map<String, Object> param) {
-
-                            MyLog.i(TAG,"randomSeed :"+Utils.bytesToHexString(randomSeed));
-
-                            MyLog.i(TAG,"mnemonicSeed :"+Utils.bytesToHexString(mnemonicSeed));
-                            MyLog.i(TAG,"512PrivateKey:"+Utils.bytesToHexString(master.getPrivKeyBytes()));
-                            MyLog.i(TAG,"512publicKey:"+Utils.bytesToHexString(master.getPubKey()));
-                            MyLog.i(TAG,"512PrivateKey33:"+Utils.bytesToHexString(master.getPrivKeyBytes33()));
-                            MyLog.i(TAG,"512publicKeyhash:"+Utils.bytesToHexString(master.getPubKeyHash()));
-                            MyLog.i(TAG,"512publicKeyExtended:"+Utils.bytesToHexString(master.getPubKeyExtended()));
-                            MyLog.i(TAG,"firstAddr:"+firstAddr);
-                            Message msg = new Message();
+                            Message msg = mHandler.obtainMessage();
                             msg.what = TRANSMIT_WORDS;
                             msg.obj = words;
                             mHandler.sendMessage(msg);
@@ -172,8 +162,7 @@ public class BackUpAcitivty extends CreateActvity {
 
                         @Override
                         public void doErrorThing(Map<String, Object> param) {
-
-                            Message msg = new Message();
+                            Message msg = mHandler.obtainMessage();
                             msg.what = ERROR;
                             msg.obj = param.get("error");
                             mHandler.sendMessage(msg);
@@ -182,13 +171,14 @@ public class BackUpAcitivty extends CreateActvity {
                 }
 
                 @Override
-                public void doErrorThing(Map<String, Object> param) {
+                public void saveFailure() {
                     Message msg = new Message();
                     msg.what = ERROR;
-                    msg.obj = param.get("error");
+                    msg.obj = "";
                     mHandler.sendMessage(msg);
                 }
             });
+
         }catch (Exception e){
             e.printStackTrace();
             MyLog.e(TAG,e+"");

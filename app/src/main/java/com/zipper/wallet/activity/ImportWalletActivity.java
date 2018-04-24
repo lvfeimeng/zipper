@@ -156,7 +156,7 @@ public class ImportWalletActivity extends BaseActivity {
     /**
      * @param mnemSeed
      */
-    public void generateWalletAddress(String randomSeed,String mnemSeed) {
+    public void generateWalletAddress(String randomSeed, String mnemSeed) {
         showProgressDialog("正在导入。。。");
         new Thread() {
             @Override
@@ -165,26 +165,18 @@ public class ImportWalletActivity extends BaseActivity {
 
                 DeterministicKey master = CreateAcountUtils.CreateRootKey(Utils.hexStringToByteArray(mnemSeed));//生成根公私钥对象
 
-                CreateAcountUtils.saveCoins(master, new RuntHTTPApi.ResPonse() {
+                CreateAcountUtils.saveCoins(master, mContext, new CreateAcountUtils.Callback() {
                     @Override
-                    public void doSuccessThing(Map<String, Object> param) {
-                        String firstAddr = param.get("firstAddr").toString();
-                        CreateAcountUtils.saveWallet(randomSeed, mnemSeed, firstAddr, new RuntHTTPApi.ResPonse() {
+                    public void saveSuccess() {
+                        String full_address =  CreateAcountUtils.getWalletAddr(master, 60);
+                        //putString("full_address",full_address);
+                        CreateAcountUtils.saveWallet(randomSeed, mnemSeed, full_address, new RuntHTTPApi.ResPonse() {
                             @Override
                             public void doSuccessThing(Map<String, Object> param) {
-
-
-                                MyLog.i(TAG, "mnemonicSeed :" + mnemSeed);
-                                MyLog.i(TAG, "512PrivateKey:" + Utils.bytesToHexString(master.getPrivKeyBytes()));
-                                MyLog.i(TAG, "512publicKey:" + Utils.bytesToHexString(master.getPubKey()));
-                                MyLog.i(TAG, "512PrivateKey33:" + Utils.bytesToHexString(master.getPrivKeyBytes33()));
-                                MyLog.i(TAG, "512publicKeyhash:" + Utils.bytesToHexString(master.getPubKeyHash()));
-                                MyLog.i(TAG, "512publicKeyExtended:" + Utils.bytesToHexString(master.getPubKeyExtended()));
-                                MyLog.i(TAG, "firstAddr:" + firstAddr);
-                                Message msg = new Message();
-                                if(param.get("success")!=null) {
+                                Message msg = mHandler.obtainMessage();
+                                if (param.get("success") != null) {
                                     msg.what = TRANSMIT_PWD;
-                                }else{
+                                } else {
                                     msg.what = TRANSMIT_WORDS;
                                 }
                                 mHandler.sendMessage(msg);
@@ -192,8 +184,7 @@ public class ImportWalletActivity extends BaseActivity {
 
                             @Override
                             public void doErrorThing(Map<String, Object> param) {
-
-                                Message msg = new Message();
+                                Message msg = mHandler.obtainMessage();
                                 msg.what = ERROR;
                                 msg.obj = param.get("error");
                                 mHandler.sendMessage(msg);
@@ -202,10 +193,10 @@ public class ImportWalletActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void doErrorThing(Map<String, Object> param) {
+                    public void saveFailure() {
                         Message msg = new Message();
                         msg.what = ERROR;
-                        msg.obj = param.get("error");
+                        msg.obj = "";
                         mHandler.sendMessage(msg);
                     }
                 });

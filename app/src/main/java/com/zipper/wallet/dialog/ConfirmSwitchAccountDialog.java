@@ -70,11 +70,16 @@ public class ConfirmSwitchAccountDialog extends Dialog {
         btnConfirm.setOnClickListener(v -> submit());
         textTotalAmount.setText(bean.getTotalAmount());
         textRealAmount.setText(bean.getRealAmount());
-        textUnit.setText(bean.getUnit());
-        textUnit2.setText(bean.getUnit());
-        textUnit3.setText(bean.getUnit());
+        textUnit.setText(bean.getType());
+        textUnit2.setText(bean.getType());
+        textUnit3.setText(bean.getType());
         textPayerAddress.setText(bean.getPayerAddress());
-        textPayeeAddress.setText("【" + bean.getPayeeName() + "】" + bean.getPayeeAddress());
+        String name = bean.getPayeeName();
+        if(name == null || name.equals("") || name.equals("null")) {
+            textPayeeAddress.setText(bean.getPayeeAddress());
+        }else{
+            textPayeeAddress.setText("【" + bean.getPayeeName() + "】" + bean.getPayeeAddress());
+        }
         textRemark.setText(bean.getRemark());
         textMinerCost.setText(bean.getMinerCost());
     }
