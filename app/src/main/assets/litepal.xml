@@ -36,6 +36,7 @@
         <mapping class="com.zipper.wallet.database.WalletInfo" />
         <mapping class="com.zipper.wallet.database.CoinBalance" />
         <mapping class="com.zipper.wallet.database.PropertyRecord" />
+        <mapping class="com.zipper.wallet.database.ContactDetailsBean" />
     </list>
 
     <!--

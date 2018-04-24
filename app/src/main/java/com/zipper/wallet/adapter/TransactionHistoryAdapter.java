@@ -2,6 +2,7 @@ package com.zipper.wallet.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zipper.wallet.R;
-import com.zipper.wallet.activity.PropertyDetailActivity;
+import com.zipper.wallet.activity.TransactionActivity;
 import com.zipper.wallet.activity.TransactionDefailsActivity;
 import com.zipper.wallet.database.PropertyRecord;
 
@@ -29,6 +30,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
     private Context mContext;
     private List<PropertyRecord> mList;
     SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日");
+    private PropertyRecord mItem;
 
     public TransactionHistoryAdapter(List<PropertyRecord> item, Context context) {
         this.mContext = context;
@@ -48,24 +50,32 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 
     @Override
     public void onBindViewHolder(TransactionHistoryAdapter.MyHolder holder, int position) {
-        PropertyRecord item = mList.get(position);
-        String address=item.getFrom().substring(0,8)+"..."+item.getFrom().substring(item.getFrom().length()-8,item.getFrom().length());
-        holder.mCurrency.setText(address);
-        holder.mDate.setText(sdf.format(item.getTimestamp()*1000));
-        holder.mConfirmNum.setText("确定次数:"+item.getFee());
-        String formatData = getFormatData(item.getValue(), ((PropertyDetailActivity) mContext).deciamls);
-        holder.mFormPrice.setText(item.getValue());
-        holder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext, TransactionDefailsActivity.class).putExtra("currency",getFormatData(item.getValue(), item.getValue())));
-            }
-        });
+        mItem = mList.get(position);
+        if(mItem.getFrom().equals(((TransactionActivity) mContext).mAddress) || mItem.getTo().equals(((TransactionActivity) mContext).mAddress)) {
+            String address = mItem.getFrom().substring(0, 8) + "..." + mItem.getFrom().substring(mItem.getFrom().length() - 8, mItem.getFrom().length());
+            holder.mCurrency.setText(address);
+            String time = sdf.format(mItem.getTimestamp() * 1000);
+            holder.mDate.setText(time);
+            holder.mConfirmNum.setText("确定次数:" + mItem.getFee());
+            //String formatData = getFormatData(item.getValue(), ((PropertyDetailActivity) mContext).deciamls);
+            holder.mFormPrice.setText(mItem.getValue());
+            holder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, TransactionDefailsActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("transaction",mItem);
+                    intent.putExtras(bundle);
+                    intent.putExtra("address",((TransactionActivity) mContext).mAddress);
+                    mContext.startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mList.size();
+            return mList.size();
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {
@@ -94,4 +104,5 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
         double result = Double.parseDouble(amount) / Double.parseDouble(decimals);
         return new DecimalFormat("0.00000000").format(result);
     }
+
 }

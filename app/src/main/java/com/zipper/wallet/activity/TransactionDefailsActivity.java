@@ -12,11 +12,12 @@ import android.widget.TextView;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.database.PropertyRecord;
 
 public class TransactionDefailsActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView mBack;
-    private String mCurrency;
+    private PropertyRecord mCurrency;
     private TextView mDetailsCurrency;
     private TextView mTextUpdate;
     private TextView mTextState;
@@ -33,14 +34,15 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
             updateState(msg.what);
         }
     };
-
+    private String mAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_defails);
         Intent intent = getIntent();
-        mCurrency = intent.getStringExtra("currency");
+        mCurrency = (PropertyRecord) intent.getSerializableExtra("currency");
+        mAddress = intent.getStringExtra("address");
         initView();
     }
 
@@ -56,12 +58,12 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
         mBack.setOnClickListener(this);
         mTextUpdate.setOnClickListener(this);
 
-        mDetailsCurrency.setText(mCurrency);
+        mDetailsCurrency.setText(mCurrency.getValue());
 
-        if (mCurrency.contains("+")) {
+        if (mAddress.equals(mCurrency.getTo())) {
             mTextState.setText("等待转入");
             handlerThread(IN);
-        } else if (mCurrency.contains("-")) {
+        } else if (mAddress.equals(mCurrency.getFrom())) {
             handlerThread(OUT);
         }
 

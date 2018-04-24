@@ -12,7 +12,6 @@ import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.TransactionHistoryAdapter;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.PropertyRecord;
-import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.NormalDecoration;
 
 import org.litepal.crud.DataSupport;
@@ -27,11 +26,13 @@ public class TransactionActivity extends BaseActivity {
     private TransactionHistoryAdapter mAdapter;
     private List<PropertyRecord> items = null;
     private NormalDecoration mDecoration;
+    public String mAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
+        mAddress = getIntent().getStringExtra("address");
         initView();
     }
 
@@ -60,6 +61,8 @@ public class TransactionActivity extends BaseActivity {
                 list2.add(record);
             }
             loadData(list2);
+        }else{
+            mRecyclehistory.setVisibility(View.GONE);
         }
 
     }
@@ -71,10 +74,18 @@ public class TransactionActivity extends BaseActivity {
         items = new ArrayList<>();
         items.addAll(list);
         for (PropertyRecord item : items) {
+            if(!item.getFrom().equals(((TransactionActivity) mContext).mAddress) || !item.getTo().equals(((TransactionActivity) mContext).mAddress)) {
+                mRecyclehistory.setVisibility(View.GONE);
+            }
             item.setUnit("");
         }
+        isAdapter();
+    }
+
+    private void isAdapter(){
         mAdapter = new TransactionHistoryAdapter(items, this);
         mRecyclehistory.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclehistory.setNestedScrollingEnabled(false);
         mRecyclehistory.addItemDecoration(mDecoration);
         mRecyclehistory.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -86,16 +97,18 @@ public class TransactionActivity extends BaseActivity {
         mDecoration = new NormalDecoration() {
             @Override
             public String getHeaderName(int pos) {
-                String date = sdf.format(items.get(pos).getTimestamp()*1000);
-                String subDate = date.substring(0,date.indexOf("月"));
-                return subDate + "月";
+                if(mAddress.equals(items.get(pos).getFrom())||mAddress.equals(items.get(pos).getTo())){
+                    String date = sdf.format(items.get(pos).getTimestamp()*1000);
+                    String subDate = date.substring(0,date.indexOf("月"));
+                    return subDate + "月";
+                }
+                return null;
             }
         };
 
         mDecoration.setOnDecorationHeadDraw(new NormalDecoration.OnDecorationHeadDraw() {
             @Override
             public View getHeaderView(final int pos) {
-                MyLog.d(TAG,"调用1");
                 View inflate = LayoutInflater.from(mContext).inflate(R.layout.decoration_head, null);
                 TextView textHead = inflate.findViewById(R.id.text_head);
                 textHead.setText(mDecoration.getHeaderName(pos));

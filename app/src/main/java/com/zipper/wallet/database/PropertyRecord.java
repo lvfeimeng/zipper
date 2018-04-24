@@ -2,11 +2,13 @@ package com.zipper.wallet.database;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
+
 /**
  * Created by AlMn on 2018/04/21.
  */
 
-public class PropertyRecord extends DataSupport{
+public class PropertyRecord extends DataSupport implements Serializable {
 
     /**
      * timestamp : 1524204129
