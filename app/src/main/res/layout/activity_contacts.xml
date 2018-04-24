@@ -76,6 +76,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
+            <TextView
+                android:id="@+id/text_space"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="300dp"
+                android:text="联系人为空"
+                android:gravity="center"
+                android:visibility="gone"
+                />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

@@ -11,16 +11,22 @@ import android.widget.TextView;
 import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.TransactionHistoryAdapter;
 import com.zipper.wallet.base.BaseActivity;
-import com.zipper.wallet.bean.TransactionBean;
+import com.zipper.wallet.database.PropertyRecord;
+import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.NormalDecoration;
 
+import org.litepal.crud.DataSupport;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionActivity extends BaseActivity {
     private RecyclerView mRecyclehistory;
     private Toolbar mToolbar;
-    private List<TransactionBean> mList;
+    private TransactionHistoryAdapter mAdapter;
+    private List<PropertyRecord> items = null;
+    private NormalDecoration mDecoration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,52 +47,63 @@ public class TransactionActivity extends BaseActivity {
             }
         });
 
-        mList = new ArrayList<>();
-        testData();
         headView();
+        testData();
     }
 
     private void testData() {
 
-        mList.add(new TransactionBean("ETH", "3月16日", "确认次数：333", "+ 1999.999 ETH"));
-        mList.add(new TransactionBean("ETH", "3月16日", "确认次数：333", "+ 1999.999 ETH"));
-        mList.add(new TransactionBean("ETH", "3月16日", "确认次数：333", "+ 1999.999 ETH"));
-        mList.add(new TransactionBean("SMT", "2月06日", "确认次数：222", "+ 2999.999 SMT"));
-        mList.add(new TransactionBean("SMT", "2月06日", "确认次数：222", "+ 2999.999 SMT"));
-        mList.add(new TransactionBean("SMT", "2月06日", "确认次数：222", "- 2999.999 SMT"));
-        mList.add(new TransactionBean("BTC", "1月26日", "确认次数：111", "- 3999.999 BTC"));
-        mList.add(new TransactionBean("BTC", "1月26日", "确认次数：111", "+ 3999.999 BTC"));
-        mList.add(new TransactionBean("BTC", "1月26日", "确认次数：111", "+ 3999.999 BTC"));
-        mList.add(new TransactionBean("SMT", "12月06日", "确认次数：000", "- 4999.999 SMT"));
-        mList.add(new TransactionBean("ZIP", "11月16日", "确认次数：111", "- 5999.999 ZIP"));
+        List<PropertyRecord> list = DataSupport.findAll(PropertyRecord.class);
+        List<PropertyRecord> list2 = new ArrayList<>();
+        if(list != null){
+            for (PropertyRecord record : list) {
+                list2.add(record);
+            }
+            loadData(list2);
+        }
 
     }
 
-    private void headView() {
+    private void loadData(List<PropertyRecord> list) {
+        if (list == null) {
+            return;
+        }
+        items = new ArrayList<>();
+        items.addAll(list);
+        for (PropertyRecord item : items) {
+            item.setUnit("");
+        }
+        mAdapter = new TransactionHistoryAdapter(items, this);
+        mRecyclehistory.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclehistory.addItemDecoration(mDecoration);
+        mRecyclehistory.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+    }
 
-        NormalDecoration decoration = new NormalDecoration() {
+    private void headView() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日");
+
+        mDecoration = new NormalDecoration() {
             @Override
             public String getHeaderName(int pos) {
-                String date = mList.get(pos).getDate();
+                String date = sdf.format(items.get(pos).getTimestamp()*1000);
                 String subDate = date.substring(0,date.indexOf("月"));
                 return subDate + "月";
             }
         };
 
-        decoration.setOnDecorationHeadDraw(new NormalDecoration.OnDecorationHeadDraw() {
+        mDecoration.setOnDecorationHeadDraw(new NormalDecoration.OnDecorationHeadDraw() {
             @Override
             public View getHeaderView(final int pos) {
+                MyLog.d(TAG,"调用1");
                 View inflate = LayoutInflater.from(mContext).inflate(R.layout.decoration_head, null);
                 TextView textHead = inflate.findViewById(R.id.text_head);
-                textHead.setText(decoration.getHeaderName(pos));
+                textHead.setText(mDecoration.getHeaderName(pos));
                 return inflate;
             }
         });
 
-        TransactionHistoryAdapter adapter = new TransactionHistoryAdapter(mList, this);
-        mRecyclehistory.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclehistory.addItemDecoration(decoration);
-        mRecyclehistory.setAdapter(adapter);
+
     }
 
 }

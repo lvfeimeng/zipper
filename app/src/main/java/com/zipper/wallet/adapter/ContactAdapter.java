@@ -1,33 +1,34 @@
 package com.zipper.wallet.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 import com.zipper.wallet.R;
-import com.zipper.wallet.bean.ContactBean;
+import com.zipper.wallet.activity.AddContactActivity;
+import com.zipper.wallet.database.ContactDetailsBean;
 
 import java.util.List;
 
-public class ContactAdapter extends CommonAdapter<ContactBean> {
+public class ContactAdapter extends CommonAdapter<ContactDetailsBean> {
 
-    public ContactAdapter(Context context, List<ContactBean> datas) {
+    public ContactAdapter(Context context, List<ContactDetailsBean> datas) {
         super(context, R.layout.item_contact, datas);
     }
 
     @Override
-    protected void convert(ViewHolder holder, ContactBean bean, int position) {
+    protected void convert(ViewHolder holder, ContactDetailsBean bean, int position) {
         ContactViewHolder vh = new ContactViewHolder(holder.getConvertView());
 //        ImgUtil.loadCircleImage(bean.getPhoto(), vh.imageView);
         vh.textName.setText(bean.getName());
         vh.textName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "点击跳转" + vh.textName.getText() + "的联系详情", Toast.LENGTH_SHORT).show();
+                mContext.startActivity(new Intent(mContext, AddContactActivity.class).putExtra("name",bean.getName()));
             }
         });
 //        vh.textKey.setText(bean.getKey());

@@ -24,7 +24,6 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
-import com.zipper.wallet.activity.home.bean.HomeCoinsBean;
 import com.zipper.wallet.activity.home.contract.HomeContract;
 import com.zipper.wallet.activity.home.presenter.HomePresenter;
 import com.zipper.wallet.adapter.ConisAdapter;
@@ -227,10 +226,6 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         textLanguage = (TextView) headerView.findViewById(R.id.text_language);
         layoutLanguage = (LinearLayout) headerView.findViewById(R.id.layout_language);
         checkboxGesturePassword = (CheckBox) headerView.findViewById(R.id.checkbox_gesture_password);
-        layoutTradingRecord.setOnClickListener(v -> {
-            startActivity(new Intent(this, TransactionActivity.class));
-            //drawerLayout.closeDrawer(GravityCompat.START);
-        });
         textContacts.setOnClickListener(v -> {
             startActivity(new Intent(this, ContactsActivity.class));
             //drawerLayout.closeDrawer(GravityCompat.START);
@@ -292,6 +287,10 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         } catch (Exception e) {
             e.printStackTrace();
         }
+        layoutTradingRecord.setOnClickListener(v -> {
+            startActivity(new Intent(this, TransactionActivity.class).putExtra("address",walletInfo.getAddress()));
+            //drawerLayout.closeDrawer(GravityCompat.START);
+        });
     }
 
     @Override

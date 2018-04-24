@@ -267,6 +267,17 @@
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
+            <TextView
+                android:id="@+id/text_del"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="删除联系人"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/colorAccentTop"
+                android:visibility="gone"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
