@@ -42,6 +42,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/white"
                 app:contentInsetStart="0dp"
+                app:contentInsetRight="50dp"
                 app:layout_collapseMode="pin">
 
                 <ImageView
