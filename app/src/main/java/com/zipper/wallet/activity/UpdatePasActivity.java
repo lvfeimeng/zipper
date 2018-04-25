@@ -216,13 +216,13 @@ public class UpdatePasActivity extends BaseActivity implements View.OnClickListe
                 linWarining.setVisibility(View.INVISIBLE);
                 break;
             case 0 :
+            case 1:
                 imgPwdSign.setImageResource(R.mipmap.pwd_low);
                 txtStrong.setTextColor(getResources().getColor(R.color.btn_delete));
                 ((View)txtStrong.getParent()).setVisibility(View.VISIBLE);
                 linWarining.setVisibility(View.VISIBLE);
                 txtStrong.setText("弱");
                 break;
-            case 1:
             case 2:
                 imgPwdSign.setImageResource(R.mipmap.pwd_well);
                 txtStrong.setTextColor(getResources().getColor(R.color.text_link));
