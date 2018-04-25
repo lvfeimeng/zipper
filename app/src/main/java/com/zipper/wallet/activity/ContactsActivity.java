@@ -95,6 +95,7 @@ public class ContactsActivity extends BaseActivity implements View.OnClickListen
         MyLog.d(TAG,mList.toString());
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
+
     }
 
 }

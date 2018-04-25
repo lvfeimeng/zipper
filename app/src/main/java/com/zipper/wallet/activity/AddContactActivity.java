@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.ContactDetailsBean;
@@ -92,6 +94,7 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
         if (!TextUtils.isEmpty(mNameIntent)) {
             select(mNameIntent);
             isNoSelect(mEditTextList);
+            imageScan.setVisibility(View.GONE);
         }
     }
 
@@ -100,6 +103,7 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
         if (view.getId() == R.id.text_save) {
             if (textSave.getText().equals("修改")) {
                 textSave.setText("保存");
+                imageScan.setVisibility(View.VISIBLE);
                 isSelect(mEditTextList);
 //                update(mNameIntent);
             } else if (textSave.getText().equals("保存")) {
@@ -201,23 +205,23 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
         mEmail = editEmail.getText().toString().trim();
         mRemark = editRemark.getText().toString().trim();
 
-        if (mName.equals("")) {
+        if (TextUtils.isEmpty(mName)) {
             toast("姓名不得为空");
             return false;
         }
-        if (mAddress.equals("")) {
+        if (TextUtils.isEmpty(mAddress)) {
             toast("地址不得为空");
             return false;
         }
-        if (mPhone.equals("")) {
+        if (TextUtils.isEmpty(mPhone)) {
             toast("号码不得为空");
             return false;
         }
-        if (mEmail.equals("")) {
+        if (TextUtils.isEmpty(mEmail)) {
             toast("邮箱不得为空");
             return false;
         }
-        if (mRemark.equals("")) {
+        if (TextUtils.isEmpty(mRemark)) {
             toast("备注不得为空");
             return false;
         }
@@ -249,4 +253,35 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.image_scan) {
+            scanCode();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (null == data) {
+            return;
+        }
+        switch (requestCode) {
+            case REQUEST_CODE:
+                //处理扫描结果（在界面上显示）
+                Bundle bundle = data.getExtras();
+                if (bundle == null) {
+                    return;
+                }
+                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                    String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    editWalletAddress.setText(result);
+                    //toast("解析结果:" + result);
+                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                    toast("解析二维码失败");
+                }
+                break;
+        }
+    }
 }
