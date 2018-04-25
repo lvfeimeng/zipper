@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/text_wallet_address"
             android:layout_marginLeft="20dp"
-            android:maxLines="2"
+            android:maxLines="1"
             android:text="我的钱包"
             android:textColor="@color/white"
             android:textSize="40sp" />
