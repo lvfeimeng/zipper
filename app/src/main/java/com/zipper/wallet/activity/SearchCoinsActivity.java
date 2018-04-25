@@ -3,6 +3,7 @@ package com.zipper.wallet.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
+import com.zipper.wallet.adapter.PropertyAdapter;
 import com.zipper.wallet.adapter.SelectCoinsAdapter;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.CoinInfo;
@@ -31,15 +33,20 @@ public class SearchCoinsActivity extends BaseActivity {
 
     private List<CoinInfo> items;
     private SelectCoinsAdapter adapter;
+    private PropertyAdapter adapter2;
+
     private String full_address = "";
 
     private List<CoinInfo> temps = null;
+
+    private boolean isFromHomePage = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_search_coins);
         if (getIntent() != null) {
+            isFromHomePage = getIntent().getBooleanExtra("isFromHomePage", true);
             full_address = getIntent().getStringExtra("full_address");
             temps = (List<CoinInfo>) getIntent().getSerializableExtra("list");
         }
@@ -49,11 +56,11 @@ public class SearchCoinsActivity extends BaseActivity {
 
     private void initData() {
         items = new ArrayList<>();
-        if (temps != null) {
-            items.addAll(temps);
+        if (temps == null) {
+            return;
         }
-        adapter = new SelectCoinsAdapter(this, items);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        items.addAll(temps);
+
         recyclerView.addItemDecoration(
                 new HorizontalDividerItemDecoration
                         .Builder(this)
@@ -64,15 +71,31 @@ public class SearchCoinsActivity extends BaseActivity {
         );
         recyclerView.setSwipeItemClickListener((itemView, position) -> {
             CoinInfo bean = items.get(position);
-            startActivity(new Intent(this, PropertyDetailActivity.class)
-                    .putExtra("full_address", full_address)
-                    .putExtra("address", bean.getAddr())
-                    .putExtra("deciamls", bean.getDecimals())
-                    .putExtra("amount", bean.getAmount())
-                    .putExtra("name", bean.getName())
-                    .putExtra("full_name", bean.getFull_name()));
+            if (isFromHomePage) {
+                startActivity(new Intent(this, PropertyDetailActivity.class)
+                        .putExtra("full_address", full_address)
+                        .putExtra("address", bean.getAddr())
+                        .putExtra("deciamls", bean.getDecimals())
+                        .putExtra("amount", bean.getAmount())
+                        .putExtra("name", bean.getName())
+                        .putExtra("full_name", bean.getFull_name()));
+            } else {
+                Intent data = new Intent();
+                data.putExtra("coin_type", bean);
+                setResult(RESULT_OK, data);
+                finish();
+            }
         });
-        recyclerView.setAdapter(adapter);
+
+        if (isFromHomePage) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            adapter2 = new PropertyAdapter(this, false, items);
+            recyclerView.setAdapter(adapter2);
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            adapter = new SelectCoinsAdapter(this, items);
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     private void initView() {
@@ -106,7 +129,9 @@ public class SearchCoinsActivity extends BaseActivity {
                     recyclerView.setVisibility(View.GONE);
                     layoutEmpty.setVisibility(View.GONE);
                     items.clear();
-                    items.addAll(temps);
+                    if (temps != null) {
+                        items.addAll(temps);
+                    }
                 } else {
                     setPageBg(1);
                     requestData(s.toString());
@@ -118,16 +143,23 @@ public class SearchCoinsActivity extends BaseActivity {
     private List<CoinInfo> result = null;
 
     private void requestData(String text) {
+        if (temps == null) {
+            return;
+        }
         //根据请求结果显示
         items.clear();
         result = new ArrayList<>();
         for (CoinInfo item : temps) {
-            if (item.getName().contains(text.toLowerCase())||item.getName().contains(text.toUpperCase())) {
+            if (item.getName().contains(text.toLowerCase()) || item.getName().contains(text.toUpperCase())) {
                 result.add(item);
             }
         }
         items.addAll(result);
-        adapter.notifyDataSetChanged();
+        if (isFromHomePage) {
+            adapter2.notifyDataSetChanged();
+        } else {
+            adapter.notifyDataSetChanged();
+        }
         if (items.size() == 0) {
             recyclerView.setVisibility(View.GONE);
             layoutEmpty.setVisibility(View.VISIBLE);

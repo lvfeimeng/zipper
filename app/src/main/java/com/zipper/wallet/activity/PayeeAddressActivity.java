@@ -80,6 +80,7 @@ public class PayeeAddressActivity extends BaseActivity {
     }
 
     private void loadData(CoinInfo info) {
+        btnCopy.setEnabled(true);
         textShortName.setText(info.getName().toUpperCase());
         textFullName.setText(info.getFull_name());
         btnCopy.setEnabled(true);

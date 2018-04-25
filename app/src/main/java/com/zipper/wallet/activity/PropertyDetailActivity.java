@@ -72,7 +72,8 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
     private PropertyRecordAdapter adapter;
 
     private HomePresenter presenter;
-    int type = 0;
+    int id=0;
+//    int type = 0;
     int skip = 0;
     int step = 20;
 
@@ -84,6 +85,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         if (getIntent() == null) {
             return;
         }
+        id=getIntent().getIntExtra("id",0);
         deciamls = getIntent().getStringExtra("deciamls");
         amount = getIntent().getStringExtra("amount");
         address = getIntent().getStringExtra("address");
@@ -114,11 +116,11 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
 
         presenter = new HomePresenter(this, this);
 
-        if ("eth".equalsIgnoreCase(name)) {
-            type = HomePresenter.TYPE_ETH_HISTORY;
-        } else if ("btc".equalsIgnoreCase(name)) {
-            type = HomePresenter.TYPE_BTC_HISTORY;
-        }
+//        if ("eth".equalsIgnoreCase(name)) {
+//            type = HomePresenter.TYPE_ETH_HISTORY;
+//        } else if ("btc".equalsIgnoreCase(name)) {
+//            type = HomePresenter.TYPE_BTC_HISTORY;
+//        }
         request();
     }
 
@@ -129,7 +131,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         map.put("skip", "" + (skip * step));
         map.put("step", "" + step);
         json = new Gson().toJson(map);
-        presenter.getCoinHistory(type, json);
+        presenter.getCoinHistory(id, json);
     }
 
     private void initView() {
@@ -244,7 +246,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
 
 
     @Override
-    public void doSuccess(int type, Object obj) {
+    public void doSuccess(int id, Object obj) {
         if (obj == null) {
             return;
         }

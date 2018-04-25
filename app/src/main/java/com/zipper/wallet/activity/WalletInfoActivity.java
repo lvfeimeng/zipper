@@ -1,5 +1,6 @@
 package com.zipper.wallet.activity;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,6 +10,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +28,8 @@ import com.zipper.wallet.utils.SqliteUtils;
 
 import net.bither.bitherj.crypto.EncryptedData;
 import net.bither.bitherj.utils.Utils;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,8 +133,8 @@ public class WalletInfoActivity extends BaseActivity {
                                     if (dialog == null) {
                                         dialog = new DeleteWalletDialog(mContext);
                                         dialog.setCallback(() -> {
-                                            SQLiteDatabase sqlDB = mContext.openOrCreateDatabase(SqliteUtils.DB, Context.MODE_PRIVATE,null);
-                                            try{
+                                            SQLiteDatabase sqlDB = mContext.openOrCreateDatabase(SqliteUtils.DB, Context.MODE_PRIVATE, null);
+                                            try {
                                                 sqlDB.execSQL("drop table walletinfo");
                                             } catch (SQLiteException e) {
                                                 e.printStackTrace();
@@ -170,6 +174,11 @@ public class WalletInfoActivity extends BaseActivity {
             editWalletName.setFocusable(false);
             editWalletName.setFocusableInTouchMode(false);
             editWalletName.setCursorVisible(false);
+            if (walletInfo != null) {
+                ContentValues values = new ContentValues();
+                values.put("name", editWalletName.getText().toString().trim());
+                DataSupport.update(WalletInfo.class, values, walletInfo.getId());
+            }
         } else {//当前为不可编辑状态
             textRight.setText("保存");
             editWalletName.setFocusable(true);

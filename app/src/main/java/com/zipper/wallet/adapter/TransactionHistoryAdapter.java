@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zipper.wallet.R;
+import com.zipper.wallet.activity.TransactionActivity;
 import com.zipper.wallet.activity.TransactionDefailsActivity;
 import com.zipper.wallet.database.PropertyRecord;
 
@@ -50,7 +51,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
     @Override
     public void onBindViewHolder(TransactionHistoryAdapter.MyHolder holder, int position) {
         mItem = mList.get(position);
-        if (mItem.getFrom().equals(mItem.getAddr()) || mItem.getTo().equals(mItem.getAddr())) {
+        if(mItem.getFrom().equals(mItem.getAddr()) || mItem.getTo().equals(mItem.getAddr())) {
             String address = mItem.getFrom().substring(0, 8) + "..." + mItem.getFrom().substring(mItem.getFrom().length() - 8, mItem.getFrom().length());
             holder.mCurrency.setText(address);
             String time = sdf.format(mItem.getTimestamp() * 1000);
@@ -63,8 +64,9 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, TransactionDefailsActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("transaction", mItem);
+                    bundle.putSerializable("transaction",mItem);
                     intent.putExtras(bundle);
+                    intent.putExtra("address",(mItem.getAddr()));
                     mContext.startActivity(intent);
                 }
             });
@@ -73,7 +75,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 
     @Override
     public int getItemCount() {
-        return isAddress();
+            return mList.size();
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {
@@ -96,24 +98,11 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
     }
 
     private String getFormatData(String amount, String decimals) {
-        if (TextUtils.isEmpty(amount) || TextUtils.isEmpty(decimals) || "null".equalsIgnoreCase(amount) || "null".equalsIgnoreCase(decimals)) {
+        if (TextUtils.isEmpty(amount) || TextUtils.isEmpty(decimals)||"null".equalsIgnoreCase(amount)||"null".equalsIgnoreCase(decimals)) {
             return "0";
         }
         double result = Double.parseDouble(amount) / Double.parseDouble(decimals);
         return new DecimalFormat("0.00000000").format(result);
-    }
-
-    private int num = 0;
-
-    private int isAddress() {
-
-        for (PropertyRecord item : mList) {
-            if (item.getFrom().equals("item.getAddr()") || item.getTo().equals("item.getAddr()")) {
-                num++;
-            }
-        }
-
-        return num;
     }
 
 }

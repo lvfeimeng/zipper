@@ -13,6 +13,7 @@ import com.zipper.wallet.database.CoinInfo;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,14 +41,16 @@ public class SelectCoinsActivity extends BaseActivity {
         recyclerView = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
         imgBack.setOnClickListener(v -> finish());
         imgSearch.setOnClickListener(v -> {
-            startActivityForResult(new Intent(this, SearchCoinsActivity.class), 111);
+            startActivityForResult(new Intent(this, SearchCoinsActivity.class)
+                    .putExtra("isFromHomePage", false)
+                    .putExtra("list", (Serializable) list), 111);
         });
     }
 
     private void initData() {
         list = DataSupport.findAll(CoinInfo.class);
         if (list == null) {
-            list=new ArrayList<>();
+            list = new ArrayList<>();
         }
         adapter = new SelectCoinsAdapter(this, list);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));

@@ -53,14 +53,32 @@ public class HomePresenter implements HomeContract.Presenter {
         });
     }
 
+//    @Override
+//    public void getCoinBalance(int type, String json) {
+//        String url = "";
+//        if (type == TYPE_GET_BTC_BALANCE) {
+//            url = RuntHTTPApi.URL_BTC_BALANCE;
+//        } else if (type == TYPE_GET_ETH_BALANCE) {
+//            url = RuntHTTPApi.URL_ETH_BALANCE;
+//        }
+//        RuntHTTPApi.request(url, json, new StringCallback() {
+//            @Override
+//            public void onError(Call call, Exception e, int id) {
+//                view.doFailure();
+//                e.printStackTrace();
+//            }
+//
+//            @Override
+//            public void onResponse(String response, int id) {
+//                CoinBalanceBean bean = new Gson().fromJson(response, CoinBalanceBean.class);
+//                view.doSuccess(type, bean.getData());
+//            }
+//        });
+//    }
+
     @Override
-    public void getCoinBalance(int type, String json) {
-        String url = "";
-        if (type == TYPE_GET_BTC_BALANCE) {
-            url = RuntHTTPApi.URL_BTC_BALANCE;
-        } else if (type == TYPE_GET_ETH_BALANCE) {
-            url = RuntHTTPApi.URL_ETH_BALANCE;
-        }
+    public void getCoinBalance(int coin_id, String json) {
+        String url=coin_id+"/getaddressinfo";
         RuntHTTPApi.request(url, json, new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
@@ -71,19 +89,37 @@ public class HomePresenter implements HomeContract.Presenter {
             @Override
             public void onResponse(String response, int id) {
                 CoinBalanceBean bean = new Gson().fromJson(response, CoinBalanceBean.class);
-                view.doSuccess(type, bean.getData());
+                view.doSuccess(coin_id, bean.getData());
             }
         });
     }
 
+//    @Override
+//    public void getCoinHistory(int type, String json) {
+//        String url = "";
+//        if (type == TYPE_BTC_HISTORY) {
+//            url = RuntHTTPApi.URL_BTC_HISTORY;
+//        } else if (type == TYPE_ETH_HISTORY) {
+//            url = RuntHTTPApi.URL_ETH_HISTORY;
+//        }
+//        RuntHTTPApi.request(url, json, new StringCallback() {
+//            @Override
+//            public void onError(Call call, Exception e, int id) {
+//                view.doFailure();
+//                e.printStackTrace();
+//            }
+//
+//            @Override
+//            public void onResponse(String response, int id) {
+//                PropertyRecordBean bean = new Gson().fromJson(response, PropertyRecordBean.class);
+//                view.doSuccess(type, bean.getData());
+//            }
+//        });
+//    }
+
     @Override
-    public void getCoinHistory(int type, String json) {
-        String url = "";
-        if (type == TYPE_BTC_HISTORY) {
-            url = RuntHTTPApi.URL_BTC_HISTORY;
-        } else if (type == TYPE_ETH_HISTORY) {
-            url = RuntHTTPApi.URL_ETH_HISTORY;
-        }
+    public void getCoinHistory(int coin_id, String json) {
+        String url = coin_id+"/gethistoryinfo";
         RuntHTTPApi.request(url, json, new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
@@ -94,7 +130,7 @@ public class HomePresenter implements HomeContract.Presenter {
             @Override
             public void onResponse(String response, int id) {
                 PropertyRecordBean bean = new Gson().fromJson(response, PropertyRecordBean.class);
-                view.doSuccess(type, bean.getData());
+                view.doSuccess(coin_id, bean.getData());
             }
         });
     }

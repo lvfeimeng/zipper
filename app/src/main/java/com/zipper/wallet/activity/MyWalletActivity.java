@@ -84,6 +84,8 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
 
     private int type = 0;
 
+    private int walletId = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,16 +109,13 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         List<CoinInfo> list = DataSupport.findAll(CoinInfo.class);
         for (CoinInfo info : list) {
             Map<String, String> map = new HashMap<>();
-            if ("btc".equalsIgnoreCase(info.getAddr_algorithm())) {
-                type = HomePresenter.TYPE_GET_BTC_BALANCE;
-                map.put("address", "159FTr7Gjs2Qbj4Q5q29cvmchhqymQA7of");
-                info.setAddr("159FTr7Gjs2Qbj4Q5q29cvmchhqymQA7of");
-            } else if ("eth".equalsIgnoreCase(info.getAddr_algorithm())) {
-                type = HomePresenter.TYPE_GET_ETH_BALANCE;
-                map.put("address", "0xea674fdde714fd979de3edf0f56aa9716b898ec8");
-                info.setAddr("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
-            }
-            presenter.getCoinBalance(type, new Gson().toJson(map));
+//            if ("btc".equalsIgnoreCase(info.getAddr_algorithm())) {
+//                info.setAddr("159FTr7Gjs2Qbj4Q5q29cvmchhqymQA7of");
+//            } else if ("eth".equalsIgnoreCase(info.getAddr_algorithm())) {
+//                info.setAddr("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
+//            }
+            map.put("address", info.getAddr());
+            presenter.getCoinBalance(info.getId(), new Gson().toJson(map));
         }
         items.addAll(list);
         adapter.notifyDataSetChanged();
@@ -161,7 +160,8 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                         .putExtra("own_list", (Serializable) items), 111));
         view.findViewById(R.id.text_search).setOnClickListener(v ->
                 startActivity(new Intent(mContext, SearchCoinsActivity.class)
-                        .putExtra("list",(Serializable)items)
+                        .putExtra("isFromHomePage", true)
+                        .putExtra("list", (Serializable) items)
                         .putExtra("full_address", address)));
 
         recyclerView.addItemDecoration(
@@ -175,6 +175,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         recyclerView.setSwipeItemClickListener((itemView, position) -> {
             CoinInfo bean = items.get(position);
             startActivity(new Intent(this, PropertyDetailActivity.class)
+                    .putExtra("id", bean.getId())
                     .putExtra("full_address", address)
                     .putExtra("address", bean.getAddr())
                     .putExtra("deciamls", bean.getDecimals())
@@ -296,15 +297,23 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                         v -> startActivity(new Intent(this, WalletInfoActivity.class))
                 );
 
+        layoutTradingRecord.setOnClickListener(v -> {
+            startActivity(new Intent(this, TransactionActivity.class));
+            //drawerLayout.closeDrawer(GravityCompat.START);
+        });
+    }
 
-        List<WalletInfo> list = new ArrayList<>();
-        SqliteUtils.openDataBase(this);
-        List<Map> maps = SqliteUtils.selecte("walletinfo");
-        for (Map map : maps) {
-            list.add(new WalletInfo(map));
-        }
-        WalletInfo walletInfo = list.get(0);
+    private void setWalletName() {
         try {
+            List<WalletInfo> list = new ArrayList<>();
+            SqliteUtils.openDataBase(this);
+            List<Map> maps = SqliteUtils.selecte("walletinfo");
+            for (Map map : maps) {
+                list.add(new WalletInfo(map));
+            }
+            WalletInfo walletInfo = list.get(0);
+            walletId = walletInfo.getId();
+            //WalletInfo walletInfo = DataSupport.find(WalletInfo.class, walletId);
             if (!TextUtils.isEmpty(walletInfo.getName()) && !"null".equalsIgnoreCase(walletInfo.getName())) {
                 textWalletName.setText(walletInfo.getName());
                 textName.setText(walletInfo.getName());
@@ -324,16 +333,12 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         } catch (Exception e) {
             e.printStackTrace();
         }
-        layoutTradingRecord.setOnClickListener(v -> {
-            startActivity(new Intent(this, TransactionActivity.class));
-            //drawerLayout.closeDrawer(GravityCompat.START);
-        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        setWalletName();
         if (!TextUtils.isEmpty(PreferencesUtils.getString(mContext, KEY_HAND_PWD, PreferencesUtils.USER))) {
             checkboxGesturePassword.setChecked(true);
         } else {
@@ -448,49 +453,27 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     private boolean isResponse = false;
 
     @Override
-    public void doSuccess(int type, Object obj) {
+    public void doSuccess(int id, Object obj) {
         if (obj == null) {
             //getLocalData();
             return;
         }
         isResponse = true;
-        switch (type) {
-            case HomePresenter.TYPE_GET_COINS:
-//                List<CoinInfo> list = (List<CoinInfo>) obj;
-//                if (list != null) {
-//                    items.addAll(list);
-//                }
-                break;
-            case HomePresenter.TYPE_GET_BTC_BALANCE:
-                CoinBalance balance = (CoinBalance) obj;
-                balance.save();
-                for (CoinInfo item : items) {
-                    if ("btc".equalsIgnoreCase(item.getAddr_algorithm())) {
-                        item.setAmount(getFormatData(balance.getAmount(), item.getDecimals()));
-                        ContentValues values = new ContentValues();
-                        values.put("amount", item.getAmount());
-                        DataSupport.update(CoinInfo.class, values, item.getId());
-                    }
-                }
-                adapter.notifyDataSetChanged();
-                break;
-            case HomePresenter.TYPE_GET_ETH_BALANCE:
-                CoinBalance balance2 = (CoinBalance) obj;
-                balance2.save();
-                for (CoinInfo item : items) {
-                    if ("eth".equalsIgnoreCase(item.getAddr_algorithm())) {
-                        item.setAmount(getFormatData(balance2.getAmount(), item.getDecimals()));
-                        ContentValues values = new ContentValues();
-                        values.put("amount", item.getAmount());
-                        DataSupport.update(CoinInfo.class, values, item.getId());
-                    }
-                }
-                adapter.notifyDataSetChanged();
-                break;
-            default:
-                break;
+        CoinBalance balance = (CoinBalance) obj;
+        if (balance == null) {
+            return;
         }
-
+        balance.save();
+        for (CoinInfo item : items) {
+            if (id == item.getId()) {
+                item.setAmount(getFormatData(balance.getAmount(), item.getDecimals()));
+                ContentValues values = new ContentValues();
+                values.put("amount", item.getAmount());
+                DataSupport.update(CoinInfo.class, values, item.getId());
+                break;
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 
     @Override

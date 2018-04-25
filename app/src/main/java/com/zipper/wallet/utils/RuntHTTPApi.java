@@ -46,11 +46,11 @@ public class RuntHTTPApi {
             CHARSET = "utf-8",
             PROJECT_URL = "http://" + IP + PORT + "/",
             SERVER_URL = "http://" + IP + PORT + "/",
-            URL_GET_COINS = "coin/getcoininfos",//获取币种列表信息
-            URL_BTC_BALANCE="btc/getaddressinfo",//获取btc余额信息
-            URL_ETH_BALANCE="eth/getaddressinfo",//获取eth余额信息
-            URL_BTC_HISTORY="btc/gethistoryinfo",//获取btc历史记录
-            URL_ETH_HISTORY="eth/gethistoryinfo";//获取eth历史记录
+            URL_GET_COINS = "coin/getcoininfos";//获取币种列表信息
+//            URL_BTC_BALANCE="btc/getaddressinfo",//获取btc余额信息
+//            URL_ETH_BALANCE="eth/getaddressinfo",//获取eth余额信息
+//            URL_BTC_HISTORY="btc/gethistoryinfo",//获取btc历史记录
+//            URL_ETH_HISTORY="eth/gethistoryinfo";//获取eth历史记录
 
     public static String getImagePath(String name) {
         return SERVER_URL + "icon/andriod/" + name;

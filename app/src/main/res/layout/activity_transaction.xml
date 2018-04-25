@@ -21,6 +21,7 @@
             app:contentScrim="@color/white"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
             app:statusBarScrim="@color/white"
+            app:collapsedTitleGravity="center"
             app:title="交易记录"
             app:titleEnabled="true">
 
