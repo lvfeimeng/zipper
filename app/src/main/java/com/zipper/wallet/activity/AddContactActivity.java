@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -116,6 +115,8 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
             scanCode();
         } else if (view.getId() == R.id.text_del) {
             delete(mNameIntent);
+        } else if (view.getId() == R.id.image_scan) {
+            scanCode();
         }
     }
 
@@ -251,14 +252,6 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
             list.get(i).setSelection(list.get(i).length());
             list.get(i).setCursorVisible(true);
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.image_scan) {
-            scanCode();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -21,7 +21,8 @@
         android:clickable="true"
         android:paddingRight="20dp"
         android:paddingTop="10dp"
-        android:text="" />
+        android:text=""
+        android:textColor="@color/black"/>
     <LinearLayout
         android:id="@+id/lin_close"
         android:layout_width="15dp"

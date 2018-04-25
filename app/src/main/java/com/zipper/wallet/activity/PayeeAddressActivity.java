@@ -82,6 +82,8 @@ public class PayeeAddressActivity extends BaseActivity {
     private void loadData(CoinInfo info) {
         textShortName.setText(info.getName().toUpperCase());
         textFullName.setText(info.getFull_name());
+        btnCopy.setEnabled(true);
+        btnCopy.setText("复制收款地址");
         textWalletAddress.setText(info.getAddr());
 
         //带logo二维码
