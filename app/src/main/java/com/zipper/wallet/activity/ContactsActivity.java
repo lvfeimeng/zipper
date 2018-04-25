@@ -9,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.ContactAdapter;
@@ -25,7 +27,7 @@ public class ContactsActivity extends BaseActivity implements View.OnClickListen
 
     //    protected ImageView imgBack;
     protected TextView textNew;
-    protected RecyclerView recyclerView;
+    protected SwipeMenuRecyclerView recyclerView;
     protected Toolbar toolbar;
     private TextView mTextSpace;
     protected CollapsingToolbarLayout collapsingToolbar;
@@ -33,11 +35,15 @@ public class ContactsActivity extends BaseActivity implements View.OnClickListen
     private ContactAdapter adapter;
     private List<ContactDetailsBean> mList = null;
 
+    private boolean isOpenDetail = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_contacts);
-
+        if (getIntent() != null) {
+            isOpenDetail = getIntent().getBooleanExtra("isOpenDetail", true);
+        }
         initView();
         initData();
     }
@@ -51,7 +57,7 @@ public class ContactsActivity extends BaseActivity implements View.OnClickListen
     private void initView() {
         textNew = (TextView) findViewById(R.id.text_new);
         textNew.setOnClickListener(ContactsActivity.this);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         mTextSpace = findViewById(R.id.text_space);
@@ -70,6 +76,16 @@ public class ContactsActivity extends BaseActivity implements View.OnClickListen
                         .margin(dp2px(15), dp2px(15))
                         .build()
         );
+        recyclerView.setSwipeItemClickListener((itemView, position) -> {
+            if (isOpenDetail) {
+                startActivity(new Intent(mContext, AddContactActivity.class).putExtra("name", mList.get(position).getName()));
+            } else {
+                Intent data = new Intent();
+                data.putExtra("bean", mList.get(position));
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        });
         select();
 
     }
@@ -92,7 +108,7 @@ public class ContactsActivity extends BaseActivity implements View.OnClickListen
             recyclerView.setVisibility(View.GONE);
         }
         adapter = new ContactAdapter(this, mList);
-        MyLog.d(TAG,mList.toString());
+        MyLog.d(TAG, mList.toString());
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
     }

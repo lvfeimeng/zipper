@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.ContactDetailsBean;
@@ -249,4 +250,24 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            if (data == null) {
+                return;
+            }
+            Bundle bundle = data.getExtras();
+            if (bundle == null) {
+                return;
+            }
+            int result_type = bundle.getInt(CodeUtils.RESULT_TYPE);
+            String result_text = bundle.getString(CodeUtils.RESULT_STRING);
+            if (result_type == CodeUtils.RESULT_SUCCESS) {
+                editWalletAddress.setText(result_text);
+            } else if (result_type == CodeUtils.RESULT_FAILED) {
+                toast("解析失败");
+            }
+        }
+    }
 }

@@ -2,11 +2,13 @@ package com.zipper.wallet.database;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
+
 /**
  * Created by admin on 2018/4/23.
  */
 
-public class ContactDetailsBean extends DataSupport {
+public class ContactDetailsBean extends DataSupport implements Serializable{
 
     private int id;
     private String name;
