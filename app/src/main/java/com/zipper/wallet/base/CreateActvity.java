@@ -24,6 +24,7 @@ public class CreateActvity extends BaseActivity {
             titlebar.setRightOnclickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    PreferencesUtils.clearData(mContext,PreferencesUtils.VISITOR);
                     startActivity(new Intent(mContext, ImportWalletActivity.class));
                     finish();
                 }

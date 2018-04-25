@@ -29,7 +29,7 @@ public class CreatePwdAcitivty extends CreateActvity {
     Button btnCreate;
     TextView txtPwdReWar,txtStrong,txtAgree;
     ImageView imgPwdSign;
-    LinearLayout linSign,linWarining;
+    LinearLayout linWarining;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_create_pwd);
@@ -47,7 +47,6 @@ public class CreatePwdAcitivty extends CreateActvity {
         txtStrong = (TextView)findViewById(R.id.txt_strong);
         txtPwdReWar = (TextView)findViewById(R.id.txt_pwdre_warning);
         imgPwdSign = (ImageView)findViewById(R.id.img_pwd_sign);
-        linSign = (LinearLayout)findViewById(R.id.lin_sign) ;
         txtAgree = (TextView)findViewById(R.id.txt_agreement);
         txtAgree.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,36 +152,34 @@ public class CreatePwdAcitivty extends CreateActvity {
         @Override
         public void afterTextChanged(Editable editable) {
             MyLog.i(TAG,"pwdWatcher "+edPwd.getText());
-            if(edPwd.getText().equals("")|| edPwd.getText().toString().trim().length() ==0){
-                linSign.setVisibility(View.INVISIBLE);
-                txtStrong.setText("");
-                linWarining.setVisibility(View.INVISIBLE);
-            }else{
-                String pwd = edPwd.getText().toString();
-                switch (AlgorithmUtils.pwdLevel(pwd)){
-                    case 0 :
-                        linSign.setVisibility(View.VISIBLE);
-                        imgPwdSign.setImageResource(R.mipmap.pwd_low);
-                        txtStrong.setTextColor(getResources().getColor(R.color.btn_delete));
-                        ((View)txtStrong.getParent()).setVisibility(View.VISIBLE);
-                        linWarining.setVisibility(View.VISIBLE);
-                        txtStrong.setText("弱");
-                        break;
-                    case 1:
-                        linSign.setVisibility(View.VISIBLE);
-                        imgPwdSign.setImageResource(R.mipmap.pwd_well);
-                        txtStrong.setTextColor(getResources().getColor(R.color.text_link));
-                        txtStrong.setText("一般");
-                        linWarining.setVisibility(View.INVISIBLE);
-                        break;
-                    case 2:
-                        linSign.setVisibility(View.VISIBLE);
-                        imgPwdSign.setImageResource(R.mipmap.pwd_good);
-                        txtStrong.setTextColor(getResources().getColor(R.color.text_link));
-                        txtStrong.setText("很好");
-                        linWarining.setVisibility(View.INVISIBLE);
-                        break;
-                }
+
+            String pwd = edPwd.getText().toString();
+            switch (AlgorithmUtils.pwdLevel(pwd)){
+                case -1:
+                    txtStrong.setText("");
+                    imgPwdSign.setImageResource(R.mipmap.pwd_n);
+                    linWarining.setVisibility(View.INVISIBLE);
+                    break;
+                case 0 :
+                    imgPwdSign.setImageResource(R.mipmap.pwd_low);
+                    txtStrong.setTextColor(getResources().getColor(R.color.btn_delete));
+                    ((View)txtStrong.getParent()).setVisibility(View.VISIBLE);
+                    linWarining.setVisibility(View.VISIBLE);
+                    txtStrong.setText("弱");
+                    break;
+                case 1:
+                case 2:
+                    imgPwdSign.setImageResource(R.mipmap.pwd_well);
+                    txtStrong.setTextColor(getResources().getColor(R.color.text_link));
+                    txtStrong.setText("一般");
+                    linWarining.setVisibility(View.INVISIBLE);
+                    break;
+                case 3:
+                    imgPwdSign.setImageResource(R.mipmap.pwd_good);
+                    txtStrong.setTextColor(getResources().getColor(R.color.text_link));
+                    txtStrong.setText("很好");
+                    linWarining.setVisibility(View.INVISIBLE);
+                    break;
             }
 
             setBtnCreateEnable();

@@ -1,14 +1,11 @@
 package com.zipper.wallet.fragment;
 
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,35 +18,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zipper.wallet.R;
-import com.zipper.wallet.WebBrowserActivity;
 import com.zipper.wallet.activity.ImportWalletActivity;
 import com.zipper.wallet.activity.MyWalletActivity;
 import com.zipper.wallet.activity.WebActivity;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.base.BaseFragment;
-import com.zipper.wallet.database.CoinInfo;
-import com.zipper.wallet.database.WalletInfo;
+import com.zipper.wallet.utils.AlgorithmUtils;
 import com.zipper.wallet.utils.CreateAcountUtils;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
-import com.zipper.wallet.utils.SqliteUtils;
 
-import net.bither.bitherj.crypto.EncryptedData;
-import net.bither.bitherj.crypto.hd.DeterministicKey;
-import net.bither.bitherj.crypto.mnemonic.MnemonicCode;
-import net.bither.bitherj.crypto.mnemonic.MnemonicException;
 import net.bither.bitherj.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.zipper.wallet.base.BaseActivity.KEY_IS_LOGIN;
-import static com.zipper.wallet.base.BaseActivity.PARAMS_TITLE;
-import static com.zipper.wallet.base.BaseActivity.PARAMS_URL;
 
 /**
  * 助记词.
@@ -70,7 +54,7 @@ public class MnemonicWordFragment extends BaseFragment {
 
     TextView txtPwdReWar, txtStrong;
     ImageView imgPwdSign;
-    LinearLayout linSign, linWarining;
+    LinearLayout  linWarining;
 
     private Context mContext;
 
@@ -103,7 +87,6 @@ public class MnemonicWordFragment extends BaseFragment {
         txtStrong = (TextView) rootView.findViewById(R.id.txt_strong);
         txtPwdReWar = (TextView) rootView.findViewById(R.id.txt_pwdre_warning);
         imgPwdSign = (ImageView) rootView.findViewById(R.id.img_pwd_sign);
-        linSign = (LinearLayout) rootView.findViewById(R.id.lin_sign);
 
         addTextChangedListener(editWord);
         addTextChangedListener(editPassword);
@@ -213,56 +196,33 @@ public class MnemonicWordFragment extends BaseFragment {
     }
 
     public void handlePwdStrong(String pwd) {
-        if (TextUtils.isEmpty(pwd)) {
-            linSign.setVisibility(View.INVISIBLE);
-            txtStrong.setText("");
-            linWarining.setVisibility(View.INVISIBLE);
-        } else {
-            boolean flag = false;
-            try {
-                Integer.parseInt(pwd);
-            } catch (Exception e) {
-                flag = true;
-            }
 
-
-            boolean isHigh = false;
-            boolean hasUp = false;
-            boolean hasLow = false;
-            for (int i = 0; i < pwd.length(); i++) {
-                int chars = (int) pwd.toCharArray()[i];
-                if (chars > 64 && chars < 91) {
-                    hasUp = true;
-                } else if (chars > 96 && chars < 123) {
-                    hasLow = true;
-                } else if (chars > 9) {
-                    isHigh = true;
-                }
-            }
-
-            Log.i(TAG, "pwdWatcher isHigh:" + isHigh + " hasLow:" + hasLow + " hasUp:" + hasUp + " flag:" + flag + " pwd.length():" + (pwd.length()));
-
-            if (pwd.length() > 7 && isHigh && hasLow && hasUp && flag) {
-                linSign.setVisibility(View.VISIBLE);
-                imgPwdSign.setImageResource(R.mipmap.pwd_good);
-                txtStrong.setTextColor(getResources().getColor(R.color.text_link));
-                txtStrong.setText("很好");
+        switch (AlgorithmUtils.pwdLevel(pwd)){
+            case -1:
+                txtStrong.setText("");
+                imgPwdSign.setImageResource(R.mipmap.pwd_n);
                 linWarining.setVisibility(View.INVISIBLE);
-            } else if (pwd.length() > 7 && flag) {
-                Log.i(TAG, "pwdWatcher " + " 一般:" + (pwd.length() > 6 && flag));
-                linSign.setVisibility(View.VISIBLE);
+                break;
+            case 0 :
+                imgPwdSign.setImageResource(R.mipmap.pwd_low);
+                txtStrong.setTextColor(getResources().getColor(R.color.btn_delete));
+                ((View)txtStrong.getParent()).setVisibility(View.VISIBLE);
+                linWarining.setVisibility(View.VISIBLE);
+                txtStrong.setText("弱");
+                break;
+            case 1:
+            case 2:
                 imgPwdSign.setImageResource(R.mipmap.pwd_well);
                 txtStrong.setTextColor(getResources().getColor(R.color.text_link));
                 txtStrong.setText("一般");
                 linWarining.setVisibility(View.INVISIBLE);
-            } else if (pwd.length() < 8 || !flag) {
-                linSign.setVisibility(View.VISIBLE);
-                imgPwdSign.setImageResource(R.mipmap.pwd_low);
-                txtStrong.setTextColor(getResources().getColor(R.color.btn_delete));
-                ((View) txtStrong.getParent()).setVisibility(View.VISIBLE);
-                linWarining.setVisibility(View.VISIBLE);
-                txtStrong.setText("弱");
-            }
+                break;
+            case 3:
+                imgPwdSign.setImageResource(R.mipmap.pwd_good);
+                txtStrong.setTextColor(getResources().getColor(R.color.text_link));
+                txtStrong.setText("很好");
+                linWarining.setVisibility(View.INVISIBLE);
+                break;
         }
     }
 }

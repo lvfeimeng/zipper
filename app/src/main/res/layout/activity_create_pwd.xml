@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:left_icon_visible="visible"
+        app:title_visible="gone"
         app:right_text="@string/import_wallet"
         app:title_text="@string/create_wallet">
 
@@ -86,13 +87,12 @@
                     android:layout_alignParentRight="true"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:visibility="invisible">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/txt_strong"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="强" />
+                        android:layout_height="wrap_content" />
 
                     <ImageView
                         android:id="@+id/img_pwd_sign"
