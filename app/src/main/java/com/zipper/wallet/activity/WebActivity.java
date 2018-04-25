@@ -24,7 +24,6 @@ import java.util.Map;
 public class WebActivity extends BaseActivity {
 
     protected ImageView imgBack;
-    protected ImageView imgRight;
     protected TextView textRight;
     protected Toolbar toolbar;
     protected CollapsingToolbarLayout collapsingToolbar;
@@ -85,7 +84,6 @@ public class WebActivity extends BaseActivity {
 
     private void initView() {
         imgBack = (ImageView) findViewById(R.id.img_back);
-        imgRight = (ImageView) findViewById(R.id.img_right);
         textRight = (TextView) findViewById(R.id.text_right);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
