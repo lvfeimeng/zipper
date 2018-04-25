@@ -26,13 +26,11 @@ public class TransactionActivity extends BaseActivity {
     private TransactionHistoryAdapter mAdapter;
     private List<PropertyRecord> items = null;
     private NormalDecoration mDecoration;
-    public String mAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
-        mAddress = getIntent().getStringExtra("address");
         initView();
     }
 
@@ -56,12 +54,12 @@ public class TransactionActivity extends BaseActivity {
 
         List<PropertyRecord> list = DataSupport.findAll(PropertyRecord.class);
         List<PropertyRecord> list2 = new ArrayList<>();
-        if(list != null){
+        if (list != null) {
             for (PropertyRecord record : list) {
                 list2.add(record);
             }
             loadData(list2);
-        }else{
+        } else {
             mRecyclehistory.setVisibility(View.GONE);
         }
 
@@ -73,10 +71,16 @@ public class TransactionActivity extends BaseActivity {
         }
         items = new ArrayList<>();
         items.addAll(list);
+//        for (PropertyRecord item : items) {
+//            if (!item.getFrom().equals("item.getAddr()") || !item.getTo().equals("item.getAddr()")) {
+//                mRecyclehistory.setVisibility(View.GONE);
+//            }
+//            item.setUnit("");
+//        }
         isAdapter();
     }
 
-    private void isAdapter(){
+    private void isAdapter() {
         mAdapter = new TransactionHistoryAdapter(items, this);
         mRecyclehistory.setLayoutManager(new LinearLayoutManager(this));
         mRecyclehistory.setNestedScrollingEnabled(false);
@@ -91,9 +95,9 @@ public class TransactionActivity extends BaseActivity {
         mDecoration = new NormalDecoration() {
             @Override
             public String getHeaderName(int pos) {
-                if(mAddress.equals(items.get(pos).getFrom())||mAddress.equals(items.get(pos).getTo())){
-                    String date = sdf.format(items.get(pos).getTimestamp()*1000);
-                    String subDate = date.substring(0,date.indexOf("月"));
+                if (items.get(pos).getAddr().equals(items.get(pos).getFrom()) || items.get(pos).getAddr().equals(items.get(pos).getTo())) {
+                    String date = sdf.format(items.get(pos).getTimestamp() * 1000);
+                    String subDate = date.substring(0, date.indexOf("月"));
                     return subDate + "月";
                 }
                 return null;

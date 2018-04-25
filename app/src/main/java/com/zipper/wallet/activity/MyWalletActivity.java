@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -20,7 +19,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.gyf.barlibrary.ImmersionBar;
 import com.readystatesoftware.viewbadger.BadgeView;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
@@ -36,14 +34,12 @@ import com.zipper.wallet.database.CoinBalance;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.definecontrol.AppBarStateChangeListener;
-import com.zipper.wallet.utils.CoinsUtil;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.ScreenUtils;
 import com.zipper.wallet.utils.SqliteUtils;
 
 import org.litepal.crud.DataSupport;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -329,7 +325,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             e.printStackTrace();
         }
         layoutTradingRecord.setOnClickListener(v -> {
-            startActivity(new Intent(this, TransactionActivity.class).putExtra("address",walletInfo.getAddress()));
+            startActivity(new Intent(this, TransactionActivity.class));
             //drawerLayout.closeDrawer(GravityCompat.START);
         });
     }

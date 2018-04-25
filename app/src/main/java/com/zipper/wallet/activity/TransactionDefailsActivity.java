@@ -59,7 +59,7 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
         mBack.setOnClickListener(this);
         mTextUpdate.setOnClickListener(this);
 
-        mDetailsCurrency.setText(getFormatData(mCurrency.getValue(),mCurrency.getDeciamls()));
+        mDetailsCurrency.setText(mCurrency.getValue());
 
         if (mCurrency.getAddr().equals(mCurrency.getTo())) {
             mTextState.setText("等待转入");
