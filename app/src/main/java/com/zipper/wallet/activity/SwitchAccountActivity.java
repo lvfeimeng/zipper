@@ -79,7 +79,7 @@ public class SwitchAccountActivity extends BaseActivity {
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         appBar = (AppBarLayout) findViewById(R.id.appBar);
         setSupportActionBar(toolbar);
-        collapsingToolbar.setTitle("转账");
+        collapsingToolbar.setTitle("转账");/////
         editWalletAddress = (EditText) findViewById(R.id.editWalletAddress);
         textSelectCoins = (TextView) findViewById(R.id.text_select_coins);
         textShowCoin = (TextView) findViewById(R.id.text_show_coin);
