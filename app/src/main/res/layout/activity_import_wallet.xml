@@ -17,7 +17,7 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:collapsedTitleGravity="center_vertical|left"
+            app:collapsedTitleGravity="center"
             app:contentScrim="@color/white"
             app:expandedTitleGravity="left|bottom"
             app:expandedTitleMarginBottom="22dp"
