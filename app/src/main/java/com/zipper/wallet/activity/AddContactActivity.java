@@ -205,23 +205,23 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
         mEmail = editEmail.getText().toString().trim();
         mRemark = editRemark.getText().toString().trim();
 
-        if (TextUtils.isEmpty(mName)) {
+        if (mName.equals("")) {
             toast("姓名不得为空");
             return false;
         }
-        if (TextUtils.isEmpty(mAddress)) {
+        if (mAddress.equals("")) {
             toast("地址不得为空");
             return false;
         }
-        if (TextUtils.isEmpty(mPhone)) {
+        if (mPhone.equals("")) {
             toast("号码不得为空");
             return false;
         }
-        if (TextUtils.isEmpty(mEmail)) {
+        if (mEmail.equals("")) {
             toast("邮箱不得为空");
             return false;
         }
-        if (TextUtils.isEmpty(mRemark)) {
+        if (mRemark.equals("")) {
             toast("备注不得为空");
             return false;
         }

@@ -25,12 +25,6 @@ public class ContactAdapter extends CommonAdapter<ContactDetailsBean> {
         ContactViewHolder vh = new ContactViewHolder(holder.getConvertView());
 //        ImgUtil.loadCircleImage(bean.getPhoto(), vh.imageView);
         vh.textName.setText(bean.getName());
-        vh.textName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext, AddContactActivity.class).putExtra("name",bean.getName()));
-            }
-        });
 //        vh.textKey.setText(bean.getKey());
     }
 

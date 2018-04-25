@@ -24,6 +24,7 @@ import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.bean.SwitchAccountBean;
 import com.zipper.wallet.bean.WalletBean;
 import com.zipper.wallet.database.CoinInfo;
+import com.zipper.wallet.database.ContactDetailsBean;
 import com.zipper.wallet.dialog.ConfirmSwitchAccountDialog;
 import com.zipper.wallet.dialog.MinerCostTypeDialog;
 import com.zipper.wallet.number.BigNumber;
@@ -65,7 +66,7 @@ public class SwitchAccountActivity extends BaseActivity {
 
     MinerCostTypeDialog minerDialog;
     CoinInfo coinsChoosed;
-
+    ContactDetailsBean contactDetailsBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +80,7 @@ public class SwitchAccountActivity extends BaseActivity {
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         appBar = (AppBarLayout) findViewById(R.id.appBar);
         setSupportActionBar(toolbar);
-        collapsingToolbar.setTitle("转账");
+        collapsingToolbar.setTitle("转账");/////
         editWalletAddress = (EditText) findViewById(R.id.editWalletAddress);
         textSelectCoins = (TextView) findViewById(R.id.text_select_coins);
         textShowCoin = (TextView) findViewById(R.id.text_show_coin);
@@ -115,7 +116,10 @@ public class SwitchAccountActivity extends BaseActivity {
                 }
         );
 
-        imgContacts.setOnClickListener(v -> startActivityForResult(new Intent(this, ContactsActivity.class), 200));
+        imgContacts.setOnClickListener(v -> {
+            startActivityForResult(new Intent(this, ContactsActivity.class)
+                    .putExtra("isOpenDetail",false), 200);
+        });
 
         btnNext.setOnClickListener(v -> {
             submit();
@@ -262,6 +266,8 @@ public class SwitchAccountActivity extends BaseActivity {
                 //toast("name=" + item.getShortName());
                 break;
             case 200://选择联系人
+                contactDetailsBean = (ContactDetailsBean) data.getSerializableExtra("bean");
+                editWalletAddress.setText(contactDetailsBean.getAddress());
                 break;
             default:
                 break;
