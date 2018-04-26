@@ -191,7 +191,11 @@ public class SwitchAccountActivity extends BaseActivity {
         bean.setRealAmount(realAmount);
         bean.setPayeeName(payeeName);
         bean.setPayeeAddress(payeeAddress);
-        bean.setPayerAddress("zp" + coinsChoosed.getAddr());
+        if(coinsChoosed.getName().equalsIgnoreCase("eth")) {
+            bean.setPayerAddress("0x" + coinsChoosed.getAddr());
+        }else{
+            bean.setPayerAddress(coinsChoosed.getAddr());
+        }
         bean.setType(coinsChoosed.getName());
         bean.setRemark(remark);
         confirmDialog = new ConfirmSwitchAccountDialog(this, bean);
