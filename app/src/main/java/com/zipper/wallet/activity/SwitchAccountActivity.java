@@ -22,7 +22,6 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.bean.SwitchAccountBean;
-import com.zipper.wallet.bean.WalletBean;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.ContactDetailsBean;
 import com.zipper.wallet.dialog.ConfirmSwitchAccountDialog;
@@ -192,7 +191,7 @@ public class SwitchAccountActivity extends BaseActivity {
         bean.setRealAmount(realAmount);
         bean.setPayeeName(payeeName);
         bean.setPayeeAddress(payeeAddress);
-        bean.setPayerAddress("zp" + WalletBean.getAddress());
+        bean.setPayerAddress("zp" + coinsChoosed.getAddr());
         bean.setType(coinsChoosed.getName());
         bean.setRemark(remark);
         confirmDialog = new ConfirmSwitchAccountDialog(this, bean);

@@ -71,7 +71,7 @@ public class AlgorithmUtils {
 
     public static boolean validAddress(String addr){
         boolean flag = true;
-        if(addr.length()<34 || addr.length()>38){
+        if(addr.length()<34 || addr.length()>44){
             return false;
         }
         for(int i = 0 ; i < addr.length(); i ++ ){

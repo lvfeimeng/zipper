@@ -20,18 +20,20 @@ public class WalletBean {
 
     }
 
-    public static WalletBean getWalletBean(){
+    public static boolean setWalletBean(){
         if(wallet == null){
             wallet = new WalletBean();
+            return  true;
         }
-        return  wallet;
+        return  false;
     }
 
-    public static WalletBean getWalletBean(Map map){
+    public static boolean setWalletBean(Map map){
         if(wallet == null){
             wallet = new WalletBean(map);
+            return  true;
         }
-        return  wallet;
+        return  false;
     }
 
 

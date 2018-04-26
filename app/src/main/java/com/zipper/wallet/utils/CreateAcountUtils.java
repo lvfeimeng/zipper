@@ -308,11 +308,14 @@ public class CreateAcountUtils {
             }.getType());
             if (list != null) {
                 for (CoinInfo coinInfo : list) {
+                    MyLog.i(TAG,"btc coinInfo:"+coinInfo);
                     String addr = "";
                     if ("btc".equalsIgnoreCase(coinInfo.getAddr_algorithm())) {
                         addr = getAccount(master, coinInfo.getType()).toAddress();
+                        MyLog.i(TAG,"btc addr:"+addr);
                     } else if ("eth".equalsIgnoreCase(coinInfo.getAddr_algorithm())) {
                         addr = getWalletAddr(master, coinInfo.getType());
+                        MyLog.i(TAG,"eth addr:"+addr);
                     }
                     coinInfo.setAddr(addr);
                 }
@@ -409,7 +412,6 @@ public class CreateAcountUtils {
                 SqliteUtils.execSQL("drop table walletinfo");
             } catch (SQLiteException e) {
                 e.printStackTrace();
-
             }
             WalletInfo walletInfo = new WalletInfo(mContext);
             walletInfo.setName(PreferencesUtils.getString(mContext, BaseActivity.KEY_WALLET_NAME, PreferencesUtils.VISITOR));

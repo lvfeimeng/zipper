@@ -30,6 +30,7 @@ import com.zipper.wallet.activity.home.presenter.HomePresenter;
 import com.zipper.wallet.adapter.ConisAdapter;
 import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.bean.WalletBean;
 import com.zipper.wallet.database.CoinBalance;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
@@ -330,6 +331,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 textWallet.setText("");
                 textWalletAddress.setText("");
             }
+            WalletBean.setWalletBean(walletInfo.toMap());
         } catch (Exception e) {
             e.printStackTrace();
         }
