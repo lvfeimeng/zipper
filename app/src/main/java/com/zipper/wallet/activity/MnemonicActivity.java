@@ -127,7 +127,7 @@ public class MnemonicActivity extends BaseActivity {
                             break;
                     }
                 }else{
-                    showTipDialog("备份失败，请检查你的助记词",null);
+                    showTipDialog("备份失败，请检查你的助记词","知道了",null);
                 }
             }
         });

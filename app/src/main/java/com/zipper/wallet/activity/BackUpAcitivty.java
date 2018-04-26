@@ -114,7 +114,7 @@ public class BackUpAcitivty extends CreateActvity {
 
                         }else{
                             //hideProgressDialog();
-                            toast("密码错误");
+                            showTipDialog("密码错误","知道了",null);
                         }
                     }
 
