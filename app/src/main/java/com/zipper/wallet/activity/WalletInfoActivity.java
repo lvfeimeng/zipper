@@ -10,7 +10,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -109,7 +108,7 @@ public class WalletInfoActivity extends BaseActivity {
 
     private void deleteWallet() {
 
-        showInputDialog("请输入密码", "", "", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
+        showInputDialog("验证私钥密码", "", "Password","","取消","确认", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
 
             @Override
             public void doSuccessThing(Map<String, Object> param) {
@@ -190,7 +189,7 @@ public class WalletInfoActivity extends BaseActivity {
     }
 
     private void inputPwd() {
-        showInputDialog("请输入密码", "", "", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
+        showInputDialog("验证私钥密码", "", "Password","","取消","确认", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
 
             @Override
             public void doSuccessThing(final Map<String, Object> param) {

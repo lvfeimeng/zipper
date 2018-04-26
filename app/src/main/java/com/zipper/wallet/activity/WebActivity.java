@@ -35,7 +35,7 @@ public class WebActivity extends BaseActivity {
     private String title = "";
     private String url = "";
 
-    @Override
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_web);

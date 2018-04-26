@@ -35,6 +35,7 @@ import com.zipper.wallet.database.CoinBalance;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.definecontrol.AppBarStateChangeListener;
+import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.ScreenUtils;
 import com.zipper.wallet.utils.SqliteUtils;
@@ -319,6 +320,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 textWalletName.setText(walletInfo.getName());
                 textName.setText(walletInfo.getName());
             } else {
+                MyLog.d(TAG,"名字获取为空");
                 textWalletName.setText("我的钱包");
                 textName.setText("我的钱包");
             }
