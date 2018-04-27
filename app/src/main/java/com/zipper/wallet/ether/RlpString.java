@@ -1,7 +1,5 @@
 package com.zipper.wallet.ether;
 
-import com.zipper.wallet.utils.ether.Numeric;
-
 import java.math.BigInteger;
 import java.util.Arrays;
 

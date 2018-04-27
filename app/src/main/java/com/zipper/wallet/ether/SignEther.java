@@ -1,10 +1,9 @@
 package com.zipper.wallet.ether;
 
-import com.zipper.wallet.utils.ether.KECCAK256;
-
-import java.util.Arrays;
 
 import net.bither.bitherj.crypto.ECKey;
+
+import java.util.Arrays;
 
 /**
  * <p>Transaction signing logic.</p>

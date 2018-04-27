@@ -84,7 +84,7 @@ public class BigNumber {
             int cha = numbers[0].getDoubleStr().length() - doubleBig.toString().length();
             String str = doubleBig.toString();
             for(int i = 0 ; i < cha; i ++ ){
-                str += "0"+str;
+                str = "0"+str;
             }
             doubleBig = new BigInteger(str);
         }
@@ -99,28 +99,35 @@ public class BigNumber {
     public BigNumber subtract(BigNumber val){
         BigNumber[] numbers = castSameLenth(this,val);
         int poitPosition = numbers[0].getDoubleStr().length();
-        MyLog.i("BigNumber","subtract numbers0:"+numbers[0].toString());
-        MyLog.i("BigNumber","subtract numbers0:"+numbers[1].toString());
-        BigInteger intBig = numbers[0].getIntBig().subtract(numbers[1].getIntBig());
-        MyLog.i("BigNumber","subtract intBig:"+intBig.toString());
-        BigInteger doubleBig = numbers[0].getDoubleBig().subtract(numbers[1].getDoubleBig());
-        MyLog.i("BigNumber","subtract doubleBig:"+doubleBig.toString());
-        String doubleStr = doubleBig.toString();
-        if(doubleStr.indexOf("-") == 0 ){
-            intBig = intBig.subtract(new BigInteger("1"));
-            String str = "1";
-            for(int i = 0 ; i < numbers[0].getDoubleStr().length(); i ++ ){
-                str+="0";
+        String sub = new BigInteger(numbers[0].getIntStr()+numbers[0].getDoubleStr()).subtract(new BigInteger(numbers[1].getIntStr()+numbers[1].getDoubleStr())).toString();
+        MyLog.i("BigNumber","subtract sub:"+sub+" poitPosition:"+poitPosition);
+        if(sub.indexOf("-") == 0){
+            sub = sub.substring(1);
+            if(sub.length()<poitPosition){
+                for(int i = 0 ; i < poitPosition - sub.length(); i ++ ){
+                    sub = "0"+sub;
+                }
+                sub = "0."+sub;
+            }else{
+                StringBuilder sb = new StringBuilder(sub);
+                sb.insert(sb.length() - poitPosition,".");
+                sub = sb.toString();
             }
-            doubleStr = new BigInteger(str).add(doubleBig).toString();
-        }
-        if(doubleStr.length() != numbers[0].getDoubleStr().length()){
-            for(int i = 0 ; i < numbers[0].getDoubleStr().length() - doubleStr.length(); i ++ ){
-                doubleStr += "0"+doubleStr;
+            sub = "-"+sub;
+        }else{
+            if(sub.length()<poitPosition){
+                for(int i = 0 ; i < poitPosition - sub.length(); i ++ ){
+                    sub = "0"+sub;
+                }
+                sub = "0."+sub;
+            }else{
+                StringBuilder sb = new StringBuilder(sub);
+                sb.insert(sb.length() - poitPosition,".");
+                sub = sb.toString();
             }
         }
-        MyLog.i("BigNumber","subtract :"+intBig+"."+doubleStr);
-        return new BigNumber(intBig+"."+doubleStr);
+        MyLog.i("BigNumber","subtract :"+intStr+"."+doubleStr);
+        return new BigNumber(sub);
 
     }
 
@@ -169,8 +176,6 @@ public class BigNumber {
         MyLog.i("BigNumber","castSameLenth val2:"+val2);
         String valStr = val1.getDoubleStr();
         String val2Str = val2.getDoubleStr();
-        MyLog.i("BigNumber","castSameLenth valStr:"+valStr);
-        MyLog.i("BigNumber","castSameLenth val2Str:"+val2Str);
         if(valStr.length() != val2Str.length()){
             int abs = valStr.length()- val2Str.length();
             if(valStr.length() > val2Str.length()){
@@ -185,6 +190,8 @@ public class BigNumber {
                 val1.setDoubleStr(valStr);
             }
         }
+        MyLog.i("BigNumber","castSameLenth val1:"+val1);
+        MyLog.i("BigNumber","castSameLenth val2:"+val2);
         return  new BigNumber[]{val1,val2};
     }
 

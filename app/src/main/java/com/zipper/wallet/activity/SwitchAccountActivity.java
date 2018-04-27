@@ -56,7 +56,7 @@ public class SwitchAccountActivity extends BaseActivity {
     private TextView textRealAmount;
     private TextView textHelp;
 
-    private BigNumber realCount = new BigNumber("0.0"), totalCount = new BigNumber("0.0"), cast = new BigNumber("0.0");
+    private BigNumber realCount, totalCount, cast, recommend, maxCommend, minCommend, chaCommend;
     private String payerAddress, payeeName, payeeAddress, unit, totalAmount, realAmount, minerCost, remark;
     private int coinsType, minerCostType;
 
@@ -117,28 +117,30 @@ public class SwitchAccountActivity extends BaseActivity {
 
         imgContacts.setOnClickListener(v -> {
             startActivityForResult(new Intent(this, ContactsActivity.class)
-                    .putExtra("isOpenDetail",false), 200);
+                    .putExtra("isOpenDetail", false), 200);
         });
 
         btnNext.setOnClickListener(v -> {
             submit();
         });
         seekBar.setProgress(0);
+        seekBar.setEnabled(false);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 String str = new DecimalFormat("0.00000000").format(1.0 * progress / seekBar.getMax());
                 MyLog.i(TAG, "str:" + str);
-                cast = new BigNumber(str);
+
+                cast = minCommend.add(chaCommend.multiply(new BigNumber(str)));
                 MyLog.i(TAG, "cast:" + cast);
                 if (totalAmount == null || totalAmount.equals("")) {
                     return;
                 }
-                minerCost = totalCount.multiply(cast).toString();
+                minerCost = cast.toString();
                 MyLog.i(TAG, "totalCount:" + totalCount);
                 textMinerCost.setText(minerCost);
 
-                realCount = totalCount.subtract(totalCount.multiply(cast));
+                realCount = totalCount.subtract(cast);
                 realAmount = realCount.toString();
                 textRealAmount.setText("到账金额：" + realAmount);
             }
@@ -155,8 +157,10 @@ public class SwitchAccountActivity extends BaseActivity {
         });
     }
 
-    //    private String payerAddress, payeeName, payeeAddress, unit, totalAmount, realAmount, minerCost, remark;
-//    private int coinsType, minerCostType;
+
+    /**
+     * 提交数据
+     */
     private void submit() {
         payeeAddress = editWalletAddress.getText().toString().trim();
         if (TextUtils.isEmpty(payeeAddress)) {
@@ -191,9 +195,9 @@ public class SwitchAccountActivity extends BaseActivity {
         bean.setRealAmount(realAmount);
         bean.setPayeeName(payeeName);
         bean.setPayeeAddress(payeeAddress);
-        if(coinsChoosed.getName().equalsIgnoreCase("eth")) {
+        if (coinsChoosed.getName().equalsIgnoreCase("eth")) {
             bean.setPayerAddress("0x" + coinsChoosed.getAddr());
-        }else{
+        } else {
             bean.setPayerAddress(coinsChoosed.getAddr());
         }
         bean.setType(coinsChoosed.getName());
@@ -205,14 +209,14 @@ public class SwitchAccountActivity extends BaseActivity {
         });
     }
 
-//    private void setRadioButtonDrawable(RadioButton radioButton) {
-//        if (radioButton == null) {
-//            return;
-//        }
-//        Drawable drawable = getResources().getDrawable(R.mipmap.ok_blue);
-//        drawable.setBounds(0, dp2px(5), 0, dp2px(5));
-//        radioButton.setCompoundDrawables(null, null, drawable, null);
-//    }
+    //    private void setRadioButtonDrawable(RadioButton radioButton) {
+    //        if (radioButton == null) {
+    //            return;
+    //        }
+    //        Drawable drawable = getResources().getDrawable(R.mipmap.ok_blue);
+    //        drawable.setBounds(0, dp2px(5), 0, dp2px(5));
+    //        radioButton.setCompoundDrawables(null, null, drawable, null);
+    //    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -265,7 +269,33 @@ public class SwitchAccountActivity extends BaseActivity {
                 break;
             case 100://选择币种
                 coinsChoosed = (CoinInfo) data.getSerializableExtra("coin_type");
+                setSeekBarEnable();
+                if(coinsChoosed.getPrice() == null){
+                    recommend = new BigNumber("1");
+                }else{
+                    recommend = new BigNumber(coinsChoosed.getPrice());
+                }
+                minCommend = recommend.multiply(new BigNumber("0.2"));
+                if (coinsChoosed.getName().equalsIgnoreCase("eth")) {
+                    maxCommend = recommend.multiply(new BigNumber("21000"));
+                } else {
+                    maxCommend = recommend.multiply(new BigNumber("20"));
+                }
+                chaCommend = maxCommend.subtract(minCommend);
                 textSelectCoins.setText(coinsChoosed.getName());
+                cast = minCommend.add(chaCommend.multiply(new BigNumber("0."+seekBar.getProgress())));
+
+                MyLog.i(TAG, "cast:" + cast);
+                if (totalAmount == null || totalAmount.equals("")||totalAmount.length() == 0) {
+                    return;
+                }
+                minerCost = cast.toString();
+                MyLog.i(TAG, "totalCount:" + totalCount);
+                textMinerCost.setText(minerCost);
+
+                realCount = totalCount.subtract(cast);
+                realAmount = realCount.toString();
+                textRealAmount.setText("到账金额：" + realAmount);
                 //toast("name=" + item.getShortName());
                 break;
             case 200://选择联系人
@@ -297,16 +327,21 @@ public class SwitchAccountActivity extends BaseActivity {
                     payeeAddress = text.substring(text.lastIndexOf("】") + 1);
                 } else if (editText == editCount) {
                     totalAmount = s.toString().trim();
+                    setSeekBarEnable();
                     try {
                         MyLog.i(TAG, "totalAmount:" + totalAmount);
                         totalCount = new BigNumber(totalAmount);
                         MyLog.i(TAG, "totalCount:" + totalCount);
-
-                        minerCost = totalCount.multiply(cast).toString();
+                        if(cast!= null){
+                            minerCost = cast.toString();
+                            realCount = totalCount.subtract(cast);
+                        }else{
+                            minerCost = "0" ;
+                            realCount = totalCount;
+                        }
                         MyLog.i(TAG, "totalCount:" + totalCount);
                         textMinerCost.setText(minerCost);
 
-                        realCount = totalCount.subtract(totalCount.multiply(cast));
                         MyLog.i(TAG, "realCount:" + realCount);
                         realAmount = realCount.toString();
                         MyLog.i(TAG, "realAmount:" + realAmount);
@@ -324,16 +359,23 @@ public class SwitchAccountActivity extends BaseActivity {
         });
     }
 
+    private void setSeekBarEnable() {
+        if (coinsChoosed != null && editCount.getText() != null && editCount.getText().toString().length() > 0) {
+            seekBar.setEnabled(true);
+        }else{
+            seekBar.setEnabled(false);
+        }
+    }
 
     private MinerCostTypeDialog.Callback minerCallback = new MinerCostTypeDialog.Callback() {
         @Override
         public void minerCostType(int type, String text) {
             textCostType.setText(text);
-//            if (type == 0) {//从余额中扣除
-//
-//            } else if (type == 1) {//从转账金额中扣除
-//
-//            }
+            //            if (type == 0) {//从余额中扣除
+            //
+            //            } else if (type == 1) {//从转账金额中扣除
+            //
+            //            }
         }
     };
 

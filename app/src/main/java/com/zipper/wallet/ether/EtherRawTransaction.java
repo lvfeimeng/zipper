@@ -1,16 +1,10 @@
 package com.zipper.wallet.ether;
 
+import net.bither.bitherj.crypto.ECKey;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.zipper.wallet.utils.ether.Bytes;
-import com.zipper.wallet.utils.ether.RlpEncoder;
-import com.zipper.wallet.utils.ether.RlpList;
-import com.zipper.wallet.utils.ether.RlpString;
-import com.zipper.wallet.utils.ether.RlpType;
-
-import net.bither.bitherj.crypto.ECKey;
 
 /**
  * Transaction class used for signing transactions locally.
