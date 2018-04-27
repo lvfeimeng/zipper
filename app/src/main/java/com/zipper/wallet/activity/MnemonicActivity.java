@@ -313,6 +313,7 @@ public class MnemonicActivity extends CreateActvity {
 
     private void startNext(){
 
+        PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
         startActivity(new Intent(mContext,
                 MyWalletActivity.class));
         ActivityManager.getInstance().finishAllActivity();

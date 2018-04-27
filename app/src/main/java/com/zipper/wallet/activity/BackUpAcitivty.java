@@ -59,7 +59,6 @@ public class BackUpAcitivty extends CreateActvity {
                 case TRANSMIT_WORDS:
                     if(obj!=null){
                         if(obj instanceof  List){
-                            PreferencesUtils.putBoolean(mContext,KEY_IS_LOGIN,true,PreferencesUtils.USER);
                             PreferencesUtils.clearData(mContext,PreferencesUtils.VISITOR);
                             Intent intent = new Intent(mContext,MnemonicActivity.class);
                             intent.putExtra("list",new RuntListSeria<String>((List<String>) obj));
