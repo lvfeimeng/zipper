@@ -73,11 +73,20 @@ public class BigNumber {
      */
     public BigNumber add(BigNumber val){
         BigNumber[] numbers = castSameLenth(this,val);
+        int poitPosition = numbers[0].getDoubleStr().length();
         BigInteger intBig = numbers[0].getIntBig().add(numbers[1].getIntBig());
         BigInteger doubleBig = numbers[0].getDoubleBig().add(numbers[1].getDoubleBig());
         if(doubleBig.toString().length()> numbers[0].getDoubleBig().toString().length()){
             intBig = intBig.add(new BigInteger("1"));
             doubleBig = new BigInteger(doubleBig.toString().substring(1));
+        }else{
+
+            int cha = numbers[0].getDoubleStr().length() - doubleBig.toString().length();
+            String str = doubleBig.toString();
+            for(int i = 0 ; i < cha; i ++ ){
+                str += "0"+str;
+            }
+            doubleBig = new BigInteger(str);
         }
         return new BigNumber(intBig+"."+doubleBig);
     }
@@ -89,6 +98,7 @@ public class BigNumber {
      */
     public BigNumber subtract(BigNumber val){
         BigNumber[] numbers = castSameLenth(this,val);
+        int poitPosition = numbers[0].getDoubleStr().length();
         MyLog.i("BigNumber","multiply numbers0:"+numbers[0].toString());
         MyLog.i("BigNumber","subtract numbers0:"+numbers[1].toString());
         BigInteger intBig = numbers[0].getIntBig().subtract(numbers[1].getIntBig());
@@ -106,7 +116,7 @@ public class BigNumber {
         }
         if(doubleStr.length() != numbers[0].getDoubleStr().length()){
             for(int i = 0 ; i < numbers[0].getDoubleStr().length() - doubleStr.length(); i ++ ){
-                doubleStr = "0"+doubleStr;
+                doubleStr += "0"+doubleStr;
             }
         }
         MyLog.i("BigNumber","subtract :"+intBig+"."+doubleStr);
@@ -129,6 +139,12 @@ public class BigNumber {
         StringBuilder sb = new StringBuilder(big.toString());
         MyLog.i("BigNumber","multiply big:"+big);
         if(!big.toString().equals("0")) {
+            if(sb.length()<poitPosition){
+                int cha = poitPosition - sb.length();
+                for(int i = 0 ; i <  cha; i ++){
+                    sb.insert(0,"0");
+                }
+            }
             sb.insert(sb.length() - poitPosition, ".");
         }
         return new BigNumber(sb.toString());

@@ -19,6 +19,16 @@ public class CoinBalance extends DataSupport {
     private String amount;
     private int tx_cnt;
 
+    private String price;
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
     public String getAddress() {
         return address;
     }

@@ -149,7 +149,7 @@ public class BackUpAcitivty extends CreateActvity {
             CreateAcountUtils.saveCoins(master, mContext, new CreateAcountUtils.Callback() {
                 @Override
                 public void saveSuccess() {
-                    String full_address = "zp" + CreateAcountUtils.getWalletAddr(master, 60);
+                    String full_address = CreateAcountUtils.getWalletAddr(master, 60);
                     //putString("full_address",full_address);
                     CreateAcountUtils.saveWallet(Utils.bytesToHexString(randomSeed), Utils.bytesToHexString(mnemonicSeed), full_address, new RuntHTTPApi.ResPonse() {
                         @Override

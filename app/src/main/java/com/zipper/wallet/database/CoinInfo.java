@@ -33,6 +33,15 @@ public class CoinInfo extends DataSupport implements Serializable{
     private String decimals;
     private String icon;
     private String amount;
+    private String price;//矿工费用
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
 
     public String getAmount() {
         return amount;

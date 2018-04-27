@@ -8,6 +8,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
+        android:textSize="16sp"
         android:text="最近交易记录" />
 
     <TextView
@@ -15,8 +16,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:text="全部 ▼"
+        android:text="全部"
+        android:drawablePadding="3dp"
+        android:drawableRight="@mipmap/arrow_down_blue"
         android:paddingLeft="20dp"
+        android:textSize="16sp"
         android:paddingRight="20dp"
         android:gravity="center_vertical"
         android:textColor="@color/btn_normal" />

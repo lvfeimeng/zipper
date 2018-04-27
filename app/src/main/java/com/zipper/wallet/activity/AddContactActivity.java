@@ -126,7 +126,7 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
                 .request(Manifest.permission.CAMERA)
                 .subscribe(granted -> {
                     if (granted) {
-                        Intent intent = new Intent(AddContactActivity.this, CaptureActivity.class);
+                        Intent intent = new Intent(AddContactActivity.this, ScanQrCodeActivity.class);
                         startActivityForResult(intent, REQUEST_CODE);
                     } else {
                         toast("相机权限被禁止，请先开启权限");

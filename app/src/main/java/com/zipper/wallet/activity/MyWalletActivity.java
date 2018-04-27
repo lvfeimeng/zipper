@@ -320,7 +320,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 textWalletName.setText(walletInfo.getName());
                 textName.setText(walletInfo.getName());
             } else {
-                MyLog.d(TAG,"名字获取为空");
+                MyLog.d(TAG, "名字获取为空");
                 textWalletName.setText("我的钱包");
                 textName.setText("我的钱包");
             }
@@ -473,6 +473,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 item.setAmount(getFormatData(balance.getAmount(), item.getDecimals()));
                 ContentValues values = new ContentValues();
                 values.put("amount", item.getAmount());
+                values.put("price", item.getPrice());
                 DataSupport.update(CoinInfo.class, values, item.getId());
                 break;
             }

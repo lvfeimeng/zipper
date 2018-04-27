@@ -157,7 +157,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         setSupportActionBar(toolbar);
 
         View view = inflate(R.layout.layout_record);
-        View chooseView = view.findViewById(R.id.txt_choose);
+        TextView chooseView = view.findViewById(R.id.txt_choose);
         initPop(chooseView);
         recyclerView.addHeaderView(view);
         recyclerView.setSwipeItemClickListener((itemView, position) -> {
@@ -211,7 +211,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         textSubTitle = (TextView) findViewById(R.id.text_sub_title);
     }
 
-    private void initPop(View chooseView) {
+    private void initPop(TextView chooseView) {
         TestPopupWindow pop = new TestPopupWindow(mContext);
         pop.setOnDismissListener(() -> {
             WindowManager.LayoutParams lp = getWindow().getAttributes();
@@ -230,12 +230,16 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
                 pop.dismiss();
                 switch (checkedId) {
                     case R.id.radio_all:
+                        chooseView.setText("全部");
                         break;
                     case R.id.radio_transfer:
+                        chooseView.setText("转账");
                         break;
                     case R.id.radio_receive:
+                        chooseView.setText("收款");
                         break;
                     case R.id.radio_going:
+                        chooseView.setText("进行中");
                         break;
                     default:
                         break;

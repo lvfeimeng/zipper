@@ -33,8 +33,11 @@
                     android:id="@+id/text_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:text="我的钱包"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
 

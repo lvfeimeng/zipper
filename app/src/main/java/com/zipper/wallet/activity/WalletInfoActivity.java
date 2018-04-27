@@ -108,7 +108,7 @@ public class WalletInfoActivity extends BaseActivity {
 
     private void deleteWallet() {
 
-        showInputDialog("验证私钥密码", "", "Password","","取消","确认", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
+        showInputDialog("验证私钥密码", "", "Password", "", "取消", "确认", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
 
             @Override
             public void doSuccessThing(Map<String, Object> param) {
@@ -169,13 +169,22 @@ public class WalletInfoActivity extends BaseActivity {
 
     private void rightClick() {
         if (editWalletName.isFocusable()) {//当前为可编辑状态
+            String walletName = editWalletName.getText().toString().trim();
+            if (TextUtils.isEmpty(walletName)) {
+                toast("钱包名称不能为空");
+                return;
+            }
+            if (walletName.length() < 2 || walletName.length() > 20) {
+                toast("钱包名称长度为2-20位");
+                return;
+            }
             textRight.setText("编辑");
             editWalletName.setFocusable(false);
             editWalletName.setFocusableInTouchMode(false);
             editWalletName.setCursorVisible(false);
             if (walletInfo != null) {
                 ContentValues values = new ContentValues();
-                values.put("name", editWalletName.getText().toString().trim());
+                values.put("name", walletName);
                 DataSupport.update(WalletInfo.class, values, walletInfo.getId());
             }
         } else {//当前为不可编辑状态
@@ -189,7 +198,7 @@ public class WalletInfoActivity extends BaseActivity {
     }
 
     private void inputPwd() {
-        showInputDialog("验证私钥密码", "", "Password","","取消","确认", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
+        showInputDialog("验证密码", "", "Password", "", "取消", "确认", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
 
             @Override
             public void doSuccessThing(final Map<String, Object> param) {
