@@ -203,7 +203,7 @@
                 android:layout_marginTop="30dp"
                 android:background="@drawable/btn_ripple_blue_corner"
                 android:enabled="false"
-                android:text="开始导入"
+                android:text="导入"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
