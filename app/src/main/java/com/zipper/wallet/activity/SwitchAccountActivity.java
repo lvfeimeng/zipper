@@ -285,13 +285,13 @@ public class SwitchAccountActivity extends BaseActivity {
                 textSelectCoins.setText(coinsChoosed.getName());
                 cast = minCommend.add(chaCommend.multiply(new BigNumber("0."+seekBar.getProgress())));
 
+                minerCost = cast.toString();
+                MyLog.i(TAG, "totalCount:" + totalCount);
+                textMinerCost.setText(minerCost);
                 MyLog.i(TAG, "cast:" + cast);
                 if (totalAmount == null || totalAmount.equals("")||totalAmount.length() == 0) {
                     return;
                 }
-                minerCost = cast.toString();
-                MyLog.i(TAG, "totalCount:" + totalCount);
-                textMinerCost.setText(minerCost);
 
                 realCount = totalCount.subtract(cast);
                 realAmount = realCount.toString();

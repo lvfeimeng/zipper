@@ -99,7 +99,10 @@ public class BigNumber {
     public BigNumber subtract(BigNumber val){
         BigNumber[] numbers = castSameLenth(this,val);
         int poitPosition = numbers[0].getDoubleStr().length();
-        String sub = new BigInteger(numbers[0].getIntStr()+numbers[0].getDoubleStr()).subtract(new BigInteger(numbers[1].getIntStr()+numbers[1].getDoubleStr())).toString();
+        String left = numbers[0].getIntStr()+numbers[0].getDoubleStr();
+        String right = numbers[1].getIntStr()+numbers[1].getDoubleStr();
+        MyLog.i("BigNumber","subtract left:"+left+" right:"+right);
+        String sub = new BigInteger(left).subtract(new BigInteger(right)).toString();
         MyLog.i("BigNumber","subtract sub:"+sub+" poitPosition:"+poitPosition);
         if(sub.indexOf("-") == 0){
             sub = sub.substring(1);
