@@ -262,11 +262,13 @@ public class CreateAcountUtils {
         DeterministicKey purpose = master.deriveHardened(44);
         DeterministicKey coinType = purpose.deriveHardened(coin_type);
         DeterministicKey account = coinType.deriveHardened(1);
-        DeterministicKey account1 = account.deriveHardened(0);
+        DeterministicKey account1 = account.deriveSoftened(0);
+        DeterministicKey account2 = account1.deriveSoftened(0);
         purpose.wipe();
         coinType.wipe();
         account.wipe();
-        return account1;
+        account1.wipe();
+        return account2;
     }
 
 
@@ -281,14 +283,35 @@ public class CreateAcountUtils {
             MyLog.e("CreateAcountUtils", "doesn't new this class, please use the method 'instance()' first");
             throw new NullPointerException();
         }
+        MyLog.e("CreateAcountUtils", " master path:"+ master.getPathAsString());
+        MyLog.e("CreateAcountUtils", " master getPubKey:"+ Utils.bytesToHexString(master.getPubKey()));
+        MyLog.e("CreateAcountUtils", " master PrivKey:"+ Utils.bytesToHexString(master.getPrivKeyBytes()));
         DeterministicKey purpose = master.deriveHardened(44);
+        MyLog.e("CreateAcountUtils", " purpose path:"+ purpose.getPathAsString());
+        MyLog.e("CreateAcountUtils", " purpose getPubKey:"+ Utils.bytesToHexString(purpose.getPubKey()));
+        MyLog.e("CreateAcountUtils", " purpose PrivKey:"+ Utils.bytesToHexString(purpose.getPrivKeyBytes()));
         DeterministicKey coinType = purpose.deriveHardened(coin_type);
+        MyLog.e("CreateAcountUtils", " coinType path:"+ coinType.getPathAsString());
+        MyLog.e("CreateAcountUtils", " coinType getPubKey:"+ Utils.bytesToHexString(coinType.getPubKey()));
+        MyLog.e("CreateAcountUtils", " coinType PrivKey:"+ Utils.bytesToHexString(coinType.getPrivKeyBytes()));
         DeterministicKey account = coinType.deriveHardened(1);
-        DeterministicKey account1 = account.deriveHardened(0);
+        MyLog.e("CreateAcountUtils", " account path:"+ account.getPathAsString());
+        MyLog.e("CreateAcountUtils", " account getPubKey:"+ Utils.bytesToHexString(account.getPubKey()));
+        MyLog.e("CreateAcountUtils", " account PrivKey:"+ Utils.bytesToHexString(account.getPrivKeyBytes()));
+        DeterministicKey account1 = account.deriveSoftened(0);
+        MyLog.e("CreateAcountUtils", " account1 path:"+ account1.getPathAsString());
+        MyLog.e("CreateAcountUtils", " account1 getPubKey:"+ Utils.bytesToHexString(account1.getPubKey()));
+        MyLog.e("CreateAcountUtils", " account1 PrivKey:"+ Utils.bytesToHexString(account1.getPrivKeyBytes()));
+        DeterministicKey account2 = account1.deriveSoftened(0);
+
+        MyLog.e("CreateAcountUtils", " account2 path:"+ account2.getPathAsString());
+        MyLog.e("CreateAcountUtils", " account2 getPubKey:"+ Utils.bytesToHexString(account2.getPubKey()));
+        MyLog.e("CreateAcountUtils", " account2 PrivKey:"+ Utils.bytesToHexString(account2.getPrivKeyBytes()));
         purpose.wipe();
         coinType.wipe();
         account.wipe();
-        return account1.toAddress1();
+        account1.wipe();
+        return account2.toAddress1();
     }
 
     public static void saveCoins(DeterministicKey master, Context context,Callback callback) {

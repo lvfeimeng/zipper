@@ -20,6 +20,7 @@ import com.google.common.base.Charsets;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 import com.google.common.primitives.UnsignedLongs;
+import com.zipper.wallet.ether.KECCAK256;
 
 import net.bither.bitherj.AbstractApp;
 import net.bither.bitherj.BitherjSettings;
@@ -365,13 +366,13 @@ public class Utils {
                 bytes[i-1] = input[i];
             }
 
-            byte[] sha256 = MessageDigest.getInstance("SHA-256").digest(bytes);
+            byte[] sha256 = KECCAK256.keccak256(bytes);
             byte[] bytes2 = new byte[20];
             for(int i = 0 ; i < bytes2.length ; i ++ ){
-                bytes2[i] = sha256[i+sha256.length-20-1];
+                bytes2[i] = sha256[i+sha256.length-bytes2.length-1];
             }
             return bytes2;
-        } catch (NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);  // Cannot happen.
         }
     }

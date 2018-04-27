@@ -14,7 +14,6 @@ import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.definecontrol.WrapContentHeightViewPager;
 import com.zipper.wallet.fragment.MnemonicWordFragment;
-import com.zipper.wallet.fragment.PrivateKeyFragment;
 import com.zipper.wallet.utils.CreateAcountUtils;
 import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.MyPagerAdapter;
@@ -157,6 +156,8 @@ public class ImportWalletActivity extends BaseActivity {
      * @param mnemSeed
      */
     public void generateWalletAddress(String randomSeed, String mnemSeed) {
+        MyLog.i(TAG,"randomSeed:"+randomSeed);
+        MyLog.i(TAG,"mnemSeed:"+mnemSeed);
         showProgressDialog("正在导入。。。");
         new Thread() {
             @Override
