@@ -263,12 +263,10 @@ public class CreateAcountUtils {
         DeterministicKey coinType = purpose.deriveHardened(coin_type);
         DeterministicKey account = coinType.deriveHardened(1);
         DeterministicKey account1 = account.deriveHardened(0);
-        DeterministicKey account2 = account1.deriveHardened(0);
         purpose.wipe();
         coinType.wipe();
         account.wipe();
-        account1.wipe();
-        return account2;
+        return account1;
     }
 
 
@@ -287,12 +285,10 @@ public class CreateAcountUtils {
         DeterministicKey coinType = purpose.deriveHardened(coin_type);
         DeterministicKey account = coinType.deriveHardened(1);
         DeterministicKey account1 = account.deriveHardened(0);
-        DeterministicKey account2 = account1.deriveHardened(0);
         purpose.wipe();
         coinType.wipe();
         account.wipe();
-        account1.wipe();
-        return account2.toAddress1();
+        return account1.toAddress1();
     }
 
     public static void saveCoins(DeterministicKey master, Context context,Callback callback) {

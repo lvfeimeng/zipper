@@ -99,7 +99,7 @@ public class BigNumber {
     public BigNumber subtract(BigNumber val){
         BigNumber[] numbers = castSameLenth(this,val);
         int poitPosition = numbers[0].getDoubleStr().length();
-        MyLog.i("BigNumber","multiply numbers0:"+numbers[0].toString());
+        MyLog.i("BigNumber","subtract numbers0:"+numbers[0].toString());
         MyLog.i("BigNumber","subtract numbers0:"+numbers[1].toString());
         BigInteger intBig = numbers[0].getIntBig().subtract(numbers[1].getIntBig());
         MyLog.i("BigNumber","subtract intBig:"+intBig.toString());
