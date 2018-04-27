@@ -110,7 +110,7 @@ public class BigNumber {
                 sub = "0."+sub;
             }else{
                 StringBuilder sb = new StringBuilder(sub);
-                sb.insert(sb.length() - poitPosition,".");
+                sb.insert(sb.length() - poitPosition,(sb.length() - poitPosition == 0? "0.":"."));
                 sub = sb.toString();
             }
             sub = "-"+sub;
@@ -122,7 +122,7 @@ public class BigNumber {
                 sub = "0."+sub;
             }else{
                 StringBuilder sb = new StringBuilder(sub);
-                sb.insert(sb.length() - poitPosition,".");
+                sb.insert(sb.length() - poitPosition,(sb.length() - poitPosition == 0? "0.":"."));
                 sub = sb.toString();
             }
         }
@@ -152,7 +152,7 @@ public class BigNumber {
                     sb.insert(0,"0");
                 }
             }
-            sb.insert(sb.length() - poitPosition, ".");
+            sb.insert(sb.length() - poitPosition, (sb.length() - poitPosition == 0? "0.":"."));
         }
         return new BigNumber(sb.toString());
 
