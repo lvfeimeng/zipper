@@ -20,6 +20,7 @@ import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.dialog.DeleteWalletDialog;
 import com.zipper.wallet.utils.CreateAcountUtils;
+import com.zipper.wallet.utils.KeyBoardUtils;
 import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
@@ -182,6 +183,7 @@ public class WalletInfoActivity extends BaseActivity {
             editWalletName.setFocusable(false);
             editWalletName.setFocusableInTouchMode(false);
             editWalletName.setCursorVisible(false);
+            KeyBoardUtils.closeKeybord(editWalletName,mContext);
             if (walletInfo != null) {
                 ContentValues values = new ContentValues();
                 values.put("name", walletName);

@@ -1,7 +1,10 @@
 package com.zipper.wallet.activity;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -112,7 +115,7 @@ public class MnemonicActivity extends CreateActvity {
                             });
                             break;
                         case 1:
-                            showTipDialog("助记词验证顺序正确","返回上一页", new RuntHTTPApi.ResPonse() {
+                            showTipDialog("助记词验证顺序正确","知道了", new RuntHTTPApi.ResPonse() {
                                 @Override
                                 public void doSuccessThing(Map<String, Object> param) {
                                     alertDialog.dismiss();
@@ -284,15 +287,28 @@ public class MnemonicActivity extends CreateActvity {
     }
 
 
-    /*@Override
+    @Override
     protected boolean onBackKeyDown() {
 
         switch (mode) {
             case 0:
-                startActivity(new Intent(mContext,
-                        MyWalletActivity.class));
-                ActivityManager.getInstance().finishAllActivity();
-                finish();
+                showTipDialog("放弃创建钱包", "钱包还未创建成功，是否放弃？","继续","放弃", new RuntHTTPApi.ResPonse() {
+                    @Override
+                    public void doSuccessThing(Map<String, Object> param) {
+                        PreferencesUtils.clearData(mContext,PreferencesUtils.VISITOR);SQLiteDatabase sqlDB = mContext.openOrCreateDatabase(SqliteUtils.DB, Context.MODE_PRIVATE, null);
+                        try {
+                            sqlDB.execSQL("drop table walletinfo");
+                        } catch (SQLiteException e) {
+                            e.printStackTrace();
+                        }
+                        finish();
+                    }
+
+                    @Override
+                    public void doErrorThing(Map<String, Object> param) {
+                        alertDialog.dismiss();
+                    }
+                });
                 break;
             case 1:
                 onBackPressed();
@@ -300,7 +316,7 @@ public class MnemonicActivity extends CreateActvity {
         }
 
         return true;
-    }*/
+    }
 
     private  void delMnemCode(){
         PreferencesUtils.putBoolean(mContext, KEY_IS_LOGIN, true, PreferencesUtils.USER);
