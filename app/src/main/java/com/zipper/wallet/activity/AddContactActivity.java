@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
-import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
@@ -102,7 +101,6 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
         if (view.getId() == R.id.text_save) {
             if (textSave.getText().equals("修改")) {
                 textSave.setText("保存");
-                imageScan.setVisibility(View.VISIBLE);
                 isSelect(mEditTextList);
 //                update(mNameIntent);
             } else if (textSave.getText().equals("保存")) {

@@ -34,6 +34,7 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
 
     private int IN = 1;
     private int OUT = 2;
+    private int FAIL = 4;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -64,8 +65,6 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
         mBack.setOnClickListener(this);
         mTextUpdate.setOnClickListener(this);
 
-        mDetailsCurrency.setText(mCurrency.getValue());
-
         if (mCurrency.getAddr().equals(mCurrency.getTo())) {
             mTextState.setText("等待转入");
             handlerThread(IN);
@@ -77,7 +76,7 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
     }
 
     private String getFormatData(String amount, String decimals) {
-        if (TextUtils.isEmpty(amount) || TextUtils.isEmpty(decimals)||"null".equalsIgnoreCase(amount)||"null".equalsIgnoreCase(decimals)) {
+        if (TextUtils.isEmpty(amount) || TextUtils.isEmpty(decimals) || "null".equalsIgnoreCase(amount) || "null".equalsIgnoreCase(decimals)) {
             return "0";
         }
         double result = Double.parseDouble(amount) / Double.parseDouble(decimals);
@@ -111,30 +110,42 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
         switch (details) {
 
             case 1:
-                //收入成功
+                //收入成功--确认收入
                 mTextState.setText("已收入");
                 mTextState.setTextColor(R.color.color_button_blue);
                 mLinerGradient.setBackgroundResource(R.drawable.wallet_ok_bg);
                 mImgState.setBackgroundResource(R.mipmap.transaction_ok);
-                mTextUpdate.setVisibility(View.GONE);
+                mDetailsCurrency.setText("+" + mCurrency.getValue() + mCurrency.getName());
                 break;
 
             case 2:
-                //转出成功
+                //转出成功--确认转出
                 mTextState.setText("已转出");
                 mTextState.setTextColor(R.color.color_button_blue);
                 mLinerGradient.setBackgroundResource(R.drawable.wallet_ok_bg);
                 mImgState.setBackgroundResource(R.mipmap.transaction_ok);
-                mTextUpdate.setVisibility(View.GONE);
+                mDetailsCurrency.setText("-" + mCurrency.getValue() + mCurrency.getName());
                 break;
 
             case 3:
-                //等待转出
+                //等待转出--待确认
                 mTextState.setText("等待转出");
                 mTextState.setTextColor(R.color.text_minor);
                 mLinerGradient.setBackgroundResource(R.drawable.wallet_inprocess_bg);
                 mImgState.setBackgroundResource(R.mipmap.inprocess);
+                mDetailsCurrency.setText("-" + mCurrency.getValue() + mCurrency.getName());
+                break;
+
+            case 4:
+                //转出失败--失败
+                fuilurehints();
+                mTextState.setText("已扣除");
+                mTextState.setTextColor(R.color.text_minor);
+                mLinerGradient.setBackgroundResource(R.drawable.wallet_fail_bg);
+                mImgState.setBackgroundResource(R.mipmap.error);
                 mTextUpdate.setVisibility(View.VISIBLE);
+                mTextUpdate.setText("重发");
+                mDetailsCurrency.setText("-" + mCurrency.getValue() + mCurrency.getName());
                 break;
 
             default:
@@ -152,8 +163,8 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
                 break;
             case R.id.txt_right:
 
-                if(NetworkUtils.getNetworkType(this, (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)) == NetworkUtils.NetworkType.NONE){
-                    showTipDialog("没有网络连接","是否开启网络设置","取消","去设置", new RuntHTTPApi.ResPonse() {
+                if (NetworkUtils.getNetworkType(this, (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)) == NetworkUtils.NetworkType.NONE) {
+                    showTipDialog("没有网络连接", "是否开启网络设置", "取消", "去设置", new RuntHTTPApi.ResPonse() {
                         @Override
                         public void doSuccessThing(Map<String, Object> param) {
                             NetworkUtils.setNetwork(mContext);
@@ -163,10 +174,14 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
                         public void doErrorThing(Map<String, Object> param) {
                         }
                     });
-                }else if(!NetworkUtils.checkNetworkState(this)){
+                } else if (!NetworkUtils.checkNetworkState(this)) {
                     toast("连接不到互联网，请稍后再试！！！");
-                }else {
-                    startActivity(new Intent(this, SwitchAccountActivity.class));
+                } else {
+                    Intent intent = new Intent(this, SwitchAccountActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("details",mCurrency);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 }
                 break;
         }
@@ -175,5 +190,11 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
     @Override
     public void statusBarSetting() {
         setTransparentStatusBar();
+    }
+
+    private void fuilurehints() {
+
+        showTipDialog("转账失败", "服务器连接失败，请稍后重试", "", "知道了",null);
+
     }
 }
