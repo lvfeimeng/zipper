@@ -1,17 +1,19 @@
 package com.zipper.wallet.activity;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zipper.wallet.R;
-import com.zipper.wallet.activity.home.presenter.HomePresenter;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.dialog.SelectCoinsDialog;
@@ -34,25 +36,47 @@ public class PayeeAddressActivity extends BaseActivity {
     private SelectCoinsDialog coinsDialog;
     private List<CoinInfo> items;
 
-    private HomePresenter presenter;
-
     private String full_address = "";
+
+    private int coin_id = -1;
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 100) {
+                if (coin_id == -1) {
+                    items.get(0).setChecked(true);
+                    loadData(items.get(0));
+                } else {
+                    //CoinInfo coinInfo=DataSupport.find(CoinInfo.class,coin_id);
+                    for (CoinInfo item : items) {
+                        if (item.getId() == coin_id) {
+                            item.setChecked(true);
+                            loadData(item);
+                        }
+                    }
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_payee_address);
         if (getIntent() != null) {
+            coin_id = getIntent().getIntExtra("coin_id", -1);
             full_address = getIntent().getStringExtra("full_address");
         }
 
         initView();
         CoinInfo info = new CoinInfo();
+        info.setId(-1);
         info.setName("全站钱包地址");
         info.setFull_name("全站钱包地址");
-        info.setAddr("zp"+full_address);
-        info.setChecked(true);
-        loadData(info);
+        info.setAddr("zp" + full_address);
 
         imgBack.setOnClickListener(v -> finish());
         imgShare.setOnClickListener(v -> toast("分享"));
@@ -72,8 +96,10 @@ public class PayeeAddressActivity extends BaseActivity {
                 if (items == null) {
                     items = new ArrayList<>();
                     items.add(info);
+                    loadData(info);
                 } else {
                     items.add(0, info);
+                    handler.sendEmptyMessage(100);
                 }
             }
         }.start();

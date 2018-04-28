@@ -115,6 +115,7 @@ dependencies {
     compile 'com.yanzhenjie:recyclerview-swipe:1.1.4'
 
     compile 'com.google.code.gson:gson:2.6.2'
+
 }
 repositories {
     mavenCentral()

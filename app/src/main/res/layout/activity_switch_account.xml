@@ -180,7 +180,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="旷工费用"
+                    android:text="矿工费用"
                     android:textColor="@color/text_major"
                     android:textSize="16sp" />
 

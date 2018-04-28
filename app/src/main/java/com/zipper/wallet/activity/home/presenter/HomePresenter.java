@@ -134,4 +134,23 @@ public class HomePresenter implements HomeContract.Presenter {
             }
         });
     }
+
+    @Override
+    public void sendTransaction(int coin_id, String json) {
+        String url = coin_id+"/sendrawtransaction";
+        RuntHTTPApi.request(url, json, new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                view.doFailure();
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                view.doSuccess(coin_id, response);
+            }
+        });
+    }
+
+
 }

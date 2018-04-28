@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.math.MathUtils;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -17,22 +20,42 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zipper.wallet.R;
+import com.zipper.wallet.activity.home.contract.HomeContract;
+import com.zipper.wallet.activity.home.presenter.HomePresenter;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.bean.SwitchAccountBean;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.ContactDetailsBean;
+import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.dialog.ConfirmSwitchAccountDialog;
 import com.zipper.wallet.dialog.MinerCostTypeDialog;
+import com.zipper.wallet.ether.EtherRawTransaction;
 import com.zipper.wallet.number.BigNumber;
 import com.zipper.wallet.utils.AlgorithmUtils;
 import com.zipper.wallet.utils.MyLog;
+import com.zipper.wallet.utils.RuntHTTPApi;
+import com.zipper.wallet.utils.SqliteUtils;
 
+import net.bither.bitherj.crypto.ECKey;
+import net.bither.bitherj.crypto.EncryptedData;
+import net.bither.bitherj.crypto.hd.DeterministicKey;
+import net.bither.bitherj.crypto.hd.HDKeyDerivation;
+import net.bither.bitherj.utils.Utils;
+
+import org.litepal.crud.DataSupport;
+
+import java.math.BigInteger;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class SwitchAccountActivity extends BaseActivity {
+public class SwitchAccountActivity extends BaseActivity implements HomeContract.View {
 
     public static final int REQUEST_CODE = 1000;
 
@@ -56,10 +79,9 @@ public class SwitchAccountActivity extends BaseActivity {
     private TextView textRealAmount;
     private TextView textHelp;
 
-    private BigNumber realCount, totalCount, cast, recommend, maxCommend, minCommend, chaCommend;
+    private BigNumber realCount, totalCount, cost, recommend, maxCommend, minCommend, chaCommend;
     private String payerAddress, payeeName, payeeAddress, unit, totalAmount, realAmount, minerCost, remark;
     private int coinsType, minerCostType;
-
     SwitchAccountBean bean;
     ConfirmSwitchAccountDialog confirmDialog;
 
@@ -67,11 +89,18 @@ public class SwitchAccountActivity extends BaseActivity {
     CoinInfo coinsChoosed;
     ContactDetailsBean contactDetailsBean;
 
+    private String toAddress = "";
+
+    private HomePresenter presenter;
+
+    private double rate = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_switch_account);
         initView();
+        presenter = new HomePresenter(this, this);
     }
 
     private void initView() {
@@ -123,26 +152,27 @@ public class SwitchAccountActivity extends BaseActivity {
         btnNext.setOnClickListener(v -> {
             submit();
         });
+
         seekBar.setProgress(0);
         seekBar.setEnabled(false);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                String str = new DecimalFormat("0.00000000").format(1.0 * progress / seekBar.getMax());
-                MyLog.i(TAG, "str:" + str);
-
-                cast = minCommend.add(chaCommend.multiply(new BigNumber(str)));
-                MyLog.i(TAG, "cast:" + cast);
-                if (totalAmount == null || totalAmount.equals("")) {
+                if (coinsChoosed == null) {
+                    toast("请选择币种");
                     return;
                 }
-                minerCost = cast.toString();
-                MyLog.i(TAG, "totalCount:" + totalCount);
+                rate = 1.0 * progress / seekBar.getMax();
+
+                String str = "" + rate;
+                MyLog.i(TAG, "str:" + str);
+
+                cost = minCommend.add(chaCommend.multiply(new BigNumber(str)));
+                MyLog.i(TAG, "cast:" + cost);
+                minerCost = cost.toString();
                 textMinerCost.setText(minerCost);
 
-                realCount = totalCount.subtract(cast);
-                realAmount = realCount.toString();
-                textRealAmount.setText("到账金额：" + realAmount);
+                realAmountResultSetting(miner_cost_type);
             }
 
             @Override
@@ -195,17 +225,20 @@ public class SwitchAccountActivity extends BaseActivity {
         bean.setRealAmount(realAmount);
         bean.setPayeeName(payeeName);
         bean.setPayeeAddress(payeeAddress);
-        if (coinsChoosed.getName().equalsIgnoreCase("eth")) {
-            bean.setPayerAddress("0x" + coinsChoosed.getAddr());
-        } else {
-            bean.setPayerAddress(coinsChoosed.getAddr());
-        }
+        bean.setPayerAddress(coinsChoosed.getAddr());//创建时已做eth前加0x的处理
         bean.setType(coinsChoosed.getName());
         bean.setRemark(remark);
         confirmDialog = new ConfirmSwitchAccountDialog(this, bean);
         confirmDialog.show();
         confirmDialog.handleResult(() -> {
-            toast("确认转账");
+            if (miner_cost_type == 0) {//从余额中扣除
+                //判断输入的转账金额+矿工费用<=账户余额
+                String total = new BigNumber(coinsChoosed.getAmount()).divide(new BigNumber(coinsChoosed.getDecimals())).toString();
+
+            } else if (miner_cost_type == 1) {//从转账金额中扣除
+                //判断输入的转账金额<账户余额&&转账金额>矿工费用
+            }
+            inputPwd();
         });
     }
 
@@ -260,8 +293,8 @@ public class SwitchAccountActivity extends BaseActivity {
                     return;
                 }
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    editWalletAddress.setText(result);
+                    toAddress = bundle.getString(CodeUtils.RESULT_STRING);
+                    editWalletAddress.setText(toAddress);
                     //toast("解析结果:" + result);
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     toast("解析二维码失败");
@@ -270,33 +303,27 @@ public class SwitchAccountActivity extends BaseActivity {
             case 100://选择币种
                 coinsChoosed = (CoinInfo) data.getSerializableExtra("coin_type");
                 setSeekBarEnable();
-                if(coinsChoosed.getPrice() == null){
-                    recommend = new BigNumber("1");
-                }else{
-                    recommend = new BigNumber(coinsChoosed.getPrice());
+                if (coinsChoosed.getGas_price() == null) {
+                    recommend = new BigNumber("0");
+                } else {
+                    recommend = new BigNumber(coinsChoosed.getGas_price()).multiply(new BigNumber("21000")).divide(new BigNumber(coinsChoosed.getDecimals()));
                 }
                 minCommend = recommend.multiply(new BigNumber("0.2"));
-                if (coinsChoosed.getName().equalsIgnoreCase("eth")) {
-                    maxCommend = recommend.multiply(new BigNumber("21000"));
-                } else {
-                    maxCommend = recommend.multiply(new BigNumber("20"));
-                }
+                maxCommend = recommend.multiply(new BigNumber("20"));
                 chaCommend = maxCommend.subtract(minCommend);
                 textSelectCoins.setText(coinsChoosed.getName());
-                cast = minCommend.add(chaCommend.multiply(new BigNumber("0."+seekBar.getProgress())));
+                rate = 1.0 * seekBar.getProgress() / seekBar.getMax();
+                cost = minCommend.add(chaCommend.multiply(new BigNumber("" + rate)));
 
-                minerCost = cast.toString();
+                minerCost = cost.toString();
                 MyLog.i(TAG, "totalCount:" + totalCount);
                 textMinerCost.setText(minerCost);
-                MyLog.i(TAG, "cast:" + cast);
-                if (totalAmount == null || totalAmount.equals("")||totalAmount.length() == 0) {
+                MyLog.i(TAG, "cast:" + cost);
+                if (totalAmount == null || totalAmount.equals("") || totalAmount.length() == 0) {
                     return;
                 }
 
-                realCount = totalCount.subtract(cast);
-                realAmount = realCount.toString();
-                textRealAmount.setText("到账金额：" + realAmount);
-                //toast("name=" + item.getShortName());
+                realAmountResultSetting(miner_cost_type);
                 break;
             case 200://选择联系人
                 contactDetailsBean = (ContactDetailsBean) data.getSerializableExtra("bean");
@@ -332,20 +359,19 @@ public class SwitchAccountActivity extends BaseActivity {
                         MyLog.i(TAG, "totalAmount:" + totalAmount);
                         totalCount = new BigNumber(totalAmount);
                         MyLog.i(TAG, "totalCount:" + totalCount);
-                        if(cast!= null){
-                            minerCost = cast.toString();
-                            realCount = totalCount.subtract(cast);
-                        }else{
-                            minerCost = "0" ;
-                            realCount = totalCount;
-                        }
-                        MyLog.i(TAG, "totalCount:" + totalCount);
-                        textMinerCost.setText(minerCost);
+//                        if (cost != null) {
+//                            minerCost = cost.toString();
+//                            realCount = totalCount.subtract(cost);
+//                        } else {
+//                            minerCost = "0";
+//                            realCount = totalCount;
+//                        }
+//                        MyLog.i(TAG, "totalCount:" + totalCount);
+//                        cost=
+//                        minerCost = cost.toString();
+//                        textMinerCost.setText(minerCost);
 
-                        MyLog.i(TAG, "realCount:" + realCount);
-                        realAmount = realCount.toString();
-                        MyLog.i(TAG, "realAmount:" + realAmount);
-                        textRealAmount.setText("到账金额：" + realAmount);
+                        realAmountResultSetting(miner_cost_type);
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                     }
@@ -362,21 +388,122 @@ public class SwitchAccountActivity extends BaseActivity {
     private void setSeekBarEnable() {
         if (coinsChoosed != null && editCount.getText() != null && editCount.getText().toString().length() > 0) {
             seekBar.setEnabled(true);
-        }else{
+        } else {
             seekBar.setEnabled(false);
         }
     }
 
+    private int miner_cost_type = 0;
+
     private MinerCostTypeDialog.Callback minerCallback = new MinerCostTypeDialog.Callback() {
         @Override
         public void minerCostType(int type, String text) {
+            if (coinsChoosed == null) {
+                toast("请先选择币种");
+                return;
+            }
+            if (cost == null) {
+                toast("矿工费用计算出错");
+                return;
+            }
             textCostType.setText(text);
-            //            if (type == 0) {//从余额中扣除
-            //
-            //            } else if (type == 1) {//从转账金额中扣除
-            //
-            //            }
+            if (miner_cost_type != type) {//矿工费用方式发生变化
+                realAmountResultSetting(type);
+                miner_cost_type = type;
+            } else {//矿工费用方式未发生变化
+                //不做处理
+            }
         }
     };
 
+    private void realAmountResultSetting(int type) {
+        if (TextUtils.isEmpty(totalAmount)) {
+            toast("请输入转账金额");
+            return;
+        }
+        if (type == 0) {//从余额中扣除
+            realCount = totalCount;
+            realAmount = realCount.toString();
+            textRealAmount.setText("到账金额：" + realAmount);
+        } else if (type == 1) {//从转账金额中扣除
+            realCount = totalCount.subtract(cost);
+            realAmount = realCount.toString();
+            textRealAmount.setText("到账金额：" + realAmount);
+        }
+    }
+
+    private DecimalFormat df = new DecimalFormat("0.00000000");
+
+//    private String getRealValue(String rawValue) {
+//        return String.valueOf(Double.parseDouble(rawValue) / Double.parseDouble(coinsChoosed.getDecimals()));
+//    }
+
+    private void inputPwd() {
+        showInputDialog("验证密码", "", "Password", "", "取消", "确认", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
+
+            @Override
+            public void doSuccessThing(final Map<String, Object> param) {
+                showProgressDialog("正在验证。。。");
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            String pwd = param.get(INPUT_TEXT).toString().trim();
+                            BigInteger nonce = new BigInteger(coinsChoosed.getNonce());
+                            BigInteger gasPrice = new BigNumber(coinsChoosed.getGas_price()).multiply(new BigNumber(String.valueOf((20-0.2)*rate)))
+                                    .add(new BigNumber(coinsChoosed.getGas_price()).multiply(new BigNumber(""+0.2))).getBigInteger();
+                            BigInteger gasLimit = new BigInteger("21000");
+                            toAddress = editWalletAddress.getText().toString().trim();
+                            String to = toAddress;
+                            BigInteger value = new BigNumber(realAmount).multiply(new BigNumber(coinsChoosed.getDecimals())).getBigInteger();
+                            String data = "";//editRemark.getText().toString().trim();
+                            EtherRawTransaction eth = EtherRawTransaction.createTransaction(nonce, gasPrice, gasLimit, to, value, data);
+                            //WalletInfo walletInfo = DataSupport.find(WalletInfo.class, 0);
+                            List<WalletInfo> list = new ArrayList<>();
+                            SqliteUtils.openDataBase(mContext);
+                            List<Map> maps = SqliteUtils.selecte("walletinfo");
+                            for (Map map : maps) {
+                                list.add(new WalletInfo(map));
+                            }
+                            WalletInfo walletInfo = list.get(0);
+                            byte[] seed = new EncryptedData(walletInfo.getEsda_seed()).decrypt(pwd);
+                            DeterministicKey master = HDKeyDerivation.createMasterPrivateKey(seed);
+                            ECKey ecKey=new ECKey(master.getPrivKey(),null,false);
+                            byte[] bytes = eth.Sign(ecKey);
+                            String signed = Utils.bytesToHexString(bytes);
+                            Map<String, String> map = new HashMap<>();
+                            map.put("signed", signed);
+                            String json = new Gson().toJson(map);
+                            presenter.sendTransaction(coinsChoosed.getId(), json);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(() -> {
+                                hideProgressDialog();
+                                toast("密码错误");
+                            });
+                        }
+                    }
+                }.start();
+                alertDialog.dismiss();
+            }
+
+            @Override
+            public void doErrorThing(Map<String, Object> param) {
+
+            }
+        });
+    }
+
+    @Override
+    public void doSuccess(int type, Object obj) {
+        hideProgressDialog();
+        toast("转账交易已提交");
+        String json = (String) obj;
+        Log.d(TAG, "doSuccess: json=" + json);
+    }
+
+    @Override
+    public void doFailure() {
+
+    }
 }

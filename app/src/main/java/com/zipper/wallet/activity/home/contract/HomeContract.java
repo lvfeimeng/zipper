@@ -7,15 +7,19 @@ package com.zipper.wallet.activity.home.contract;
 public interface HomeContract {
 
     interface View {
-        void doSuccess(int type, Object obj);
+        void doSuccess(int coin_id, Object obj);
 
         void doFailure();
     }
 
     interface Presenter {
         void getCoins();
-        void getCoinBalance(int id, String json);
-        void getCoinHistory(int id, String json);
+
+        void getCoinBalance(int coin_id, String json);
+
+        void getCoinHistory(int coin_id, String json);
+
+        void sendTransaction(int coin_id, String json);
     }
 
 }

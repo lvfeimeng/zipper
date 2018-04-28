@@ -315,7 +315,7 @@ public class CreateAcountUtils {
                         addr = getAccount(master, coinInfo.getType()).toAddress();
                         MyLog.i(TAG,"btc addr:"+addr);
                     } else if ("eth".equalsIgnoreCase(coinInfo.getAddr_algorithm())) {
-                        addr = getWalletAddr(master, coinInfo.getType());
+                        addr = "0x"+getWalletAddr(master, coinInfo.getType());
                         MyLog.i(TAG,"eth addr:"+addr);
                     }
                     coinInfo.setAddr(addr);

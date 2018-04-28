@@ -27,6 +27,7 @@ import com.zipper.wallet.adapter.PropertyRecordAdapter;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.PropertyRecord;
 import com.zipper.wallet.definecontrol.AppBarStateChangeListener;
+import com.zipper.wallet.definecontrol.NoScrollTextView;
 import com.zipper.wallet.definecontrol.TestPopupWindow;
 import com.zipper.wallet.utils.NetworkUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
@@ -145,6 +146,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         recyclerView = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
         imgQrCode.setOnClickListener(v -> {
             startActivity(new Intent(this, PayeeAddressActivity.class)
+                    .putExtra("coin_id",id)
                     .putExtra("full_address", full_address));
         });
         imgSwitch.setOnClickListener(v -> {
@@ -169,7 +171,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         setSupportActionBar(toolbar);
 
         View view = inflate(R.layout.layout_record);
-        TextView chooseView = view.findViewById(R.id.txt_choose);
+        NoScrollTextView chooseView = view.findViewById(R.id.txt_choose);
         initPop(chooseView);
         recyclerView.addHeaderView(view);
         recyclerView.setSwipeItemClickListener((itemView, position) -> {
@@ -223,7 +225,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         textSubTitle = (TextView) findViewById(R.id.text_sub_title);
     }
 
-    private void initPop(TextView chooseView) {
+    private void initPop(NoScrollTextView chooseView) {
         TestPopupWindow pop = new TestPopupWindow(mContext);
         pop.setOnDismissListener(() -> {
             WindowManager.LayoutParams lp = getWindow().getAttributes();

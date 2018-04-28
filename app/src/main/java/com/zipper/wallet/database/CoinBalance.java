@@ -10,23 +10,34 @@ public class CoinBalance extends DataSupport {
 
 
     /**
-     * address : 1JBV1C2ifgFjFjEuzAQVj88y3UtKRYRfWU
-     * amount : 5000000000
-     * tx_cnt : 1
+     * "address": "0x570d21bd8dd425093b803439625c26aa7a68e3eb",
+     * "amount": 6000000000000000000,
+     * "nonce": 0,
+     * "tx_cnt": 2,
+     * "gas_price": 20000000000
      */
 
     private String address;
     private String amount;
     private int tx_cnt;
 
-    private String price;
+    private String gas_price;
+    private String nonce;
 
-    public String getPrice() {
-        return price;
+    public String getNonce() {
+        return nonce;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setNonce(String nonce) {
+        this.nonce = nonce;
+    }
+
+    public String getGas_price() {
+        return gas_price;
+    }
+
+    public void setGas_price(String price) {
+        this.gas_price = price;
     }
 
     public String getAddress() {

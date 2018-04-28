@@ -4,7 +4,6 @@ import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +11,7 @@ import java.util.Map;
  * Created by Administrator on 2018/4/11.
  */
 
-public class CoinInfo extends DataSupport implements Serializable{
+public class CoinInfo extends DataSupport implements Serializable {
     @Column(ignore = true)
     public boolean checked;
 
@@ -33,14 +32,23 @@ public class CoinInfo extends DataSupport implements Serializable{
     private String decimals;
     private String icon;
     private String amount;
-    private String price;//矿工费用
+    private String gas_price;//矿工基本费用=gas_price*gas_limit
+    private String nonce;
 
-    public String getPrice() {
-        return price;
+    public String getNonce() {
+        return nonce;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setNonce(String nonce) {
+        this.nonce = nonce;
+    }
+
+    public String getGas_price() {
+        return gas_price;
+    }
+
+    public void setGas_price(String gas_price) {
+        this.gas_price = gas_price;
     }
 
     public String getAmount() {
@@ -83,7 +91,7 @@ public class CoinInfo extends DataSupport implements Serializable{
             setSing_algorithm_param(map.get("sing_algorithm_param") + "");
             setToken_type(map.get("token_type") + "");
             setToken_addr(map.get("token_addr") + "");
-            setAddr(map.get("addr")+"");
+            setAddr(map.get("addr") + "");
             setDecimals(map.get("decimals") + "");
             setIcon(map.get("icon") + "");
             setAmount(map.get("amount") + "");

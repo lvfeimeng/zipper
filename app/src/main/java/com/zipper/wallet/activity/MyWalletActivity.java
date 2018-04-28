@@ -38,6 +38,7 @@ import com.zipper.wallet.database.CoinBalance;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.definecontrol.AppBarStateChangeListener;
+import com.zipper.wallet.number.BigNumber;
 import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.NetworkUtils;
 import com.zipper.wallet.utils.PreferencesUtils;
@@ -121,7 +122,11 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
 //            } else if ("eth".equalsIgnoreCase(info.getAddr_algorithm())) {
 //                info.setAddr("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
 //            }
-            map.put("address", info.getAddr());
+            if (info.getId() == 4) {
+                map.put("address", "0x570d21bd8dd425093b803439625c26aa7a68e3eb");
+            } else {
+                map.put("address", info.getAddr());
+            }
             presenter.getCoinBalance(info.getId(), new Gson().toJson(map));
         }
         items.addAll(list);
@@ -181,12 +186,19 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         );
         recyclerView.setSwipeItemClickListener((itemView, position) -> {
             CoinInfo bean = items.get(position);
+            String amount = "";
+            if (TextUtils.isEmpty(bean.getAmount())) {
+                amount = "0.00000000";
+            } else {
+                //getFormatData(balance.getAmount(), item.getDecimals())
+                amount = new BigNumber(bean.getAmount()).divide(new BigNumber(bean.getDecimals())).toString();
+            }
             startActivity(new Intent(this, PropertyDetailActivity.class)
                     .putExtra("id", bean.getId())
                     .putExtra("full_address", address)
                     .putExtra("address", bean.getAddr())
                     .putExtra("deciamls", bean.getDecimals())
-                    .putExtra("amount", bean.getAmount())
+                    .putExtra("amount", amount)
                     .putExtra("name", bean.getName())
                     .putExtra("full_name", bean.getFull_name()));
         });
@@ -236,26 +248,26 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     private void initSwipeSetting() {
         recyclerView.setItemViewSwipeEnabled(false);
         recyclerView.setLongPressDragEnabled(false);
-        recyclerView.setSwipeMenuCreator((swipeLeftMenu, swipeRightMenu, viewType) -> {
-            SwipeMenuItem deleteItem = new SwipeMenuItem(mContext);
-            deleteItem.setBackgroundColorResource(R.color.btn_delete);
-            deleteItem.setText("移除");
-            deleteItem.setTextSize(16);
-            deleteItem.setTextColorResource(R.color.white);
-            deleteItem.setHeight(-1);
-            deleteItem.setWidth(ScreenUtils.dp2px(mContext, 80));
-            swipeRightMenu.addMenuItem(deleteItem);
-        });
-        recyclerView.setSwipeMenuItemClickListener(menuBridge -> {
-            menuBridge.closeMenu();
-            //int direction=menuBridge.getDirection();
-            int adapterPosition = menuBridge.getAdapterPosition();
-            int menuPosition = menuBridge.getPosition();
-            if (menuPosition == 0) {
-                items.remove(adapterPosition);
-                adapter.notifyDataSetChanged();
-            }
-        });
+//        recyclerView.setSwipeMenuCreator((swipeLeftMenu, swipeRightMenu, viewType) -> {
+//            SwipeMenuItem deleteItem = new SwipeMenuItem(mContext);
+//            deleteItem.setBackgroundColorResource(R.color.btn_delete);
+//            deleteItem.setText("移除");
+//            deleteItem.setTextSize(16);
+//            deleteItem.setTextColorResource(R.color.white);
+//            deleteItem.setHeight(-1);
+//            deleteItem.setWidth(ScreenUtils.dp2px(mContext, 80));
+//            swipeRightMenu.addMenuItem(deleteItem);
+//        });
+//        recyclerView.setSwipeMenuItemClickListener(menuBridge -> {
+//            menuBridge.closeMenu();
+//            //int direction=menuBridge.getDirection();
+//            int adapterPosition = menuBridge.getAdapterPosition();
+//            int menuPosition = menuBridge.getPosition();
+//            if (menuPosition == 0) {
+//                items.remove(adapterPosition);
+//                adapter.notifyDataSetChanged();
+//            }
+//        });
     }
 
     private void initNavHeaderView() {
@@ -423,6 +435,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             case R.id.text_collect_bill:
             case R.id.img_qr_code:
                 startActivity(new Intent(this, PayeeAddressActivity.class)
+                        .putExtra("coin_id", -1)
                         .putExtra("full_address", address));
                 break;
             default:
@@ -492,14 +505,18 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         balance.save();
         for (CoinInfo item : items) {
             if (id == item.getId()) {
-                item.setAmount(getFormatData(balance.getAmount(), item.getDecimals()));
+                item.setAmount(balance.getAmount());
+                item.setGas_price(balance.getGas_price());
+                item.setNonce(balance.getNonce());
                 ContentValues values = new ContentValues();
                 values.put("amount", item.getAmount());
-                values.put("price", item.getPrice());
+                values.put("gas_price", item.getGas_price());
+                values.put("nonce", item.getNonce());
                 DataSupport.update(CoinInfo.class, values, item.getId());
                 break;
             }
         }
+        DataSupport.findAll(CoinInfo.class);
         adapter.notifyDataSetChanged();
     }
 

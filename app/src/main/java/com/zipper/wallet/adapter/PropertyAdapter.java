@@ -13,6 +13,7 @@ import com.zipper.wallet.R;
 import com.zipper.wallet.activity.AddPropertyActivity;
 import com.zipper.wallet.bean.PropertyBean;
 import com.zipper.wallet.database.CoinInfo;
+import com.zipper.wallet.utils.CoinsUtil;
 import com.zipper.wallet.utils.ImgUtil;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class PropertyAdapter extends CommonAdapter<CoinInfo> {
     @Override
     protected void convert(ViewHolder holder, CoinInfo bean, int position) {
         PropertyViewHolder vh = new PropertyViewHolder(holder.getConvertView());
-        ImgUtil.loadCircleImage(bean.getIcon(), vh.imageView);
+        CoinsUtil.addCoinIcon(vh.imageView, bean.getName(), bean.getFull_name());
         vh.textShortName.setText(bean.getName());
         vh.textFullName.setText(bean.getFull_name());
         if (isShowCheckBox) {
