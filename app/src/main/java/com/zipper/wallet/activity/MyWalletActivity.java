@@ -1,7 +1,9 @@
 package com.zipper.wallet.activity;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -37,7 +39,9 @@ import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.definecontrol.AppBarStateChangeListener;
 import com.zipper.wallet.utils.MyLog;
+import com.zipper.wallet.utils.NetworkUtils;
 import com.zipper.wallet.utils.PreferencesUtils;
+import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.ScreenUtils;
 import com.zipper.wallet.utils.SqliteUtils;
 
@@ -398,7 +402,23 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.text_switch_account:
             case R.id.img_switch:
-                startActivity(new Intent(this, SwitchAccountActivity.class));
+
+                if(NetworkUtils.getNetworkType(this, (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)) == NetworkUtils.NetworkType.NONE){
+                    showTipDialog("没有网络连接","是否开启网络设置","取消","去设置", new RuntHTTPApi.ResPonse() {
+                        @Override
+                        public void doSuccessThing(Map<String, Object> param) {
+                            NetworkUtils.setNetwork(mContext);
+                        }
+
+                        @Override
+                        public void doErrorThing(Map<String, Object> param) {
+                        }
+                    });
+                }else if(!NetworkUtils.checkNetworkState(this)){
+                    toast("连接不到互联网，请稍后再试！！！");
+                }else {
+                    startActivity(new Intent(this, SwitchAccountActivity.class));
+                }
                 break;
             case R.id.text_collect_bill:
             case R.id.img_qr_code:

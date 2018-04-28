@@ -1,18 +1,17 @@
 package com.zipper.wallet.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -20,7 +19,6 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.zipper.wallet.R;
 import com.zipper.wallet.activity.home.contract.HomeContract;
@@ -30,12 +28,10 @@ import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.PropertyRecord;
 import com.zipper.wallet.definecontrol.AppBarStateChangeListener;
 import com.zipper.wallet.definecontrol.TestPopupWindow;
+import com.zipper.wallet.utils.NetworkUtils;
+import com.zipper.wallet.utils.RuntHTTPApi;
 
-import net.bither.bitherj.utils.Utils;
-
-import org.litepal.LitePalDB;
 import org.litepal.crud.DataSupport;
-import org.litepal.parser.LitePalConfig;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -152,7 +148,23 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
                     .putExtra("full_address", full_address));
         });
         imgSwitch.setOnClickListener(v -> {
-            startActivity(new Intent(this, SwitchAccountActivity.class));
+
+            if(NetworkUtils.getNetworkType(this, (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)) == NetworkUtils.NetworkType.NONE){
+                showTipDialog("没有网络连接","是否开启网络设置","取消","去设置", new RuntHTTPApi.ResPonse() {
+                    @Override
+                    public void doSuccessThing(Map<String, Object> param) {
+                        NetworkUtils.setNetwork(mContext);
+                    }
+
+                    @Override
+                    public void doErrorThing(Map<String, Object> param) {
+                    }
+                });
+            }else if(!NetworkUtils.checkNetworkState(this)){
+                toast("连接不到互联网，请稍后再试！！！");
+            }else {
+                startActivity(new Intent(this, SwitchAccountActivity.class));
+            }
         });
         setSupportActionBar(toolbar);
 

@@ -1,7 +1,9 @@
 package com.zipper.wallet.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,8 +16,11 @@ import android.widget.TextView;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.PropertyRecord;
+import com.zipper.wallet.utils.NetworkUtils;
+import com.zipper.wallet.utils.RuntHTTPApi;
 
 import java.text.DecimalFormat;
+import java.util.Map;
 
 public class TransactionDefailsActivity extends BaseActivity implements View.OnClickListener {
 
@@ -146,7 +151,23 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
                 finish();
                 break;
             case R.id.txt_right:
-                startActivity(new Intent(this, SwitchAccountActivity.class));
+
+                if(NetworkUtils.getNetworkType(this, (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)) == NetworkUtils.NetworkType.NONE){
+                    showTipDialog("没有网络连接","是否开启网络设置","取消","去设置", new RuntHTTPApi.ResPonse() {
+                        @Override
+                        public void doSuccessThing(Map<String, Object> param) {
+                            NetworkUtils.setNetwork(mContext);
+                        }
+
+                        @Override
+                        public void doErrorThing(Map<String, Object> param) {
+                        }
+                    });
+                }else if(!NetworkUtils.checkNetworkState(this)){
+                    toast("连接不到互联网，请稍后再试！！！");
+                }else {
+                    startActivity(new Intent(this, SwitchAccountActivity.class));
+                }
                 break;
         }
     }
