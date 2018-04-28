@@ -369,7 +369,7 @@ public class Utils {
             byte[] sha256 = KECCAK256.keccak256(bytes);
             byte[] bytes2 = new byte[20];
             for(int i = 0 ; i < bytes2.length ; i ++ ){
-                bytes2[i] = sha256[i+sha256.length-bytes2.length-1];
+                bytes2[i] = sha256[i+sha256.length-bytes2.length];
             }
             return bytes2;
         } catch (Exception e) {
