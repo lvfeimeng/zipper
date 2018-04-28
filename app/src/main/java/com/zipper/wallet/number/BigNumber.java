@@ -199,6 +199,19 @@ public class BigNumber {
     }
 
 
+    public int compare(BigNumber bigNumber){
+        int compare = 0 ;
+        BigNumber sub = this.subtract(bigNumber);
+        if(Double.parseDouble(sub.toString()) == 0){
+            return  0 ;
+        }else if(Double.parseDouble(sub.toString()) < 0){
+            return -1;
+        }else{
+            return 1;
+        }
+    }
+
+
     private String clearZero(String str){
         if(str.length()< 8 || str.indexOf(".") == -1){
             return str;
