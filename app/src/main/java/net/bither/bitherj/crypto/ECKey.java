@@ -350,7 +350,8 @@ public class ECKey implements Serializable {
         return Utils.toAddress(Utils.sha256hash160(pub));
     }
     public String toAddress1() {
-        return Utils.bytesToHexString(Utils.sha256hash1601(pub));
+        ECKey tecKey = new ECKey(priv,null,false);
+        return Utils.bytesToHexString(Utils.sha256hash1601(tecKey.pub));
     }
 
     /**

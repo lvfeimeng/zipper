@@ -261,7 +261,7 @@ public class CreateAcountUtils {
         }
         DeterministicKey purpose = master.deriveHardened(44);
         DeterministicKey coinType = purpose.deriveHardened(coin_type);
-        DeterministicKey account = coinType.deriveHardened(1);
+        DeterministicKey account = coinType.deriveHardened(0);
         DeterministicKey account1 = account.deriveSoftened(0);
         DeterministicKey account2 = account1.deriveSoftened(0);
         purpose.wipe();
@@ -285,7 +285,7 @@ public class CreateAcountUtils {
         }
         DeterministicKey purpose = master.deriveHardened(44);
         DeterministicKey coinType = purpose.deriveHardened(coin_type);
-        DeterministicKey account = coinType.deriveHardened(1);
+        DeterministicKey account = coinType.deriveHardened(0);
         DeterministicKey account1 = account.deriveSoftened(0);
         DeterministicKey account2 = account1.deriveSoftened(0);
 
