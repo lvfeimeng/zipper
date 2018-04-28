@@ -109,7 +109,7 @@ public class WalletInfoActivity extends BaseActivity {
 
     private void deleteWallet() {
 
-        showInputDialog("验证私钥密码", "", "Password", "", "取消", "确认", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
+        showInputDialog("验证密码", "", "Password", "", "取消", "确认", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
 
             @Override
             public void doSuccessThing(Map<String, Object> param) {
@@ -204,7 +204,7 @@ public class WalletInfoActivity extends BaseActivity {
 
             @Override
             public void doSuccessThing(final Map<String, Object> param) {
-                showProgressDialog("正在导出。。。");
+                showProgressDialog("正在验证。。。");
                 new Thread() {
                     @Override
                     public void run() {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ import com.zipper.wallet.adapter.PropertyAdapter;
 import com.zipper.wallet.adapter.SelectCoinsAdapter;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.CoinInfo;
+import com.zipper.wallet.number.BigNumber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,11 +74,19 @@ public class SearchCoinsActivity extends BaseActivity {
         recyclerView.setSwipeItemClickListener((itemView, position) -> {
             CoinInfo bean = items.get(position);
             if (isFromHomePage) {
+                String amount = "";
+                if (TextUtils.isEmpty(bean.getAmount())) {
+                    amount = "0.00000000";
+                } else {
+                    //getFormatData(balance.getAmount(), item.getDecimals())
+                    amount = new BigNumber(bean.getAmount()).divide(new BigNumber(bean.getDecimals())).toString();
+                }
                 startActivity(new Intent(this, PropertyDetailActivity.class)
+                        .putExtra("id", bean.getId())
                         .putExtra("full_address", full_address)
                         .putExtra("address", bean.getAddr())
                         .putExtra("deciamls", bean.getDecimals())
-                        .putExtra("amount", bean.getAmount())
+                        .putExtra("amount", amount)
                         .putExtra("name", bean.getName())
                         .putExtra("full_name", bean.getFull_name()));
             } else {

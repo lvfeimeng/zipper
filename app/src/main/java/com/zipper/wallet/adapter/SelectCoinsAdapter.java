@@ -3,6 +3,7 @@ package com.zipper.wallet.adapter;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,6 +11,7 @@ import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 import com.zipper.wallet.R;
 import com.zipper.wallet.database.CoinInfo;
+import com.zipper.wallet.number.BigNumber;
 import com.zipper.wallet.utils.ScreenUtils;
 
 import java.util.List;
@@ -28,7 +30,13 @@ public class SelectCoinsAdapter extends CommonAdapter<CoinInfo> {
     protected void convert(ViewHolder holder, CoinInfo bean, int position) {
         SelectViewHolder vh = new SelectViewHolder(holder.getConvertView());
         vh.textName.setText(bean.getName());
-        vh.textBalance.setText(bean.getAmount());
+        if (!TextUtils.isEmpty(bean.getAmount()) && !"null".equalsIgnoreCase(bean.getAmount())
+                && !TextUtils.isEmpty(bean.getDecimals()) && !"null".equalsIgnoreCase(bean.getDecimals())) {
+            String amount = new BigNumber(bean.getAmount()).divide(new BigNumber(bean.getDecimals())).toString();
+            vh.textBalance.setText(amount);
+        } else {
+            vh.textBalance.setText("0.00000000");
+        }
         CardView.LayoutParams params = new CardView.LayoutParams(-1,
                 ScreenUtils.dp2px(mContext, 80));
         if (position % 2 == 1) {
