@@ -102,14 +102,8 @@ public class UnlockActivity extends BaseActivity {
                         mUnlockView.setMode(UnlockView.CREATE_MODE);
                         mode = 0;
                         break;
-                    case 3://删除
-                        Toast.makeText(mContext, getString(R.string.success_del_hand_pwd), Toast.LENGTH_SHORT).show();
-                        PreferencesUtils.putString(mContext,KEY_HAND_PWD,"",PreferencesUtils.USER);
-                        finish();
-                        break;
                     case 4:
                         finish();
-
                     default:
                         break;
                 }

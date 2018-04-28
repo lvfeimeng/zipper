@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.gyf.barlibrary.ImmersionBar;
@@ -283,10 +284,11 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             String pwd = PreferencesUtils.getString(mContext, "hand_pwd", PreferencesUtils.USER);
             int mode = 0;
             if (!TextUtils.isEmpty(pwd)) {
-                mode = 3;
-            }
-            startActivity(new Intent(this, UnlockActivity.class)
-                    .putExtra("mode", mode));
+                Toast.makeText(mContext, getString(R.string.success_del_hand_pwd), Toast.LENGTH_SHORT).show();
+                PreferencesUtils.putString(mContext, KEY_HAND_PWD, "", PreferencesUtils.USER);
+            } else
+                startActivity(new Intent(this, UnlockActivity.class)
+                        .putExtra("mode", mode));
             //drawerLayout.closeDrawer(GravityCompat.START);
         });
 
