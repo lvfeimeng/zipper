@@ -19,7 +19,7 @@
             android:id="@+id/text_head"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="48px"
+            android:layout_marginLeft="16dp"
             android:gravity="center_vertical"
             android:text="1月"
             android:textColor="@color/text_link"

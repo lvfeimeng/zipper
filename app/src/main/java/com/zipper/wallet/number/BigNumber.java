@@ -13,6 +13,9 @@ public class BigNumber {
 
     private String intStr,doubleStr;
     public BigNumber(String str){
+        if (str==null) {
+            return;
+        }
         str = clearZero(str);
         MyLog.i("BigNumber","str:"+str+" length:"+str.length());
         int index = str.indexOf(".");

@@ -19,7 +19,6 @@ import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.ContactDetailsBean;
 import com.zipper.wallet.utils.MyLog;
-import com.zipper.wallet.utils.RegularUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -205,29 +204,29 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
         mRemark = editRemark.getText().toString().trim();
 
         if (mName.equals("")) {
-            toast("姓名不得为空");
+            toast("姓名不能为空");
             return false;
         }
         if (mAddress.equals("")) {
-            toast("地址不得为空");
+            toast("地址不能为空");
             return false;
         }
-        if (mPhone.equals("")) {
-            toast("号码不得为空");
-            return false;
-        }
-        if (mEmail.equals("")) {
-            toast("邮箱不得为空");
-            return false;
-        }
-        if (mRemark.equals("")) {
-            toast("备注不得为空");
-            return false;
-        }
-        if (!RegularUtils.idEmail(mEmail)) {
-            toast("邮箱错误，请重新输入！");
-            return false;
-        }
+//        if (mPhone.equals("")) {
+//            toast("号码不能为空");
+//            return false;
+//        }
+//        if (mEmail.equals("")) {
+//            toast("邮箱不能为空");
+//            return false;
+//        }
+//        if (mRemark.equals("")) {
+//            toast("备注不能为空");
+//            return false;
+//        }
+//        if (!RegularUtils.idEmail(mEmail)) {
+//            toast("邮箱错误，请重新输入！");
+//            return false;
+//        }
 
         return true;
     }

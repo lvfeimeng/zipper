@@ -22,10 +22,10 @@ public class NetworkUtils {
         //得到网络连接信息
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         //去进行判断网络是否连接
-        MyLog.i("NetworkUtils"," checkNetworkState "+manager.getActiveNetworkInfo()+"");
+        MyLog.i("NetworkUtils", " checkNetworkState " + manager.getActiveNetworkInfo() + "");
         if (manager.getActiveNetworkInfo() != null) {
             flag = manager.getActiveNetworkInfo().isAvailable();
-            MyLog.i("NetworkUtils"," checkNetworkState "+manager.getActiveNetworkInfo().isAvailable()+"");
+            MyLog.i("NetworkUtils", " checkNetworkState " + manager.getActiveNetworkInfo().isAvailable() + "");
         }
         return flag;
     }
@@ -34,7 +34,7 @@ public class NetworkUtils {
     /**
      * 网络未连接时，调用设置方法
      */
-    public static  void setNetwork(Context context) {
+    public static void setNetwork(Context context) {
 
         Intent intent = null;
         /**
@@ -58,11 +58,20 @@ public class NetworkUtils {
      * 网络已经连接，然后去判断是wifi连接还是GPRS连接
      * 设置一些自己的逻辑调用
      */
-    public static  NetworkType getNetworkType(Context context ,ConnectivityManager manager) {
-
-        State gprs = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
-        State wifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-        State bluetooth = manager.getNetworkInfo(ConnectivityManager.TYPE_BLUETOOTH).getState();
+    public static NetworkType getNetworkType(Context context, ConnectivityManager manager) {
+        if (manager == null) {
+            return null;
+        }
+        State gprs = null, wifi = null, bluetooth = null;
+        if (manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) != null) {
+            gprs = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+        }
+        if (manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI) != null) {
+            wifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+        }
+        if (manager.getNetworkInfo(ConnectivityManager.TYPE_BLUETOOTH) != null) {
+            bluetooth = manager.getNetworkInfo(ConnectivityManager.TYPE_BLUETOOTH).getState();
+        }
         if (gprs == State.CONNECTED || gprs == State.CONNECTING) {
             return NetworkType.GPRS;
         }
@@ -77,8 +86,8 @@ public class NetworkUtils {
         return NetworkType.NONE;
     }
 
-    public static enum NetworkType{
-        WIFI,GPRS,BLUETOOTH,NONE
+    public static enum NetworkType {
+        WIFI, GPRS, BLUETOOTH, NONE
     }
 
 }

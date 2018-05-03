@@ -76,7 +76,7 @@ public class PayeeAddressActivity extends BaseActivity {
         info.setId(-1);
         info.setName("全站钱包地址");
         info.setFull_name("全站钱包地址");
-        info.setAddr("zp" + full_address);
+        info.setAddr("ZP" + full_address.toUpperCase());
 
         imgBack.setOnClickListener(v -> finish());
         imgShare.setOnClickListener(v -> toast("分享"));
@@ -111,7 +111,7 @@ public class PayeeAddressActivity extends BaseActivity {
         textFullName.setText(info.getFull_name());
         btnCopy.setEnabled(true);
         btnCopy.setText("复制收款地址");
-        textWalletAddress.setText(info.getAddr());
+        textWalletAddress.setText(info.getAddr().toUpperCase());
 
         //带logo二维码
         //CodeUtils.createImage(textContent, 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));

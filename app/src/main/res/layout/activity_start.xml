@@ -48,6 +48,7 @@ a powerful ally it is. Life creates it, makes it grow. It’s energy surrounds u
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="导入钱包"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/bg_button"

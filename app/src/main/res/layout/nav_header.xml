@@ -41,10 +41,11 @@
             android:layout_above="@+id/text_wallet_address"
             android:layout_marginLeft="20dp"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="2"
+            android:layout_marginRight="20dp"
             android:text="我的钱包"
             android:textColor="@color/white"
-            android:textSize="40sp" />
+            android:textSize="30sp" />
 
     </RelativeLayout>
 

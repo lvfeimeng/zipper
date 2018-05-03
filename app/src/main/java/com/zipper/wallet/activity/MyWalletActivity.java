@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.gyf.barlibrary.ImmersionBar;
 import com.readystatesoftware.viewbadger.BadgeView;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
@@ -122,11 +121,11 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
 //            } else if ("eth".equalsIgnoreCase(info.getAddr_algorithm())) {
 //                info.setAddr("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
 //            }
-            if (info.getId() == 4) {
-                map.put("address", "0x570d21bd8dd425093b803439625c26aa7a68e3eb");
-            } else {
-                map.put("address", info.getAddr());
-            }
+//            if (info.getId() == 4) {
+//                map.put("address", "0x570d21bd8dd425093b803439625c26aa7a68e3eb");
+//            } else {
+//            }
+            map.put("address", info.getAddr());
             presenter.getCoinBalance(info.getId(), new Gson().toJson(map));
         }
         items.addAll(list);
@@ -345,8 +344,8 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             address = walletInfo.getAddress();
             if (!TextUtils.isEmpty(address)) {
                 String result = "zp" + address.substring(0, 5) + "..." + address.substring(address.length() - 7);
-                textWallet.setText(result);
-                textWalletAddress.setText(result);
+                textWallet.setText(result.toUpperCase());
+                textWalletAddress.setText(result.toUpperCase());
             } else {
                 textWallet.setText("");
                 textWalletAddress.setText("");
@@ -429,7 +428,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 }else if(!NetworkUtils.checkNetworkState(this)){
                     toast("连接不到互联网，请稍后再试！！！");
                 }else {
-                    startActivity(new Intent(this, SwitchAccountActivity.class));
+                    startActivity(new Intent(this, TransferAccountActivity.class));
                 }
                 break;
             case R.id.text_collect_bill:
@@ -516,7 +515,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 break;
             }
         }
-        DataSupport.findAll(CoinInfo.class);
+        //DataSupport.saveAll(items);
         adapter.notifyDataSetChanged();
     }
 

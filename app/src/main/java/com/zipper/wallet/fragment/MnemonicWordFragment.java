@@ -132,8 +132,8 @@ public class MnemonicWordFragment extends BaseFragment {
         }
 
         List<String> words = new ArrayList<>();
-        words.addAll(Arrays.asList(wordStr.split(" ")));
-
+          wordStr= wordStr.replace((char) 160, (char) 32);
+        words.addAll(Arrays.asList(wordStr.split(Character.toString((char)32))));
 //        if (words.size()!=12) {
 //            toast("请输入12个助记单词");
 //            return;

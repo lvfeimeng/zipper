@@ -87,6 +87,7 @@ public class ConfirmSwitchAccountDialog extends Dialog {
     private void submit() {
         if (callback != null) {
             callback.confirmInfo();
+            dismiss();
         }
     }
 

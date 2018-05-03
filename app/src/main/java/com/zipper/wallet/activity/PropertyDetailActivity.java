@@ -165,7 +165,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
             }else if(!NetworkUtils.checkNetworkState(this)){
                 toast("连接不到互联网，请稍后再试！！！");
             }else {
-                startActivity(new Intent(this, SwitchAccountActivity.class));
+                startActivity(new Intent(this, TransferAccountActivity.class));
             }
         });
         setSupportActionBar(toolbar);
@@ -176,7 +176,7 @@ public class PropertyDetailActivity extends BaseActivity implements HomeContract
         recyclerView.addHeaderView(view);
         recyclerView.setSwipeItemClickListener((itemView, position) -> {
             startActivity(new Intent(mContext, TransactionDefailsActivity.class)
-                    .putExtra("currency", (Serializable) (items.get(position))));
+                    .putExtra("currency", items.get(position)));
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         items = new ArrayList<>();

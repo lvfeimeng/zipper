@@ -30,7 +30,7 @@ public class PropertyRecordAdapter extends CommonAdapter<PropertyRecord> {
     @Override
     protected void convert(ViewHolder holder, PropertyRecord item, int position) {
         RecordViewHolder vh = new RecordViewHolder(holder.getConvertView());
-        String address=item.getHash().substring(0,8)+"..."+item.getFrom().substring(item.getFrom().length()-8,item.getFrom().length());
+        String address=item.getHash().substring(0,8)+"..."+item.getHash().substring(item.getHash().length()-8,item.getHash().length());
         vh.txtAddr.setText(address);
         String deciamls = ((PropertyDetailActivity) mContext).deciamls;
         vh.txtCount.setText(getFormatData(item.getValue(), deciamls));

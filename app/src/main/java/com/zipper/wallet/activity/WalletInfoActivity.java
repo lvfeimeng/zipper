@@ -75,7 +75,7 @@ public class WalletInfoActivity extends BaseActivity {
             } else {
                 editWalletName.setText("我的钱包");
             }
-            textAddr.setText("zp" + walletInfo.getAddress());
+            textAddr.setText("ZP" + walletInfo.getAddress().toUpperCase());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -16,10 +16,13 @@ import android.widget.TextView;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.PropertyRecord;
+import com.zipper.wallet.number.BigNumber;
 import com.zipper.wallet.utils.NetworkUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 public class TransactionDefailsActivity extends BaseActivity implements View.OnClickListener {
@@ -32,10 +35,19 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
     private LinearLayout mLinerGradient;
     private ImageView mImgState;
 
+    protected TextView textPayerAddress;
+    protected TextView textPayeeAddress;
+    protected TextView textMinerCost;
+    protected TextView textRemark;
+    protected TextView textTransferId;
+    protected TextView textBlock;
+    protected TextView textTransferTime;
+
     private int IN = 1;
     private int OUT = 2;
     private int FAIL = 4;
 
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -65,15 +77,31 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
         mBack.setOnClickListener(this);
         mTextUpdate.setOnClickListener(this);
 
+        textPayerAddress = (TextView) findViewById(R.id.text_payer_address);
+        textPayeeAddress = (TextView) findViewById(R.id.text_payee_address);
+        textMinerCost = (TextView) findViewById(R.id.text_miner_cost);
+        textRemark = (TextView) findViewById(R.id.text_remark);
+        textTransferId = (TextView) findViewById(R.id.text_transfer_id);
+        textBlock = (TextView) findViewById(R.id.text_block);
+        textTransferTime = (TextView) findViewById(R.id.text_transfer_time);
+
         if (mCurrency.getAddr().equals(mCurrency.getTo())) {
             mTextState.setText("等待转入");
             handlerThread(IN);
         } else if (mCurrency.getAddr().equals(mCurrency.getFrom())) {
             handlerThread(OUT);
         }
-
-
+//        textPayeeAddress.setText();
+        textMinerCost.setText(new BigNumber(mCurrency.getFee()).divide(new BigNumber(mCurrency.getDeciamls())).toString()+" "+mCurrency.getName());
+        textRemark.setText("无");
+        textTransferId.setText(mCurrency.getHash());
+        Date date = new Date();
+        date.setTime(mCurrency.getTimestamp()*1000);
+        textTransferTime.setText(sdf.format(date));
+        textBlock.setText(mCurrency.getHeight());
     }
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private String getFormatData(String amount, String decimals) {
         if (TextUtils.isEmpty(amount) || TextUtils.isEmpty(decimals) || "null".equalsIgnoreCase(amount) || "null".equalsIgnoreCase(decimals)) {
@@ -177,9 +205,9 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
                 } else if (!NetworkUtils.checkNetworkState(this)) {
                     toast("连接不到互联网，请稍后再试！！！");
                 } else {
-                    Intent intent = new Intent(this, SwitchAccountActivity.class);
+                    Intent intent = new Intent(this, TransferAccountActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("details",mCurrency);
+                    bundle.putSerializable("details", mCurrency);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
@@ -194,7 +222,7 @@ public class TransactionDefailsActivity extends BaseActivity implements View.OnC
 
     private void fuilurehints() {
 
-        showTipDialog("转账失败", "服务器连接失败，请稍后重试", "", "知道了",null);
+        showTipDialog("转账失败", "服务器连接失败，请稍后重试", "", "知道了", null);
 
     }
 }

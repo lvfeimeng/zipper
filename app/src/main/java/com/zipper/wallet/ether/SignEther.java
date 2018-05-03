@@ -30,8 +30,8 @@ public class SignEther {
 //        if (!keyPair.verify(messageHash,sigData)) {
 //            throw new RuntimeException("sign error, verify failed");
 //        }
-
-        return new SignatureData((byte)(sigData[0]-27), Arrays.copyOfRange(sigData, 1, 32), Arrays.copyOfRange(sigData, 32, 32));
+        return new SignatureData((byte)(sigData[0]-27), Arrays.copyOfRange(sigData, 1, 33), Arrays.copyOfRange(sigData, 33, 65));
+        //return new SignatureData((byte)(sigData[0]-27), Arrays.copyOfRange(sigData, 1, 32), Arrays.copyOfRange(sigData, 32, 32));
     }
 
 

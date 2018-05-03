@@ -1,5 +1,7 @@
 package com.zipper.wallet.ether;
 
+import android.text.TextUtils;
+
 import net.bither.bitherj.crypto.ECKey;
 
 import java.math.BigInteger;
@@ -45,7 +47,7 @@ public class EtherRawTransaction {
     public static EtherRawTransaction createTransaction(
             BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
             BigInteger value, String data) {
-        return new EtherRawTransaction(nonce, gasPrice, gasLimit, to, value, data, (byte)0);
+        return new EtherRawTransaction(nonce, gasPrice, gasLimit, to, value, data, (byte)15);
     }
 
     public BigInteger getNonce() {
@@ -94,6 +96,7 @@ public class EtherRawTransaction {
         // value field will already be hex encoded, so we need to convert into binary first
         byte[] data = Numeric.hexStringToByteArray(this.getData());
         result.add(RlpString.create(data));
+
         return result;
     }
     

@@ -303,7 +303,7 @@ public class CreateAcountUtils {
             } catch (SQLiteException e) {
                 e.printStackTrace();
             }
-            SqliteUtils.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42),addr VARCHAR(42),decimals VARCHAR(42),amount VARCHAR(42),icon VARCHAR(42));");
+            SqliteUtils.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42),addr VARCHAR(42),decimals VARCHAR(42),amount VARCHAR(42),nonce VARCHAR(42),gas_price VARCHAR(42),icon VARCHAR(42));");
             String json = CoinsUtil.getJson(context);
             List<CoinInfo> list = new Gson().fromJson(json, new TypeToken<List<CoinInfo>>() {
             }.getType());

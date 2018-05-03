@@ -56,7 +56,7 @@
         <activity android:name=".activity.PayeeAddressActivity" />
         <activity android:name=".activity.PropertyDetailActivity" />
         <activity android:name=".activity.ScanQrCodeActivity" />
-        <activity android:name=".activity.SwitchAccountActivity" />
+        <activity android:name=".activity.TransferAccountActivity" />
         <activity android:name=".activity.LanguageSettingActivity" />
         <activity android:name=".activity.SelectCoinsActivity" />
         <activity android:name=".activity.TransactionActivity" />
