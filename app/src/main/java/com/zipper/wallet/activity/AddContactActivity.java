@@ -55,8 +55,6 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
         super.setContentView(R.layout.activity_add_contact);
         if (getIntent() != null) {
             mNameIntent = getIntent().getStringExtra("name");
-        } else {
-            return;
         }
         initView();
     }
@@ -84,21 +82,29 @@ public class AddContactActivity extends BaseActivity implements View.OnClickList
 
 
         setSupportActionBar(toolbar);
-        collapsingToolbar.setTitle("新建联系人");
         toolbar.setNavigationOnClickListener(v -> finish());
         mTextViewDel.setOnClickListener(this);
-
+        String tilte = "";
         if (!TextUtils.isEmpty(mNameIntent)) {
+            tilte = "修改联系人";
             select(mNameIntent);
             isNoSelect(mEditTextList);
             imageScan.setVisibility(View.GONE);
+        } else {
+            tilte = "新建联系人";
         }
+        collapsingToolbar.setTitle(tilte);
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.text_save) {
             if (textSave.getText().equals("修改")) {
+                int len = editName.getText().length();
+                if (len < 2 || len > 8) {
+                    toast("姓名长度在2-8位之间");
+                    return;
+                }
                 textSave.setText("保存");
                 isSelect(mEditTextList);
 //                update(mNameIntent);

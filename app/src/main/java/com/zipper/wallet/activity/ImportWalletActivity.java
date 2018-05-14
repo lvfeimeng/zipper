@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.definecontrol.WrapContentHeightViewPager;
 import com.zipper.wallet.fragment.MnemonicWordFragment;
 import com.zipper.wallet.utils.CreateAcountUtils;
@@ -151,29 +152,36 @@ public class ImportWalletActivity extends BaseActivity {
         magicIndicator.setNavigator(commonNavigator);
     }
 
-
+    DeterministicKey master=null;
     /**
      * @param mnemSeed
      */
     public void generateWalletAddress(String randomSeed, String mnemSeed) {
-        MyLog.i(TAG,"randomSeed:"+randomSeed);
-        MyLog.i(TAG,"mnemSeed:"+mnemSeed);
+        MyLog.i(TAG, "randomSeed:" + randomSeed);
+        MyLog.i(TAG, "mnemSeed:" + mnemSeed);
         showProgressDialog("正在导入。。。");
         new Thread() {
             @Override
             public void run() {
                 CreateAcountUtils.instance(mContext);
 
-                DeterministicKey master = CreateAcountUtils.CreateRootKey(Utils.hexStringToByteArray(mnemSeed));//生成根公私钥对象
+                  master = CreateAcountUtils.CreateRootKey(Utils.hexStringToByteArray(mnemSeed));//生成根公私钥对象
 
                 CreateAcountUtils.saveCoins(master, mContext, new CreateAcountUtils.Callback() {
                     @Override
-                    public void saveSuccess() {
-                        String full_address =  CreateAcountUtils.getWalletAddr(master, 60);
+                    public void saveSuccess(List<CoinInfo> list) {
+                        StringBuilder sb = new StringBuilder();
+                        for (CoinInfo item : list) {
+                            sb.append(item.getCoin_id()).append("|").append(item.getAddr())
+                                    .append("|");
+                        }
+                        sb.deleteCharAt(sb.length() - 1);
+                        String full_address = CreateAcountUtils.getWalletAddr(master, 60,sb.toString());
                         //putString("full_address",full_address);
                         CreateAcountUtils.saveWallet(randomSeed, mnemSeed, full_address, new RuntHTTPApi.ResPonse() {
                             @Override
                             public void doSuccessThing(Map<String, Object> param) {
+
                                 Message msg = mHandler.obtainMessage();
                                 if (param.get("success") != null) {
                                     msg.what = TRANSMIT_PWD;
@@ -204,6 +212,7 @@ public class ImportWalletActivity extends BaseActivity {
             }
         }.start();
     }
+
 
 
 }

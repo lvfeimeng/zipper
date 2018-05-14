@@ -298,7 +298,7 @@ public class PrivateKeyUtil {
             if (key == null) {
                 return null;
             } else {
-                Address address = new Address(key.toAddress(), key.getPubKey(), encryptedString,
+                Address address = new Address(key.toBtcAddress(), key.getPubKey(), encryptedString,
                         false, key.isFromXRandom());
                 key.clearPrivateKey();
                 list.add(address);
@@ -348,7 +348,7 @@ public class PrivateKeyUtil {
             signatureText = signatureText.replaceAll("\n", "").replaceAll("\r", "");
 
             ECKey key = ECKey.signedMessageToKey(messageText, signatureText);
-            String signAddress = key.toAddress();
+            String signAddress = key.toBtcAddress();
             return Utils.compareString(address, signAddress);
         } catch (SignatureException e) {
             e.printStackTrace();

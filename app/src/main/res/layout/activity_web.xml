@@ -23,6 +23,7 @@
             app:title="更改密码"
             app:expandedTitleMarginStart="20dp"
             app:titleEnabled="true"
+            app:expandedTitleTextAppearance="@style/MyExpandedTitle"
             app:collapsedTitleGravity="center">
 
             <!--app:statusBarScrim="@android:color/transparent"-->

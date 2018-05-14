@@ -1,18 +1,18 @@
 /*
-* Copyright 2014 http://Bither.net
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2014 http://Bither.net
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package net.bither.bitherj;
 
@@ -55,8 +55,9 @@ public class BitherjSettings {
     public static final BigInteger proofOfWorkLimit = Utils.decodeCompactBits(0x1d00ffffL);
     public static final int port = 8333;
     public static final long packetMagic = 0xf9beb4d9L;
-    public static final int addressHeader = 0;
-    public static final int p2shHeader = 5;
+    public static int addressHeader = 0;
+    public static int p2shHeader = 5;
+    public static int signForkID = 0;
     public static final int dumpedPrivateKeyHeader = 128;
     public static final int TARGET_TIMESPAN = 14 * 24 * 60 * 60;  // 2 weeks per difficulty cycle, on average.
     public static final int TARGET_SPACING = 10 * 60;  // 10 minutes per block.
@@ -98,11 +99,12 @@ public class BitherjSettings {
         BLOCKCHAIN_INFO(1), BITHER_NET(0);
 
         private int value;
-        ApiConfig(int value){
+
+        ApiConfig(int value) {
             this.value = value;
         }
 
-        public int value(){
+        public int value() {
             return value;
         }
     }

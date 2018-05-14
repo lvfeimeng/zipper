@@ -1,8 +1,13 @@
 package com.zipper.wallet.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -24,30 +30,49 @@ import com.google.gson.Gson;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zipper.wallet.R;
+import com.zipper.wallet.activity.home.RegAddr;
 import com.zipper.wallet.activity.home.contract.HomeContract;
 import com.zipper.wallet.activity.home.presenter.HomePresenter;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.bean.PayAddressBean;
 import com.zipper.wallet.bean.SwitchAccountBean;
+import com.zipper.wallet.btc.Out;
+import com.zipper.wallet.btc.Tx;
+import com.zipper.wallet.btc.TxBuilder;
+import com.zipper.wallet.database.BtcUtxo;
+import com.zipper.wallet.database.CoinBalance;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.ContactDetailsBean;
+import com.zipper.wallet.database.PropertyRecord;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.dialog.ConfirmSwitchAccountDialog;
 import com.zipper.wallet.dialog.MinerCostTypeDialog;
+import com.zipper.wallet.ether.ERC20Token;
 import com.zipper.wallet.ether.EtherRawTransaction;
-import com.zipper.wallet.number.BigNumber;
 import com.zipper.wallet.utils.AlgorithmUtils;
 import com.zipper.wallet.utils.CreateAcountUtils;
 import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.RuntHTTPApi;
+import com.zipper.wallet.utils.ScreenUtils;
 import com.zipper.wallet.utils.SqliteUtils;
 
+import net.bither.bitherj.BitherjSettings;
 import net.bither.bitherj.crypto.ECKey;
 import net.bither.bitherj.crypto.EncryptedData;
+import net.bither.bitherj.crypto.TransactionSignature;
 import net.bither.bitherj.crypto.hd.DeterministicKey;
 import net.bither.bitherj.crypto.hd.HDKeyDerivation;
+import net.bither.bitherj.exception.TxBuilderException;
+import net.bither.bitherj.script.ScriptBuilder;
 import net.bither.bitherj.utils.Utils;
 
+import org.bouncycastle.util.Arrays;
+import org.json.JSONObject;
+import org.litepal.crud.DataSupport;
+
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +94,8 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
     protected TextView textLeft;
     protected TextView textRight;
     protected Button btnNext;
+    protected View viewScale;
+    protected RelativeLayout layoutTotalScale;
 
     private ImageView imgBack;
     private ImageView imgContacts;
@@ -78,8 +105,8 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
     private TextView textHelp;
     private TextView textBalance;
 
-    private BigNumber realCount, totalCount, cost, recommend, maxCommend, minCommend, chaCommend;
-    private String payerAddress, payeeName, payeeAddress, unit, inputAmount, realAmount, minerCost, remark;
+    private BigDecimal realCount, totalCount, cost, recommend, maxCommend, minCommend;//chaCommend;
+    private String payerAddress, payeeName, payeeAddress, unit = "", inputAmount, realAmount, minerCost, remark;
     private int coinsType, minerCostType;
     SwitchAccountBean bean;
     ConfirmSwitchAccountDialog confirmDialog;
@@ -88,7 +115,7 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
     CoinInfo coinsChoosed;
     ContactDetailsBean contactDetailsBean;
 
-    private String toAddress = "";
+    private boolean isSendTransaction = true;
 
     private HomePresenter presenter;
 
@@ -100,6 +127,25 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
         super.setContentView(R.layout.activity_transfer_account);
         initView();
         presenter = new HomePresenter(this, this);
+        if (getIntent() != null) {
+            coinsChoosed = (CoinInfo) getIntent().getSerializableExtra("item");
+            if (coinsChoosed!=null) {
+                getCoinBalance();
+            }
+            //coinInfoSetting(coinsChoosed);
+        }
+    }
+
+    private void setDefaultScale() {
+        double rate = 1.0 / (20 - 0.2);
+        int totalWidth = ScreenUtils.getScreenWidth(this) - dp2px(60);
+        int realWidth = (int) (rate * totalWidth);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dp2px(1), dp2px(15));
+        params.leftMargin = realWidth;
+        params.addRule(RelativeLayout.CENTER_VERTICAL);
+        viewScale.setLayoutParams(params);
+        viewScale.setVisibility(View.VISIBLE);
+        seekBar.setProgress((int) (rate * seekBar.getMax()));
     }
 
     private void initView() {
@@ -125,6 +171,9 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
         textRealAmount = (TextView) findViewById(R.id.text_real_amount);
         textHelp = (TextView) findViewById(R.id.text_help);
         textBalance = (TextView) findViewById(R.id.text_balance);
+
+        viewScale = (View) findViewById(R.id.view_scale);
+        layoutTotalScale = (RelativeLayout) findViewById(R.id.layout_total_scale);
 
         addTextChangedListener(editWalletAddress);
         addTextChangedListener(editCount);
@@ -153,7 +202,8 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
             submit();
         });
 
-        seekBar.setProgress(0);
+        rate = 1.0 / (20 - 0.2);
+        seekBar.setProgress((int) (rate * seekBar.getMax()));
         seekBar.setEnabled(false);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -164,13 +214,10 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
                 }
                 rate = 1.0 * progress / seekBar.getMax();
 
-                String str = "" + rate;
-                MyLog.i(TAG, "str:" + str);
-
-                cost = minCommend.add(chaCommend.multiply(new BigNumber(str)));
+                cost = minCommend.add(recommend.multiply(new BigDecimal(String.valueOf(19.8 * rate))));
                 MyLog.i(TAG, "cast:" + cost);
-                minerCost = cost.toString();
-                textMinerCost.setText(minerCost);
+                minerCost = df.format(cost.doubleValue());
+                textMinerCost.setText(minerCost + " " + unit);
 
                 realAmountResultSetting(miner_cost_type);
             }
@@ -186,7 +233,6 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
             }
         });
     }
-
 
     /**
      * 提交数据
@@ -212,6 +258,12 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
         if (TextUtils.isEmpty(remark)) {
             remark = "无";
         }
+
+        if (TextUtils.isEmpty(coinsChoosed.getAmount()) || "null".equals(coinsChoosed.getAmount()) || "0".equals(coinsChoosed.getAmount())) {
+            toast("账户余额为0");
+            return;
+        }
+
         /*minerCost = textMinerCost.getText().toString().trim();
         if (TextUtils.isEmpty(minerCost)) {
             toast("请选择需要支付的矿工费用");
@@ -244,18 +296,18 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
             //toast("");
             return;
         }
-        String total = new BigNumber(coinsChoosed.getAmount()).divide(new BigNumber(coinsChoosed.getDecimals())).toString();
+        String total = new BigDecimal(coinsChoosed.getAmount()).divide(new BigDecimal(coinsChoosed.getDecimals())).toString();
         if (miner_cost_type == 0) {//从余额中扣除
             //判断输入的转账金额+矿工费用<=账户余额
-            int result = new BigNumber(inputAmount).add(cost).compare(new BigNumber(total));
+            int result = new BigDecimal(inputAmount).add(cost).compareTo(new BigDecimal(total));
             if (result == 1) {
                 toast("转账金额+矿工费用不能大于账户余额");
                 return;
             }
         } else if (miner_cost_type == 1) {//从转账金额中扣除
             //判断输入的转账金额<账户余额&&转账金额>矿工费用
-            int result = new BigNumber(inputAmount).compare(new BigNumber(total));
-            int result2 = new BigNumber(inputAmount).compare(cost);
+            int result = new BigDecimal(inputAmount).compareTo(new BigDecimal(total));
+            int result2 = new BigDecimal(inputAmount).compareTo(cost);
             if (result == 1) {
                 toast("转账金额不能大于账户余额");
                 return;
@@ -265,17 +317,32 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
                 return;
             }
         }
-        inputPwd();
-    }
+        if (payeeAddress.startsWith("zp") || payeeAddress.startsWith("ZP")) {
+            payeeAddress = "0x" + payeeAddress.substring(2);
+            Map<String, String> map = new HashMap<>();
+            map.put("addr", payeeAddress);
+            String json = new Gson().toJson(map);
+            RegAddr.checkFullAddress(json, new RegAddr.Callback() {
+                @Override
+                public void doSuccess(String data) {
+                    String[] array = data.split("\\|");
+                    for (int i = 0, len = array.length; i < len; i++) {
+                        if (array[i].equals(String.valueOf(coinsChoosed.getCoin_id())) && i < len - 1) {
+                            payeeAddress = array[i + 1];
+                            inputPwd();
+                        }
+                    }
+                }
 
-    //    private void setRadioButtonDrawable(RadioButton radioButton) {
-    //        if (radioButton == null) {
-    //            return;
-    //        }
-    //        Drawable drawable = getResources().getDrawable(R.mipmap.ok_blue);
-    //        drawable.setBounds(0, dp2px(5), 0, dp2px(5));
-    //        radioButton.setCompoundDrawables(null, null, drawable, null);
-    //    }
+                @Override
+                public void doFailure() {
+
+                }
+            });
+        } else {
+            inputPwd();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -319,8 +386,8 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
                     return;
                 }
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    toAddress = bundle.getString(CodeUtils.RESULT_STRING);
-                    editWalletAddress.setText(toAddress);
+                    payeeAddress = bundle.getString(CodeUtils.RESULT_STRING);
+                    editWalletAddress.setText(payeeAddress);
                     //toast("解析结果:" + result);
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     toast("解析二维码失败");
@@ -328,48 +395,96 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
                 break;
             case 100://选择币种
                 coinsChoosed = (CoinInfo) data.getSerializableExtra("coin_type");
-                if (coinsChoosed == null || coinsChoosed.getAmount() == null || coinsChoosed.getDecimals() == null) {
-                    toast("币种包含的数据信息为空");
-                    return;
+                if (coinsChoosed!=null) {
+                    getCoinBalance();
                 }
-                String account = new BigNumber(coinsChoosed.getAmount()).divide(new BigNumber(coinsChoosed.getDecimals())).toString();
-                textBalance.setText("余额 " + account + " " + coinsChoosed.getName());
-                textBalance.setVisibility(View.VISIBLE);
-
-                setSeekBarEnable();
-                if (coinsChoosed.getGas_price() == null) {
-                    recommend = new BigNumber("0");
-                } else {
-                    recommend = new BigNumber(coinsChoosed.getGas_price()).multiply(new BigNumber("21000")).divide(new BigNumber(coinsChoosed.getDecimals()));
-                }
-                minCommend = recommend.multiply(new BigNumber("0.2"));
-                maxCommend = recommend.multiply(new BigNumber("20"));
-                chaCommend = maxCommend.subtract(minCommend);
-                textSelectCoins.setText(coinsChoosed.getName());
-                rate = 1.0 * seekBar.getProgress() / seekBar.getMax();
-                cost = minCommend.add(chaCommend.multiply(new BigNumber("" + rate)));
-
-                minerCost = cost.toString();
-                MyLog.i(TAG, "totalCount:" + totalCount);
-                textMinerCost.setText(minerCost);
-                MyLog.i(TAG, "cast:" + cost);
-                if (inputAmount == null || inputAmount.equals("") || inputAmount.length() == 0) {
-                    return;
-                }
-                //realAmountResultSetting(miner_cost_type);
+                //coinInfoSetting(coinsChoosed);
                 break;
             case 200://选择联系人
                 contactDetailsBean = (ContactDetailsBean) data.getSerializableExtra("bean");
                 payeeName = contactDetailsBean.getName();
                 payeeAddress = contactDetailsBean.getAddress();
-                String showAddress = "【" + payeeName + "】" + payeeAddress.toUpperCase();
-                editWalletAddress.setText(showAddress);
+                editWalletAddress.setText(
+                        new StringBuilder()
+                                .append(payeeAddress.toUpperCase())
+                                .append("【")
+                                .append(payeeName)
+                                .append("】")
+                );
+                editWalletAddress.setSelection(editWalletAddress.length());
                 break;
             default:
                 break;
         }
 
     }
+
+    private void getCoinBalance(){
+        Map<String, String> map = new HashMap<>();
+        map.put("address", coinsChoosed.getAddr());
+        isSendTransaction = false;
+        presenter.getCoinBalance(coinsChoosed.getCoin_id(), new Gson().toJson(map));
+    }
+
+    private void coinInfoSetting(CoinInfo coinsChoosed) {
+        if (coinsChoosed == null) {
+            //toast("币种包含的数据信息为空");
+            return;
+        }
+//        if ("btc".equalsIgnoreCase(coinsChoosed.getName())) {
+//            coinsChoosed.setAmount("100000");
+//        }
+        textSelectCoins.setText(coinsChoosed.getName());
+        payerAddress = coinsChoosed.getAddr();
+        if ("eth".equalsIgnoreCase(coinsChoosed.getAddr_algorithm())) {
+            unit = "ETH";
+        } else {
+            unit = coinsChoosed.getName();
+        }
+        if (TextUtils.isEmpty(coinsChoosed.getDecimals()) || "null".equalsIgnoreCase(coinsChoosed.getDecimals())) {
+            toast("币种余额精度为空");
+            return;
+        }
+        String account = new BigDecimal(coinsChoosed.getAmount()).divide(new BigDecimal(coinsChoosed.getDecimals()), 8, BigDecimal.ROUND_HALF_UP).toPlainString();
+        textBalance.setText("余额 " + account + " " + coinsChoosed.getName());
+        textBalance.setVisibility(View.VISIBLE);
+
+        setSeekBarEnable();
+        if ("eth".equalsIgnoreCase(coinsChoosed.getAddr_algorithm())) {
+            if (coinsChoosed.getGas_price() == null) {
+                recommend = new BigDecimal("0");
+            } else {
+                if (TextUtils.isEmpty(coinsChoosed.getToken_addr())) {
+                    gasLimit = new BigInteger("21000");
+                } else {
+                    gasLimit = new BigInteger("90000");
+                }
+                recommend = new BigDecimal(coinsChoosed.getGas_price()).multiply(new BigDecimal(gasLimit)).divide(new BigDecimal(coinsChoosed.getDecimals()));
+            }
+            minCommend = recommend.multiply(new BigDecimal("0.2"));
+            maxCommend = recommend.multiply(new BigDecimal("20"));
+//        chaCommend = maxCommend.subtract(minCommend);
+//        chaCommend = recommend.multiply(new BigDecimal("19.8"));
+
+            cost = recommend;
+        } else if ("btc".equalsIgnoreCase(coinsChoosed.getAddr_algorithm())) {
+            if (TextUtils.isEmpty(editCount.getText())) {
+                int txSize = TxBuilder.estimationTxSize(1, 2);
+                recommend = new BigDecimal(coinsChoosed.getGas_price()).multiply(new BigDecimal(String.valueOf(txSize))).divide(new BigDecimal(coinsChoosed.getDecimals()));
+                minCommend = recommend.multiply(new BigDecimal("0.2"));
+                maxCommend = recommend.multiply(new BigDecimal("20"));
+                cost=recommend;
+            }
+        }
+        minerCost = df.format(cost.doubleValue());
+        MyLog.i(TAG, "minerCost:" + minerCost);
+        textMinerCost.setText(minerCost + " " + unit);
+
+        setDefaultScale();
+        realAmountResultSetting(miner_cost_type);
+    }
+
+    private DecimalFormat df = new DecimalFormat("0.00000000");
 
     private void addTextChangedListener(EditText editText) {
         editText.addTextChangedListener(new TextWatcher() {
@@ -386,29 +501,31 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
             @Override
             public void afterTextChanged(Editable s) {
                 if (editText == editWalletAddress) {
-                    String text = s.toString().trim();
-                    payeeAddress = text.substring(text.lastIndexOf("】") + 1);
+                    payeeAddress = s.toString().trim();
+                    if (payeeAddress.contains("【")) {
+                        payeeAddress = payeeAddress.substring(0, payeeAddress.lastIndexOf("【"));
+                    }
                 } else if (editText == editCount) {
-                    inputAmount = s.toString().trim();
-                    setSeekBarEnable();
                     try {
+                        inputAmount = s.toString().trim();
                         MyLog.i(TAG, "inputAmount:" + inputAmount);
-                        totalCount = new BigNumber(inputAmount);
-                        MyLog.i(TAG, "totalCount:" + totalCount);
-//                        if (cost != null) {
-//                            minerCost = cost.toString();
-//                            realCount = totalCount.subtract(cost);
-//                        } else {
-//                            minerCost = "0";
-//                            realCount = totalCount;
-//                        }
-//                        MyLog.i(TAG, "totalCount:" + totalCount);
-//                        cost=
-//                        minerCost = cost.toString();
-//                        textMinerCost.setText(minerCost);
 
+                        setSeekBarEnable();
+
+                        totalCount = new BigDecimal(inputAmount);
+                        MyLog.i(TAG, "totalCount:" + totalCount);
+                        if ("btc".equalsIgnoreCase(coinsChoosed.getAddr_algorithm())) {
+                            recommend = getRecommendFee(new BigDecimal(inputAmount)).divide(new BigDecimal(coinsChoosed.getDecimals()));
+                            minCommend = recommend.multiply(new BigDecimal("0.2"));
+                            maxCommend = recommend.multiply(new BigDecimal("20"));
+
+                            cost = recommend;
+                            minerCost = df.format(cost.doubleValue());
+                            MyLog.i(TAG, "minerCost:" + minerCost);
+                            textMinerCost.setText(minerCost + " " + unit);
+                        }
                         realAmountResultSetting(miner_cost_type);
-                    } catch (NumberFormatException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -459,20 +576,17 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
         }
         if (type == 0) {//从余额中扣除
             realCount = totalCount;
-            realAmount = realCount.toString();
-            textRealAmount.setText("到账金额：" + realAmount);
+            realAmount = realCount.setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString();
+            textRealAmount.setText("到账金额：" + realAmount + " " + unit);
         } else if (type == 1) {//从转账金额中扣除
             realCount = totalCount.subtract(cost);
-            realAmount = realCount.toString();
-            textRealAmount.setText("到账金额：" + realAmount);
+            realAmount = realCount.setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString();
+            textRealAmount.setText("到账金额：" + realAmount + " " + unit);
         }
     }
 
-//    private DecimalFormat df = new DecimalFormat("0.00000000");
-
-//    private String getRealValue(String rawValue) {
-//        return String.valueOf(Double.parseDouble(rawValue) / Double.parseDouble(coinsChoosed.getDecimals()));
-//    }
+    String valueString = null;
+    String miner_cost = null;
 
     private void inputPwd() {
         showInputDialog("验证密码", "", "Password", "", "取消", "确认", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
@@ -484,39 +598,10 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
                     @Override
                     public void run() {
                         try {
+                            Looper.prepare();
                             String pwd = param.get(INPUT_TEXT).toString().trim();
-                            BigInteger nonce = new BigInteger(coinsChoosed.getNonce());
-                            BigInteger gasPrice = new BigNumber("0.2").add(new BigNumber(String.valueOf((20 - 0.2) * rate))).multiply(new BigNumber(coinsChoosed.getGas_price())).getBigInteger();
-
-                            BigInteger gasLimit = new BigInteger("21000");
-                            toAddress = editWalletAddress.getText().toString().trim();
-                            BigInteger value = new BigNumber(realAmount).multiply(new BigNumber(coinsChoosed.getDecimals())).getBigInteger();
-                            EtherRawTransaction eth = EtherRawTransaction.createTransaction(nonce, gasPrice, gasLimit, payeeAddress.toLowerCase(), value, "0x");
-                            //String signed = Utils.bytesToHexString(eth.getEncodedRaw());
-                            //WalletInfo walletInfo = DataSupport.find(WalletInfo.class, 0);
-                            List<WalletInfo> list = new ArrayList<>();
-                            SqliteUtils.openDataBase(mContext);
-                            List<Map> maps = SqliteUtils.selecte("walletinfo");
-                            for (Map map : maps) {
-                                list.add(new WalletInfo(map));
-                            }
-                            WalletInfo walletInfo = list.get(0);
-                            byte[] seed = new EncryptedData(walletInfo.getEsda_seed()).decrypt(pwd);
-                            DeterministicKey master = HDKeyDerivation.createMasterPrivateKey(seed);
-                            CreateAcountUtils.instance(mContext);
-                            DeterministicKey master2 = CreateAcountUtils.getAccount(master, 60);
-                            if (master2 == null) {
-                                return;
-                            }
-                            BigInteger bigInteger = master2.getPrivKey();
-                            ECKey ecKey = new ECKey(bigInteger, null, false);
-                            byte[] bytes = eth.Sign(ecKey);//eth.getEncodedRaw()
-                            //String sss = Utils.bytesToHexString(eth.getEncodedRaw());
-                            String signed = Utils.bytesToHexString(bytes);
-                            Map<String, String> map = new HashMap<>();
-                            map.put("signed", "0X" + signed);
-                            String json = new Gson().toJson(map);
-                            presenter.sendTransaction(coinsChoosed.getId(), json);
+                            sendEthTransaction(pwd);
+                            Looper.loop();
                         } catch (Exception e) {
                             e.printStackTrace();
                             runOnUiThread(() -> {
@@ -536,16 +621,304 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
         });
     }
 
-    @Override
-    public void doSuccess(int type, Object obj) {
-        hideProgressDialog();
-        toast("转账交易已提交");
-        String json = (String) obj;
-        Log.d(TAG, "doSuccess: json=" + json);
+    BigInteger gasLimit = null;
+
+    private void sendEthTransaction(String pwd) {
+        isSendTransaction = true;
+
+        BigDecimal totalCountDecimal = new BigDecimal(realAmount).multiply(new BigDecimal(coinsChoosed.getDecimals()));
+        valueString = totalCountDecimal.toPlainString();
+
+        List<WalletInfo> list = new ArrayList<>();
+        SqliteUtils.openDataBase(mContext);
+        List<Map> maps = SqliteUtils.selecte("walletinfo");
+        for (Map map : maps) {
+            list.add(new WalletInfo(map));
+        }
+        WalletInfo walletInfo = list.get(0);
+        byte[] seed = new EncryptedData(walletInfo.getEsda_seed()).decrypt(pwd);
+        DeterministicKey master = HDKeyDerivation.createMasterPrivateKey(seed);
+        CreateAcountUtils.instance(mContext);
+        DeterministicKey master2 = CreateAcountUtils.getAccount(master, coinsChoosed.getType());
+        if (master2 == null) {
+            return;
+        }
+
+        if ("eth".equalsIgnoreCase(coinsChoosed.getAddr_algorithm())) {
+            BigInteger nonce = new BigInteger(coinsChoosed.getNonce());
+
+            String gasPriceString = new BigDecimal("0.2").add(new BigDecimal(String.valueOf((20 - 0.2) * rate))).multiply(new BigDecimal(coinsChoosed.getGas_price())).setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString();
+            BigInteger gasPrice = new BigDecimal(gasPriceString).toBigInteger();
+
+            BigDecimal minerCostDecimal = new BigDecimal("0.2").add(new BigDecimal(String.valueOf((20 - 0.2) * rate))).multiply(new BigDecimal(coinsChoosed.getGas_price())).multiply(new BigDecimal(gasLimit));
+
+            miner_cost = minerCostDecimal.toPlainString();
+
+            BigInteger value = new BigDecimal(valueString).toBigInteger();
+
+            EtherRawTransaction eth = null;
+            if (TextUtils.isEmpty(coinsChoosed.getToken_addr())) {
+                eth = EtherRawTransaction.createTransaction(nonce, gasPrice, gasLimit, payeeAddress.toLowerCase(), value, "0x");
+            } else {
+                eth = EtherRawTransaction.createTransaction(nonce, gasPrice, gasLimit, coinsChoosed.getToken_addr().toLowerCase()
+                        , new BigInteger("0"), ERC20Token.transfer(payeeAddress.toLowerCase(), value));
+            }
+
+            //String signed = Utils.bytesToHexString(eth.getEncodedRaw());
+            //WalletInfo walletInfo = DataSupport.find(WalletInfo.class, 0);
+
+            BigInteger bigInteger = master2.getPrivKey();
+            ECKey ecKey = new ECKey(bigInteger, null, false);
+            byte[] bytes = eth.Sign(ecKey);//eth.getEncodedRaw()
+            //String sss = Utils.bytesToHexString(eth.getEncodedRaw());
+            String signed = Utils.bytesToHexString(bytes);
+            Map<String, String> map = new HashMap<>();
+            map.put("signed", "0X" + signed);
+
+            if (TextUtils.isEmpty(coinsChoosed.getToken_addr())) {
+                String json = new Gson().toJson(map);
+                presenter.sendTransaction(coinsChoosed.getCoin_id(), json);
+            } else {
+                map.put("token_address", coinsChoosed.getToken_addr().toLowerCase());
+                String json = new Gson().toJson(map);
+                presenter.sendTokenTransaction(coinsChoosed.getCoin_id(), coinsChoosed.getToken_type(),json);
+            }
+        } else if ("btc".equalsIgnoreCase(coinsChoosed.getAddr_algorithm())) {
+            try {
+                miner_cost=cost.multiply(new BigDecimal(coinsChoosed.getDecimals())).toPlainString();
+                TxBuilder txBuilder = new TxBuilder();
+                BigDecimal totalValue = totalCountDecimal.add(new BigDecimal(miner_cost));
+                List<BtcUtxo> utxos = getUtxos(totalValue);
+
+                List<Out> outList = new ArrayList<>();
+                outList.addAll(getBtcOuts(utxos));
+
+                List<Long> amoutList = new ArrayList<>();
+                amoutList.add(Long.valueOf(totalCountDecimal.toBigInteger().longValue()));
+
+                long longValue = totalValue.toBigInteger().longValue();
+                amoutList.add(getBtcChange("" + longValue, utxos));
+
+                List<String> addressList = new ArrayList<>();
+                addressList.add(payeeAddress);
+                addressList.add(payerAddress);
+
+                BitherjSettings.addressHeader = Integer.parseInt(coinsChoosed.getAddr_public());
+                BitherjSettings.p2shHeader = Integer.parseInt(coinsChoosed.getAddr_script());
+                BitherjSettings.signForkID = Integer.parseInt(coinsChoosed.getSign_fork());
+                Tx tx = txBuilder.buildTxFromAllAddress(outList, amoutList, addressList);
+
+                byte signType = (byte) TransactionSignature.calcSigHashValue(TransactionSignature.SigHash.ALL, false);
+                List<byte[]> unsignedHashes = tx.getUnsignedInHashes(signType);
+                ArrayList<byte[]> signatures = new ArrayList<byte[]>();
+                for (int i = 0; i < unsignedHashes.size(); i++) {
+                    byte[] unsigned = unsignedHashes.get(i);
+
+                    TransactionSignature signature = new TransactionSignature(master2.sign(unsigned, null),
+                            TransactionSignature.SigHash.ALL, false);
+                    signatures.add(ScriptBuilder.createInputScript(signature, master2).getProgram());
+                }
+                tx.signWithSignatures(signatures);
+                byte[] bytes = tx.bitcoinSerialize();
+                String signed = Utils.bytesToHexString(bytes);
+                Message msg = mHandler.obtainMessage();
+                msg.obj = signed;
+                msg.what = 1;
+                mHandler.sendMessage(msg);
+            } catch (TxBuilderException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            String signed = (String) msg.obj;
+//            toast("signed = " + signed);
+            Log.d(TAG, "sendEthTransaction: signed = " + signed);
+
+            Map<String, String> map = new HashMap<>();
+            map.put("signed", signed);
+
+            String json = new Gson().toJson(map);
+            presenter.sendTransaction(coinsChoosed.getCoin_id(), json);
+        }
+    };
+
+    private void sendTokenTransaction(String pwd) {
+        //EtherRawTransaction token=EtherRawTransaction.createTransaction()
     }
 
     @Override
-    public void doFailure() {
-        hideProgressDialog();
+    public void doSuccess(int coin_id, Object obj) {
+        if (isSendTransaction) {
+            hideProgressDialog();
+        }
+        if (obj == null) {
+            handleTransferResult("", "-2");
+            return;
+        }
+
+        try {
+            if (isSendTransaction) {
+                String json = (String) obj;
+                Log.d(TAG, "doSuccess: json=" + json);
+                if (json == null) {
+                    return;
+                }
+                JSONObject jsonObject = new JSONObject(json);
+                int errCode = jsonObject.optInt("errCode");
+                if (errCode == 0) {
+                    toast("转账交易已提交");
+                    if (confirmDialog != null && confirmDialog.isShowing()) {
+                        confirmDialog.dismiss();
+                    }
+                    handleTransferResult(jsonObject.optString("data"), "-1");
+                }else{
+                    handleTransferResult("", "-2");
+                }
+            } else {
+                CoinBalance balance = (CoinBalance) obj;
+                if (balance == null) {
+                    return;
+                }
+                coinsChoosed.setAmount(balance.getAmount());
+                coinsChoosed.setGas_price(balance.getGas_price());
+                coinsChoosed.setNonce(balance.getNonce());
+                coinInfoSetting(coinsChoosed);
+                ContentValues values = new ContentValues();
+                values.put("amount", coinsChoosed.getAmount());
+                values.put("gas_price", coinsChoosed.getGas_price());
+                values.put("nonce", coinsChoosed.getNonce());
+                DataSupport.update(CoinInfo.class, values, coinsChoosed.getCoin_id());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    //{"data":"0x4dde249e130619d21eb7b917797ddc6f55aa7ddae4fd41c2e1edc14c1f973f48","errCode":0,"hash":"849391b28d880c9fa97f05422d2d2673"}
+
+    @Override
+    public void doFailure() {
+        if (isSendTransaction) {
+            if (confirmDialog != null && confirmDialog.isShowing()) {
+                confirmDialog.dismiss();
+            }
+            hideProgressDialog();
+            handleTransferResult("", "-2");
+        } else {
+            coinInfoSetting(coinsChoosed);
+        }
+    }
+
+    private void handleTransferResult(String hash, String height) {
+        PropertyRecord record = new PropertyRecord();
+        record.setHash(hash);
+        record.setAddr(coinsChoosed.getAddr());
+        record.setDecimals(coinsChoosed.getDecimals());
+        record.setHeight(height);
+        record.setFee(miner_cost);
+        record.setUnit(coinsChoosed.getName());
+        record.setName(coinsChoosed.getName());
+        record.setTimestamp(System.currentTimeMillis() / 1000);
+        record.setValue(valueString);
+        record.setFrom(getAddrJson(coinsChoosed.getAddr(), valueString));
+        record.setTo(getAddrJson(payeeAddress, valueString));
+        record.setRemark(editRemark.getText().toString().trim());
+        int state = 0;
+        if (record.getAddr().equalsIgnoreCase(payeeAddress)) {
+            state = 1;
+        } else {
+            state = -1;
+        }
+        record.setState(state);
+        List<PropertyRecord> temps = new ArrayList<>();
+        temps.add(record);
+        DataSupport.saveAll(temps);
+        startActivity(new Intent(mContext, TransactionDetailsActivity.class)
+                .putExtra("coin_id", coinsChoosed.getCoin_id())
+                .putExtra("currency", record));
+        finish();
+    }
+
+    private String getAddrJson(String addr, String value) {
+        List<PayAddressBean> list = new ArrayList<>();
+        PayAddressBean bean = new PayAddressBean();
+        bean.setAddress(addr);
+        bean.setValue(value);
+        list.add(bean);
+        return new Gson().toJson(list);
+    }
+
+    private BigDecimal getRecommendFee(BigDecimal inputValue) {
+        List<BtcUtxo> temps = DataSupport.where("coin_id = " + coinsChoosed.getCoin_id()).find(BtcUtxo.class);
+        if (temps == null) {
+            return null;
+        }
+        int index = 0;
+        BigDecimal fee = null;
+        BigDecimal realValue = new BigDecimal("0");
+        for (BtcUtxo temp : temps) {
+            int txSize = TxBuilder.estimationTxSize(index + 1, 2);
+            fee = new BigDecimal(coinsChoosed.getGas_price()).multiply(new BigDecimal("" + txSize));
+            if (realValue.compareTo(inputValue) == -1) {
+                realValue = realValue.add(new BigDecimal(temp.getValue()));
+                index++;
+            } else {
+                return fee;
+            }
+        }
+        return fee;
+    }
+
+    private List<BtcUtxo> getUtxos(BigDecimal inputValue) {
+        List<BtcUtxo> list = new ArrayList<>();
+        List<BtcUtxo> temps = DataSupport.where("coin_id = " + coinsChoosed.getCoin_id()).find(BtcUtxo.class);
+        if (temps == null) {
+            return null;
+        }
+        int index = 0;
+        BigDecimal realValue = new BigDecimal("0");
+        for (BtcUtxo temp : temps) {
+            //int txSize = TxBuilder.estimationTxSize(index + 1, 2);
+            //fee = new BigDecimal(String.valueOf(new BigDecimal(coinsChoosed.getGas_price()).multiply(new BigDecimal("" + txSize))));
+            if (realValue.compareTo(inputValue) == -1) {
+                realValue = realValue.add(new BigDecimal(temp.getValue()));
+                list.add(temp);
+                //index++;
+            } else {
+                return list;
+            }
+        }
+        return null;
+    }
+
+    private List<Out> getBtcOuts(List<BtcUtxo> list) {
+        List<Out> outs = new ArrayList<>();
+        for (BtcUtxo utxo : list) {
+            byte[] txHash = Arrays.reverse(Utils.hexStringToByteArray(utxo.getHash()));
+            int outSn = utxo.getN();
+            byte[] outScript = ScriptBuilder.createOutputScript(payerAddress).getProgram();
+            long outValue = Long.parseLong(utxo.getValue());
+            outs.add(new Out(txHash, outSn, outScript, outValue));
+        }
+        return outs;
+    }
+
+    private Long getBtcChange(String totalValue, List<BtcUtxo> list) {
+        long result = 0;
+
+        for (BtcUtxo temp : list) {
+            result += Long.parseLong(temp.getValue());
+        }
+
+        return Long.valueOf(result - Long.parseLong(totalValue));
+    }
+
 }

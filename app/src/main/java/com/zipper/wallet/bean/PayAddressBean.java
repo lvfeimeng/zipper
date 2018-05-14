@@ -10,6 +10,24 @@ public class PayAddressBean {
 
     private String address;
     private String value;
+    private String decimals;
+    private String name;
+
+    public String getDecimals() {
+        return decimals;
+    }
+
+    public void setDecimals(String decimals) {
+        this.decimals = decimals;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getAddress() {
         return address;

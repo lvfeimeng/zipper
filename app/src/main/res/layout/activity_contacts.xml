@@ -22,6 +22,7 @@
             app:statusBarScrim="@color/white"
             app:expandedTitleMarginStart="15dp"
             app:collapsedTitleGravity="center"
+            app:expandedTitleTextAppearance="@style/MyExpandedTitle"
             app:titleEnabled="true">
             <!--app:statusBarScrim="@android:color/transparent"-->
             <!--app:contentScrim="?attr/colorPrimary"-->

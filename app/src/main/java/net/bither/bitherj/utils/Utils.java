@@ -361,15 +361,15 @@ public class Utils {
 
     public static byte[] sha256hash1601(byte[] input) {
         try {
-            byte[] bytes = new byte[input.length-1];
-            for(int i = 1 ; i < input.length ; i ++ ){
-                bytes[i-1] = input[i];
+            byte[] bytes = new byte[input.length - 1];
+            for (int i = 1; i < input.length; i++) {
+                bytes[i - 1] = input[i];
             }
 
             byte[] sha256 = KECCAK256.keccak256(bytes);
             byte[] bytes2 = new byte[20];
-            for(int i = 0 ; i < bytes2.length ; i ++ ){
-                bytes2[i] = sha256[i+sha256.length-bytes2.length];
+            for (int i = 0; i < bytes2.length; i++) {
+                bytes2[i] = sha256[i + sha256.length - bytes2.length];
             }
             return bytes2;
         } catch (Exception e) {
@@ -726,27 +726,11 @@ public class Utils {
         return data;
     }
 
-
     public static String toAddress(byte[] pubKeyHash) {
         checkArgument(pubKeyHash.length == 20, "Addresses are 160-bit hashes, " +
                 "so you must provide 20 bytes");
 
         int version = BitherjSettings.addressHeader;
-        checkArgument(version < 256 && version >= 0);
-
-        byte[] addressBytes = new byte[1 + pubKeyHash.length + 4];
-        addressBytes[0] = (byte) version;
-        System.arraycopy(pubKeyHash, 0, addressBytes, 1, pubKeyHash.length);
-        byte[] check = Utils.doubleDigest(addressBytes, 0, pubKeyHash.length + 1);
-        System.arraycopy(check, 0, addressBytes, pubKeyHash.length + 1, 4);
-        return Base58.encode(addressBytes);
-    }
-
-    public static String toP2SHAddress(byte[] pubKeyHash) {
-        checkArgument(pubKeyHash.length == 20, "Addresses are 160-bit hashes, " +
-                "so you must provide 20 bytes");
-
-        int version = BitherjSettings.p2shHeader;
         checkArgument(version < 256 && version >= 0);
 
         byte[] addressBytes = new byte[1 + pubKeyHash.length + 4];
@@ -947,9 +931,9 @@ public class Utils {
 
     public static boolean validBicoinAddress(String str) {
         try {
-            int addressHeader = getAddressHeader(str);
-            return (addressHeader == BitherjSettings.p2shHeader
-                    || addressHeader == BitherjSettings.addressHeader);
+            int header = getAddressHeader(str);
+            return (header == BitherjSettings.p2shHeader
+                    || header == BitherjSettings.addressHeader);
         } catch (final AddressFormatException x) {
             x.printStackTrace();
         }
@@ -1111,5 +1095,19 @@ public class Utils {
         return new SecureCharSequence(chars);
     }
 
+    public static String toP2SHAddress(byte[] pubKeyHash) {
+        checkArgument(pubKeyHash.length == 20, "Addresses are 160-bit hashes, " +
+                "so you must provide 20 bytes");
+
+        int version = BitherjSettings.p2shHeader;
+        checkArgument(version < 256 && version >= 0);
+
+        byte[] addressBytes = new byte[1 + pubKeyHash.length + 4];
+        addressBytes[0] = (byte) version;
+        System.arraycopy(pubKeyHash, 0, addressBytes, 1, pubKeyHash.length);
+        byte[] check = Utils.doubleDigest(addressBytes, 0, pubKeyHash.length + 1);
+        System.arraycopy(check, 0, addressBytes, pubKeyHash.length + 1, 4);
+        return Base58.encode(addressBytes);
+    }
 
 }

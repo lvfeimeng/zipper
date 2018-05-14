@@ -62,7 +62,7 @@ public class HDAccountCold extends AbstractHD {
         EncryptedData encryptedMnemonicSeed = new EncryptedData(mnemonicSeed, password,
                 isFromXRandom);
         ECKey k = new ECKey(mnemonicSeed, null);
-        String address = k.toAddress();
+        String address = k.toBtcAddress();
         k.clearPrivateKey();
         DeterministicKey accountKey = getAccount(master);
         DeterministicKey externalKey = getChainRootKey(accountKey, AbstractHD.PathType
@@ -70,7 +70,7 @@ public class HDAccountCold extends AbstractHD {
         DeterministicKey internalKey = getChainRootKey(accountKey, PathType
                 .INTERNAL_ROOT_PATH);
         DeterministicKey key = externalKey.deriveSoftened(0);
-        String firstAddress = key.toAddress();
+        String firstAddress = key.toBtcAddress();
         accountKey.wipe();
         master.wipe();
         wipeHDSeed();

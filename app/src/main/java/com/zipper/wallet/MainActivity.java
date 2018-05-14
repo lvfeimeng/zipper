@@ -20,38 +20,19 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         Intent intent = new Intent(MainActivity.this, StartActivity.class);
         startActivity(intent);
-        findViewById(R.id.textView)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(MainActivity.this,
-                                ImportWalletActivity.class));
-                    }
-                });
-        findViewById(R.id.textView2)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, PropertyActvity.class);
-                        startActivity(intent);
-                        //finish();
-                    }
-                });
+        findViewById(R.id.textView).setOnClickListener(v ->
+                startActivity(new Intent(this, ImportWalletActivity.class))
+        );
+        findViewById(R.id.textView2).setOnClickListener(v ->
+                startActivity(new Intent(this, PropertyActvity.class))
+        );
 
-        findViewById(R.id.textView3)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(MainActivity.this, MyWalletActivity.class));
-                    }
-                });
-        findViewById(R.id.textView4)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(MainActivity.this, AddPropertyActivity.class));
-                    }
-                });
+        findViewById(R.id.textView3).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, MyWalletActivity.class))
+        );
+        findViewById(R.id.textView4).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, AddPropertyActivity.class))
+        );
 
         // Sha256Hash
         finish();

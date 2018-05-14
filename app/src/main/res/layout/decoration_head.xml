@@ -11,8 +11,8 @@
         android:orientation="horizontal">
 
         <View
-            android:layout_width="6dp"
-            android:layout_height="27dp"
+            android:layout_width="3dp"
+            android:layout_height="26dp"
             android:background="@color/line_focused"/>
 
         <TextView
@@ -23,7 +23,7 @@
             android:gravity="center_vertical"
             android:text="1月"
             android:textColor="@color/text_link"
-            android:textSize="15sp"/>
+            android:textSize="14sp"/>
 
     </LinearLayout>
 

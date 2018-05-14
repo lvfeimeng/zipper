@@ -22,46 +22,47 @@
             <!--@drawable/wallet_home_bg-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
+                android:layout_height="225dp"
                 android:background="@drawable/wallet_home_bg"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:paddingTop="75dp"
+                android:paddingTop="60dp"
                 app:layout_collapseMode="parallax">
 
                 <TextView
                     android:id="@+id/text_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:text="我的钱包"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:alpha="0.5"
+                    android:text="我的钱包"
                     android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/text_wallet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="16dp"
                     android:maxLines="1"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:textSize="24sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="10dp"
                     android:text="（支持全币种交易）"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="12sp" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="55dp">
+                    android:layout_height="70dp">
 
                     <View
                         android:id="@+id/line_divider"
@@ -74,29 +75,35 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
+                        android:layout_alignParentStart="true"
                         android:layout_toLeftOf="@+id/line_divider"
+                        android:layout_toStartOf="@+id/line_divider"
+                        android:orientation="horizontal"
                         android:gravity="center">
 
                         <TextView
                             android:id="@+id/text_switch_account"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:drawableLeft="@mipmap/home_switch_big"
+                            android:drawableStart="@mipmap/home_switch_big"
                             android:drawablePadding="10dp"
-                            android:gravity="center_vertical"
-                            android:padding="10dp"
+                            android:gravity="center"
                             android:text="转账"
                             android:textColor="@color/white"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_toRightOf="@+id/line_divider"
+                        android:layout_toEndOf="@+id/line_divider"
+                        android:orientation="horizontal"
                         android:gravity="center">
 
                         <TextView
@@ -104,12 +111,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@mipmap/home_qr_code_big"
+                            android:drawableStart="@mipmap/home_qr_code_big"
                             android:drawablePadding="10dp"
-                            android:gravity="center_vertical"
-                            android:padding="10dp"
+                            android:gravity="center"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:text="收款"
                             android:textColor="@color/white"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                 </RelativeLayout>
@@ -119,7 +128,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="60dp"
                 app:contentInsetStart="0dp"
                 app:layout_collapseMode="pin">
                 <!--?attr/actionBarSize-->
@@ -130,41 +139,42 @@
 
                     <ImageView
                         android:id="@+id/img_home"
-                        android:layout_width="50dp"
+                        android:layout_width="40dp"
                         android:layout_height="match_parent"
-                        android:padding="12dp"
+                        android:padding="6dp"
+                        android:layout_marginLeft="10dp"
                         android:src="@mipmap/ic_drawer" />
 
                     <ImageView
                         android:id="@+id/img_qr_code"
-                        android:layout_width="50dp"
+                        android:layout_width="40dp"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
-                        android:padding="12dp"
+                        android:padding="6dp"
                         android:src="@mipmap/home_qr_code"
                         android:visibility="visible" />
 
                     <ImageView
                         android:id="@+id/img_switch"
-                        android:layout_width="50dp"
+                        android:layout_width="40dp"
                         android:layout_height="match_parent"
                         android:layout_marginRight="5dp"
                         android:layout_toLeftOf="@+id/img_qr_code"
-                        android:padding="12dp"
+                        android:padding="6dp"
                         android:src="@mipmap/home_switch"
                         android:visibility="visible" />
 
                     <TextView
                         android:id="@+id/text_title"
-                        android:layout_width="120dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
                         android:gravity="center"
                         android:maxLines="1"
-                        android:text=""
+                        android:text="dsfsf"
                         android:textColor="@color/white"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
             </android.support.v7.widget.Toolbar>
@@ -172,16 +182,16 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:orientation="vertical">-->
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    <!--</LinearLayout>-->
+            android:overScrollMode="never" />
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </android.support.design.widget.CoordinatorLayout>

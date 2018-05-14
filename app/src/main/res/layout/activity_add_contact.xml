@@ -22,6 +22,7 @@
             app:statusBarScrim="@color/white"
             app:expandedTitleMarginStart="15dp"
             app:collapsedTitleGravity="center"
+            app:expandedTitleTextAppearance="@style/MyExpandedTitle"
             app:titleEnabled="true">
 
             <LinearLayout
@@ -103,7 +104,7 @@
                     <!--android:gravity="center_vertical"-->
                     <!--android:maxLines="1"-->
                     <!--android:text=""-->
-                    <!--android:textColor="@color/black"-->
+                    <!--android:textColor="@color/text_major"-->
                     <!--android:textSize="16sp" />-->
 
                 <!--<EditText-->
@@ -119,7 +120,7 @@
                     <!--android:maxLines="1"-->
                     <!--android:text=""-->
                     <!--android:background="@null"-->
-                    <!--android:textColor="@color/black"-->
+                    <!--android:textColor="@color/text_major"-->
                     <!--android:textSize="14sp" />-->
 
             <!--</RelativeLayout>-->
@@ -130,23 +131,27 @@
                 android:text="姓名"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textColor="@color/text_major"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/edit_name"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/bg_line"
                 android:gravity="center_vertical"
                 android:hint="输入姓名"
                 android:maxLines="1"
-                android:padding="5dp"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:maxLength="8"
+                android:paddingTop="5dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/text_major"
+                android:textSize="16sp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -154,11 +159,11 @@
                 android:text="收款人钱包地址"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textColor="@color/text_major"
+                android:textSize="14sp" />
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_height="40dp">
 
                 <EditText
@@ -171,10 +176,13 @@
                     android:hint="输入收款人钱包地址"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:padding="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="5dp"
                     android:background="@null"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:textColor="@color/text_major"
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/image_scan"
@@ -199,23 +207,26 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textColor="@color/text_major"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/edit_phone"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/bg_line"
                 android:gravity="center_vertical"
                 android:hint="输入手机号"
                 android:maxLines="1"
-                android:padding="5dp"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:paddingTop="5dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/text_major"
+                android:textSize="16sp" />
 
 
             <TextView
@@ -225,24 +236,26 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textColor="@color/text_major"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/edit_email"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/bg_line"
                 android:gravity="center_vertical"
                 android:hint="输入邮箱"
                 android:maxLines="1"
-                android:padding="5dp"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
-
+                android:paddingTop="5dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/text_major"
+                android:textSize="16sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -251,22 +264,25 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textColor="@color/text_major"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/edit_remark"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/bg_line"
                 android:gravity="center_vertical"
                 android:hint="输入备注"
                 android:maxLines="1"
-                android:padding="5dp"
-                android:textColor="@color/black"
+                android:paddingTop="5dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/text_major"
                 android:textSize="14sp" />
 
             <TextView
@@ -277,6 +293,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
+                android:layout_marginBottom="36dp"
                 android:textColor="@color/colorAccentTop"
                 android:visibility="gone"
                 android:textSize="16sp" />

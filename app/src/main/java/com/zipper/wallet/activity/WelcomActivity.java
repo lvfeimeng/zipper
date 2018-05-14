@@ -69,7 +69,7 @@ public class WelcomActivity extends Activity implements OnClickListener {
         // 初始化adapter
         adapter = new GuideViewPagerAdapter(views);
         vp.setAdapter(adapter);
-        vp.setOnPageChangeListener(new PageChangeListener());
+        vp.addOnPageChangeListener(new PageChangeListener());
 
         initDots();
 

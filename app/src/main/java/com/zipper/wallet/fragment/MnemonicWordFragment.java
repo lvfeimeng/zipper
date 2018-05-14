@@ -143,6 +143,7 @@ public class MnemonicWordFragment extends BaseFragment {
     }
 
     private void generateWalletAddress(List<String> words) {
+        btnImport.setEnabled(false);
         CreateAcountUtils.instance(mContext);
         PreferencesUtils.putString(mContext, BaseActivity.KEY_WALLET_PWD,password, PreferencesUtils.VISITOR);
         byte[] seed = new byte[0];//由助记词和密码生成种子,方法内含有转换512哈系数方式
@@ -150,6 +151,7 @@ public class MnemonicWordFragment extends BaseFragment {
             seed = CreateAcountUtils.createMnemSeed(words);
             ((ImportWalletActivity)getActivity()).generateWalletAddress(Utils.bytesToHexString(CreateAcountUtils.entropyRandomSeed(words)),Utils.bytesToHexString(seed));
         } catch (Exception e) {
+            btnImport.setEnabled(true);
             e.printStackTrace();
             toast("助记词有误，请重新输入");
             return;

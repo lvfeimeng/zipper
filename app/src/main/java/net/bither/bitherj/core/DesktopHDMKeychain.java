@@ -75,7 +75,7 @@ public class DesktopHDMKeychain extends AbstractHD {
         EncryptedData encryptedMnemonicSeed = null;
         EncryptedData encryptedHDSeed = null;
         ECKey k = new ECKey(mnemonicSeed, null);
-        String address = k.toAddress();
+        String address = k.toBtcAddress();
         k.clearPrivateKey();
 
         hdSeed = seedFromMnemonic(mnemonicSeed);
@@ -128,7 +128,7 @@ public class DesktopHDMKeychain extends AbstractHD {
         ArrayList<HDMAddress.Pubs> uncompPubs = new ArrayList<HDMAddress.Pubs>();
 
         ECKey k = new ECKey(mnemonicSeed, null);
-        String address = k.toAddress();
+        String address = k.toBtcAddress();
         k.clearPrivateKey();
         String firstAddress = getFirstAddressFromSeed(password);
         wipeMnemonicSeed();
@@ -154,13 +154,13 @@ public class DesktopHDMKeychain extends AbstractHD {
                                EncryptedData encryptedHDSeed, boolean isSyncedComplete) {
         String firstAddress;
         ECKey k = new ECKey(mnemonicSeed, null);
-        String address = k.toAddress();
+        String address = k.toBtcAddress();
         k.clearPrivateKey();
         DeterministicKey accountKey = getAccount(master);
         DeterministicKey internalKey = getChainRootKey(accountKey, AbstractHD.PathType.INTERNAL_ROOT_PATH);
         DeterministicKey externalKey = getChainRootKey(accountKey, AbstractHD.PathType.EXTERNAL_ROOT_PATH);
         DeterministicKey key = externalKey.deriveSoftened(0);
-        firstAddress = key.toAddress();
+        firstAddress = key.toBtcAddress();
         accountKey.wipe();
         master.wipe();
 

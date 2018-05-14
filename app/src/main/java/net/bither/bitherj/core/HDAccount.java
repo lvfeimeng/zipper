@@ -156,7 +156,7 @@ public class HDAccount extends Address {
         String address = null;
         if (encryptedMnemonicSeed != null && mnemonicSeed != null) {
             ECKey k = new ECKey(mnemonicSeed, null);
-            address = k.toAddress();
+            address = k.toBtcAddress();
             k.clearPrivateKey();
         }
 
@@ -168,7 +168,7 @@ public class HDAccount extends Address {
             throw new DuplicatedHDAccountException();
         }
         DeterministicKey key = externalKey.deriveSoftened(0);
-        String firstAddress = key.toAddress();
+        String firstAddress = key.toBtcAddress();
         accountKey.wipe();
 
         progress += GenerationPreStartProgress;

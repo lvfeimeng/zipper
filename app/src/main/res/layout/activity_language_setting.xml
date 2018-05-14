@@ -21,6 +21,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
             app:statusBarScrim="@color/white"
             app:collapsedTitleGravity="center"
+            app:expandedTitleTextAppearance="@style/MyExpandedTitle"
             app:title="转账"
             app:titleEnabled="true">
 
@@ -82,7 +83,7 @@
                     android:gravity="center_vertical"
                     android:text="简体中文"
                     android:button="@null"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_major"
                     android:textSize="16sp" />
 
                 <View
@@ -99,7 +100,7 @@
                     android:gravity="center_vertical"
                     android:text="繁體中文"
                     android:button="@null"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_major"
                     android:textSize="16sp" />
 
                 <View
@@ -116,7 +117,7 @@
                     android:gravity="center_vertical"
                     android:text="English"
                     android:button="@null"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_major"
                     android:textSize="16sp" />
             </RadioGroup>
 

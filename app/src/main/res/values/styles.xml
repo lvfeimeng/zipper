@@ -120,4 +120,9 @@
         <item name="android:windowBackground">@color/white</item>
     </style>
 
+    <style name="MyExpandedTitle" parent="@style/TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/text_major</item>
+        <item name="android:textSize">32sp</item>
+    </style>
+
 </resources>

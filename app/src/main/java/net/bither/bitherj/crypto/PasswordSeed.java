@@ -47,7 +47,7 @@ public class PasswordSeed {
         if (ecKey == null) {
             return false;
         } else {
-            ecKeyAddress = ecKey.toAddress();
+            ecKeyAddress = ecKey.toBtcAddress();
             ecKey.clearPrivateKey();
         }
         return Utils.compareString(this.address,

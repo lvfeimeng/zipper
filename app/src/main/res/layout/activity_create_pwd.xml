@@ -26,15 +26,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="20dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
             android:paddingTop="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:layout_marginLeft="4dp"
+                android:textSize="14sp"
                 android:text="@string/pwd_work"
                 android:textColor="@color/text_minor" />
 
@@ -42,9 +42,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/pwd"
-                android:layout_marginLeft="4dp"
-                android:textColor="@color/black" />
+                android:text="钱包密码"
+                android:textSize="14sp"
+                android:textColor="@color/text_major" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -76,7 +76,11 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:hint="@string/pwd"
+                    android:hint="钱包密码"
+                    android:textSize="16sp"
+                    android:paddingLeft="0dp"
+                    android:textColor="@color/text_major"
+                    android:textColorHint="@color/text_hint"
                     android:inputType="textPassword"/>
 
                 <LinearLayout
@@ -108,9 +112,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/pwd_repeat"
-                android:layout_marginLeft="4dp"
-                android:textColor="@color/black" />
+                android:text="重复钱包密码"
+                android:textColor="@color/text_major" />
 
 
             <RelativeLayout
@@ -130,8 +133,12 @@
                     android:id="@+id/ed_repeat"
                     style="@style/EditText_register"
                     android:layout_alignParentBottom="true"
-                    android:hint="@string/pwd_repeat"
+                    android:hint="重复钱包密码"
                     android:inputType="textPassword"
+                    android:textSize="16sp"
+                    android:paddingLeft="0dp"
+                    android:textColor="@color/text_major"
+                    android:textColorHint="@color/text_hint"
                     />
 
             </RelativeLayout>
@@ -143,7 +150,7 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/pwd_tip"
                 android:visibility="gone"
-                android:textColor="@color/black" />
+                android:textColor="@color/text_major" />
 
             <EditText
                 android:id="@+id/ed_pwd_tip"
@@ -165,7 +172,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/read_agree"
-                    />
+                    android:textSize="14sp"
+                    android:textColor="@color/text_major"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -179,6 +187,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:text="@string/service_clause"
+                    android:textSize="14sp"
                     android:textColor="@color/btn_normal" />
 
 
@@ -187,15 +196,12 @@
 
             <Button
                 android:id="@+id/btn_create"
-                android:layout_width="120dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginBottom="10dp"
+                android:layout_width="125dp"
+                android:layout_height="45dp"
+                android:layout_marginBottom="30dp"
                 android:layout_marginTop="@dimen/corner_10"
                 android:background="@drawable/btn_ripple_blue_corner"
                 android:enabled="false"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
                 android:text="@string/create"
                 android:textColor="@color/white" />
         </LinearLayout>

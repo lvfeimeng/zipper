@@ -52,7 +52,7 @@ public class PayeeAddressActivity extends BaseActivity {
                 } else {
                     //CoinInfo coinInfo=DataSupport.find(CoinInfo.class,coin_id);
                     for (CoinInfo item : items) {
-                        if (item.getId() == coin_id) {
+                        if (item.getCoin_id() == coin_id) {
                             item.setChecked(true);
                             loadData(item);
                         }
@@ -73,10 +73,11 @@ public class PayeeAddressActivity extends BaseActivity {
 
         initView();
         CoinInfo info = new CoinInfo();
-        info.setId(-1);
+        info.setCoin_id(-1);
         info.setName("全站钱包地址");
         info.setFull_name("全站钱包地址");
         info.setAddr("ZP" + full_address.toUpperCase());
+        info.setAddr_algorithm("eth");
 
         imgBack.setOnClickListener(v -> finish());
         imgShare.setOnClickListener(v -> toast("分享"));
@@ -111,7 +112,13 @@ public class PayeeAddressActivity extends BaseActivity {
         textFullName.setText(info.getFull_name());
         btnCopy.setEnabled(true);
         btnCopy.setText("复制收款地址");
-        textWalletAddress.setText(info.getAddr().toUpperCase());
+        String text=null;
+        if ("btc".equalsIgnoreCase(info.getAddr_algorithm())) {
+            text = info.getAddr();
+        } else if ("eth".equalsIgnoreCase(info.getAddr_algorithm())) {
+            text = info.getAddr().toUpperCase();
+        }
+        textWalletAddress.setText(text);
 
         //带logo二维码
         //CodeUtils.createImage(textContent, 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
@@ -156,10 +163,4 @@ public class PayeeAddressActivity extends BaseActivity {
         btnCopy = (Button) findViewById(R.id.btn_copy);
     }
 
-    public static void copyToClipboard(Context context, String text) {
-        ClipboardManager systemService = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        if (systemService != null) {
-            systemService.setPrimaryClip(ClipData.newPlainText("text", text));
-        }
-    }
 }

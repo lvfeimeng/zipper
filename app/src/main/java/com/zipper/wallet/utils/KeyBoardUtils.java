@@ -15,25 +15,26 @@ public class KeyBoardUtils {
     public static void openKeybord(View view, Context mContext) {
         InputMethodManager imm = (InputMethodManager) mContext
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,
-                InputMethodManager.HIDE_IMPLICIT_ONLY);
+        if (imm != null) {
+            imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
+        }
     }
 
     /**
      * 关闭软键盘
      */
-    public static void closeKeybord( Context mContext) {
+    public static void closeKeybord(Context mContext) {
         try {
             InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-            if(imm.isActive() && ((Activity)mContext).getWindow().getCurrentFocus() != null)
-                imm.hideSoftInputFromWindow(((Activity)mContext).getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
-        }catch (Exception e){
+            if (imm.isActive() && ((Activity) mContext).getWindow().getCurrentFocus() != null)
+                imm.hideSoftInputFromWindow(((Activity) mContext).getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (Exception e) {
             e.printStackTrace();
-            MyLog.e("KeyBoardUtils",e.getMessage());
+            MyLog.e("KeyBoardUtils", e.getMessage());
         }
     }
+
     /**
      * 关闭软键盘
      */
@@ -41,10 +42,10 @@ public class KeyBoardUtils {
         try {
             InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
-        }catch (Exception e){
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        } catch (Exception e) {
             e.printStackTrace();
-            MyLog.e("KeyBoardUtils",e.getMessage());
+            MyLog.e("KeyBoardUtils", e.getMessage());
         }
     }
 }

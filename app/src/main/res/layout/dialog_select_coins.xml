@@ -23,8 +23,9 @@
             android:layout_centerInParent="true"
             android:maxLines="1"
             android:text="选择币种"
+            android:textStyle="bold"
             android:textColor="@color/text_major"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/text_confirm"
