@@ -171,7 +171,7 @@ public abstract class HDMSingular {
                     throw new RuntimeException(e);
                 }
                 initColdFirst();
-                hdmBid = new HDMBId(coldFirst.toAddress());
+                hdmBid = new HDMBId(coldFirst.toBtcAddress());
                 runOnUIThread(new Runnable() {
                     @Override
                     public void run() {
@@ -277,7 +277,7 @@ public abstract class HDMSingular {
     private void initHotFirst() {
         DeterministicKey hotEx = rootFromMnemonic(hotMnemonicSeed);
         DeterministicKey hotFirst = hotEx.deriveSoftened(0);
-        hotFirstAddress = hotFirst.toAddress();
+        hotFirstAddress = hotFirst.toBtcAddress();
         hotEx.wipe();
         hotFirst.wipe();
     }

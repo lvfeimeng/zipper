@@ -59,7 +59,7 @@ public class Bip38 {
         DumpedPrivateKey dumpedPrivateKey = new DumpedPrivateKey(base58EncodedPrivateKey);
         ECKey key = dumpedPrivateKey.getKey();
         dumpedPrivateKey.clearPrivateKey();
-        byte[] salt = Bip38.calculateScryptSalt(key.toAddress());
+        byte[] salt = Bip38.calculateScryptSalt(key.toBtcAddress());
         byte[] stretchedKeyMaterial = bip38Stretch1(passphrase, salt, SCRYPT_LENGTH);
         return encryptNoEcMultiply(stretchedKeyMaterial, key, salt);
     }
@@ -366,7 +366,7 @@ public class Bip38 {
 
         // Validate result
 
-        byte[] newSalt = calculateScryptSalt(ecKey.toAddress());
+        byte[] newSalt = calculateScryptSalt(ecKey.toBtcAddress());
         if (!Arrays.equals(bip38Key.salt, newSalt)) {
             // The passphrase is either invalid or we are on the wrong network
             return null;
@@ -415,7 +415,7 @@ public class Bip38 {
 
         // Validate result
 
-        byte[] newSalt = calculateScryptSalt(key.toAddress());
+        byte[] newSalt = calculateScryptSalt(key.toBtcAddress());
         if (!Arrays.equals(bip38Key.salt, newSalt)) {
             // The passphrase is either invalid or we are on the wrong network
             return null;

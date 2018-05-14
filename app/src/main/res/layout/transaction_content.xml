@@ -2,17 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
     android:orientation="vertical"
-    android:paddingBottom="10dp"
+    android:paddingBottom="30dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
     android:paddingTop="20dp">
 
     <TextView
         android:id="@+id/text_state"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="等待转出"
+        android:text=""
         android:textColor="@color/text_minor"
         android:textSize="14sp" />
 
@@ -20,16 +20,22 @@
         android:id="@+id/details_currency"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30px"
-        android:text="- 130.25990 SMT"
+        android:layout_marginTop="15dp"
+        android:text=""
         android:textColor="@color/text_major"
-        android:textSize="28sp"
+        android:textSize="32sp"
         android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/line_input" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="83px"
+        android:layout_marginTop="20dp"
         android:text="发款方"
         android:textColor="@color/text_hint"
         android:textSize="14sp" />
@@ -38,16 +44,26 @@
         android:id="@+id/text_payer_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12px"
+        android:layout_marginTop="5dp"
         android:maxLines="2"
-        android:text="0xe54f1Dd2D3E97678F913844B6530c8Ddd4F08a97"
+        android:text=""
         android:textColor="@color/text_major"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/text_all_transfer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="查看全部"
+        android:textColor="@color/text_link"
         android:textSize="14sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40px"
+        android:layout_marginTop="10dp"
         android:text="收款方"
         android:textColor="@color/text_hint"
         android:textSize="14sp" />
@@ -56,16 +72,26 @@
         android:id="@+id/text_payee_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12px"
+        android:layout_marginTop="5dp"
         android:maxLines="2"
-        android:text="0xe54f1Dd2D3E97678F913844B6530c8Ddd4F08a97"
+        android:text=""
         android:textColor="@color/text_major"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/text_all_receive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="查看全部"
+        android:textColor="@color/text_link"
         android:textSize="14sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40px"
+        android:layout_marginTop="10dp"
         android:text="矿工费用"
         android:textColor="@color/text_hint"
         android:textSize="14sp" />
@@ -74,16 +100,16 @@
         android:id="@+id/text_miner_cost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12px"
+        android:layout_marginTop="5dp"
         android:maxLines="1"
-        android:text="0.001786948877 ether"
+        android:text=""
         android:textColor="@color/text_major"
         android:textSize="14sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40px"
+        android:layout_marginTop="15dp"
         android:text="备注"
         android:textColor="@color/text_hint"
         android:textSize="14sp" />
@@ -92,23 +118,23 @@
         android:id="@+id/text_remark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12px"
+        android:layout_marginTop="5dp"
         android:maxLines="1"
-        android:text="transfer"
+        android:text=""
         android:textColor="@color/text_major"
         android:textSize="14sp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="40px"
-        android:background="#EBEBEB" />
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/line_input" />
 
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40px"
+        android:layout_marginTop="15dp"
         android:text="交易ID:"
         android:textColor="@color/text_hint"
         android:textSize="14sp" />
@@ -117,16 +143,15 @@
         android:id="@+id/text_transfer_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12px"
-        android:maxLines="1"
-        android:text="sdjdff45ffs…67gdss"
+        android:layout_marginTop="5dp"
+        android:text=""
         android:textColor="@color/text_major"
         android:textSize="14sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40px"
+        android:layout_marginTop="15dp"
         android:text="区块:"
         android:textColor="@color/text_hint"
         android:textSize="14sp" />
@@ -135,16 +160,16 @@
         android:id="@+id/text_block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12px"
+        android:layout_marginTop="5dp"
         android:maxLines="1"
-        android:text="4895888"
+        android:text=""
         android:textColor="@color/text_major"
         android:textSize="14sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40px"
+        android:layout_marginTop="15dp"
         android:text="交易时间:"
         android:textColor="@color/text_hint"
         android:textSize="14sp" />
@@ -153,12 +178,10 @@
         android:id="@+id/text_transfer_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12px"
+        android:layout_marginTop="5dp"
         android:maxLines="1"
-        android:text="— : — : —"
+        android:text=""
         android:textColor="@color/text_major"
-        android:textSize="14sp"
-
-        />
+        android:textSize="14sp"/>
 
 </LinearLayout>

@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zipper.wallet.R;
-import com.zipper.wallet.activity.TransactionDefailsActivity;
+import com.zipper.wallet.activity.TransactionDetailsActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -62,7 +62,7 @@ public class DealRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         dHolder.mRelativeClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext, TransactionDefailsActivity.class).putExtra("currency",mList.get(position).get("count")+""));
+                mContext.startActivity(new Intent(mContext, TransactionDetailsActivity.class).putExtra("currency",mList.get(position).get("count")+""));
             }
         });
     }

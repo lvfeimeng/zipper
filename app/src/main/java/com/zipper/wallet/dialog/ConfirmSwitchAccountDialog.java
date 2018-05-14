@@ -71,7 +71,7 @@ public class ConfirmSwitchAccountDialog extends Dialog {
         textTotalAmount.setText(bean.getTotalAmount());
         textRealAmount.setText(bean.getRealAmount());
         textUnit.setText(bean.getType());
-        textUnit2.setText(bean.getType());
+        textUnit2.setText(bean.getUnit());
         textUnit3.setText(bean.getType());
         textPayerAddress.setText(bean.getPayerAddress());
         String name = bean.getPayeeName();
@@ -87,7 +87,6 @@ public class ConfirmSwitchAccountDialog extends Dialog {
     private void submit() {
         if (callback != null) {
             callback.confirmInfo();
-            dismiss();
         }
     }
 

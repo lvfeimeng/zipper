@@ -44,7 +44,7 @@ public class EnterpriseHDMSeed extends AbstractHD {
         EncryptedData encryptedMnemonicSeed = null;
         EncryptedData encryptedHDSeed = null;
         ECKey k = new ECKey(mnemonicSeed, null);
-        String address = k.toAddress();
+        String address = k.toBtcAddress();
         k.clearPrivateKey();
 
         hdSeed = seedFromMnemonic(mnemonicSeed);
@@ -82,7 +82,7 @@ public class EnterpriseHDMSeed extends AbstractHD {
             }
         }
         ECKey k = new ECKey(mnemonicSeed, null);
-        String address = k.toAddress();
+        String address = k.toBtcAddress();
         k.clearPrivateKey();
         wipeHDSeed();
         wipeMnemonicSeed();

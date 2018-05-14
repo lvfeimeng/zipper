@@ -28,7 +28,13 @@ public class DialogSelectCoinsAdapter extends CommonAdapter<CoinInfo> {
         View rootView = viewHolder.getConvertView();
         RadioButton radioButton = (RadioButton) rootView.findViewById(R.id.radio_button);
         radioButton.setChecked(item.isChecked());
-        radioButton.setText(item.getName().toUpperCase());
+        String text = null;
+        if ("btc".equalsIgnoreCase(item.getAddr_algorithm())) {
+            text = item.getName();
+        } else if ("eth".equalsIgnoreCase(item.getAddr_algorithm())) {
+            text = item.getName().toUpperCase();
+        }
+        radioButton.setText(text);
         radioButton.setGravity(Gravity.CENTER);
         radioButton.setOnClickListener(v -> {
             item.setChecked(true);

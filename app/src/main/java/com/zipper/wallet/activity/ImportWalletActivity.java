@@ -9,10 +9,14 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 
+import com.google.gson.Gson;
 import com.zipper.wallet.R;
+import com.zipper.wallet.activity.home.RegAddr;
 import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
+import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.definecontrol.WrapContentHeightViewPager;
+import com.zipper.wallet.ether.KECCAK256;
 import com.zipper.wallet.fragment.MnemonicWordFragment;
 import com.zipper.wallet.utils.CreateAcountUtils;
 import com.zipper.wallet.utils.MyLog;
@@ -20,6 +24,7 @@ import com.zipper.wallet.utils.MyPagerAdapter;
 import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 
+import net.bither.bitherj.crypto.ECKey;
 import net.bither.bitherj.crypto.hd.DeterministicKey;
 import net.bither.bitherj.utils.Utils;
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -31,7 +36,9 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTit
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -151,29 +158,36 @@ public class ImportWalletActivity extends BaseActivity {
         magicIndicator.setNavigator(commonNavigator);
     }
 
-
+    DeterministicKey master=null;
     /**
      * @param mnemSeed
      */
     public void generateWalletAddress(String randomSeed, String mnemSeed) {
-        MyLog.i(TAG,"randomSeed:"+randomSeed);
-        MyLog.i(TAG,"mnemSeed:"+mnemSeed);
+        MyLog.i(TAG, "randomSeed:" + randomSeed);
+        MyLog.i(TAG, "mnemSeed:" + mnemSeed);
         showProgressDialog("正在导入。。。");
         new Thread() {
             @Override
             public void run() {
                 CreateAcountUtils.instance(mContext);
 
-                DeterministicKey master = CreateAcountUtils.CreateRootKey(Utils.hexStringToByteArray(mnemSeed));//生成根公私钥对象
+                  master = CreateAcountUtils.CreateRootKey(Utils.hexStringToByteArray(mnemSeed));//生成根公私钥对象
 
                 CreateAcountUtils.saveCoins(master, mContext, new CreateAcountUtils.Callback() {
                     @Override
-                    public void saveSuccess() {
-                        String full_address =  CreateAcountUtils.getWalletAddr(master, 60);
+                    public void saveSuccess(List<CoinInfo> list) {
+                        StringBuilder sb = new StringBuilder();
+                        for (CoinInfo item : list) {
+                            sb.append(item.getCoin_id()).append("|").append(item.getAddr())
+                                    .append("|");
+                        }
+                        sb.deleteCharAt(sb.length() - 1);
+                        String full_address = CreateAcountUtils.getWalletAddr(master, 60,sb.toString());
                         //putString("full_address",full_address);
                         CreateAcountUtils.saveWallet(randomSeed, mnemSeed, full_address, new RuntHTTPApi.ResPonse() {
                             @Override
                             public void doSuccessThing(Map<String, Object> param) {
+
                                 Message msg = mHandler.obtainMessage();
                                 if (param.get("success") != null) {
                                     msg.what = TRANSMIT_PWD;
@@ -204,6 +218,7 @@ public class ImportWalletActivity extends BaseActivity {
             }
         }.start();
     }
+
 
 
 }

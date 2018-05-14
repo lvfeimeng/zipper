@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import com.zipper.wallet.R;
 import com.zipper.wallet.base.CreateActvity;
+import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.utils.CreateAcountUtils;
 import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.PreferencesUtils;
@@ -36,7 +37,7 @@ public class BackUpAcitivty extends CreateActvity {
     final int ERROR = 404;
 
 
-    Handler mHandler = new Handler(){
+    Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -46,10 +47,10 @@ public class BackUpAcitivty extends CreateActvity {
             switch (msg.what) {
                 case ERROR:
 
-                    if(obj!=null){
+                    if (obj != null) {
 
                         toast(obj.toString());
-                    }else{
+                    } else {
                         toast("生成数据错误");
                     }
 
@@ -57,15 +58,15 @@ public class BackUpAcitivty extends CreateActvity {
                     break;
 
                 case TRANSMIT_WORDS:
-                    if(obj!=null){
-                        if(obj instanceof  List){
-                            PreferencesUtils.clearData(mContext,PreferencesUtils.VISITOR);
-                            Intent intent = new Intent(mContext,MnemonicActivity.class);
-                            intent.putExtra("list",new RuntListSeria<String>((List<String>) obj));
+                    if (obj != null) {
+                        if (obj instanceof List) {
+                            PreferencesUtils.clearData(mContext, PreferencesUtils.VISITOR);
+                            Intent intent = new Intent(mContext, MnemonicActivity.class);
+                            intent.putExtra("list", new RuntListSeria<String>((List<String>) obj));
                             startActivity(intent);
                             finish();
                         }
-                    }else{
+                    } else {
                         toast("未曾生成数据");
                     }
 
@@ -81,7 +82,7 @@ public class BackUpAcitivty extends CreateActvity {
         setContentView(R.layout.activity_backup);
         super.onCreate(savedInstanceState);
 
-        btnBackup = (Button)findViewById(R.id.btn_backup);
+        btnBackup = (Button) findViewById(R.id.btn_backup);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -91,29 +92,29 @@ public class BackUpAcitivty extends CreateActvity {
                     }
                 });
             }
-        },5000);
+        }, 5000);
 
         btnBackup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showInputDialog("请输入密码","输入您设置的登录密码","Password","","取消","确认", InputType.TYPE_TEXT_VARIATION_PASSWORD,new RuntHTTPApi.ResPonse(){
+                showInputDialog("请输入密码", "输入您设置的登录密码", "Password", "", "取消", "确认", InputType.TYPE_TEXT_VARIATION_PASSWORD, new RuntHTTPApi.ResPonse() {
 
                     @Override
                     public void doSuccessThing(final Map<String, Object> param) {
-                        String pwd = PreferencesUtils.getString(mContext,KEY_WALLET_PWD,PreferencesUtils.VISITOR);
-                        if(pwd.equals(param.get(INPUT_TEXT).toString().trim())){
+                        String pwd = PreferencesUtils.getString(mContext, KEY_WALLET_PWD, PreferencesUtils.VISITOR);
+                        if (pwd.equals(param.get(INPUT_TEXT).toString().trim())) {
                             alertDialog.dismiss();
                             showProgressDialog("正在导出。。。");
-                            new Thread(){
+                            new Thread() {
                                 @Override
                                 public void run() {
                                     createAccount();
                                 }
                             }.start();
 
-                        }else{
+                        } else {
                             //hideProgressDialog();
-                            showTipDialog("密码错误","知道了",null);
+                            showTipDialog("密码错误", "知道了", null);
                         }
                     }
 
@@ -127,7 +128,7 @@ public class BackUpAcitivty extends CreateActvity {
     }
 
 
-    private void createAccount(){
+    private void createAccount() {
 
         try {
 
@@ -138,17 +139,23 @@ public class BackUpAcitivty extends CreateActvity {
             //randomSeed = Utils.hexStringToByteArray("937b52d8e571ed26f32c71dcaff6d57a");
 
             List<String> words = CreateAcountUtils.getMnemonicCode(randomSeed);//一局随机数获取助记词
-            for(String str : words){
-                MyLog.i(TAG,"words :"+str);
+            for (String str : words) {
+                MyLog.i(TAG, "words :" + str);
             }
-            byte[] mnemonicSeed =  CreateAcountUtils.createMnemSeed(words);//由助记词和密码生成种子,方法内含有转换512哈系数方式
+            byte[] mnemonicSeed = CreateAcountUtils.createMnemSeed(words);//由助记词和密码生成种子,方法内含有转换512哈系数方式
 
 
             DeterministicKey master = CreateAcountUtils.CreateRootKey(mnemonicSeed);//生成根公私钥对象
             CreateAcountUtils.saveCoins(master, mContext, new CreateAcountUtils.Callback() {
                 @Override
-                public void saveSuccess() {
-                    String full_address = CreateAcountUtils.getWalletAddr(master, 60);
+                public void saveSuccess(List<CoinInfo> list) {
+                    StringBuilder sb = new StringBuilder();
+                    for (CoinInfo item : list) {
+                        sb.append(item.getCoin_id()).append("|").append(item.getAddr())
+                                .append("|");
+                    }
+                    sb.deleteCharAt(sb.length() - 1);
+                    String full_address = CreateAcountUtils.getWalletAddr(master, 60, sb.toString());
                     //putString("full_address",full_address);
                     CreateAcountUtils.saveWallet(Utils.bytesToHexString(randomSeed), Utils.bytesToHexString(mnemonicSeed), full_address, new RuntHTTPApi.ResPonse() {
                         @Override
@@ -178,9 +185,9 @@ public class BackUpAcitivty extends CreateActvity {
                 }
             });
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            MyLog.e(TAG,e+"");
+            MyLog.e(TAG, e + "");
             toast(e.getMessage());
             hideProgressDialog();
         }

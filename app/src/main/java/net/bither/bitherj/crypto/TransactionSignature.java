@@ -16,6 +16,7 @@
 
 package net.bither.bitherj.crypto;
 
+import net.bither.bitherj.BitherjSettings;
 import net.bither.bitherj.exception.VerificationException;
 
 import java.io.ByteArrayOutputStream;
@@ -74,6 +75,9 @@ public class TransactionSignature extends ECKey.ECDSASignature {
      */
     public static int calcSigHashValue(SigHash mode, boolean anyoneCanPay) {
         int sighashFlags = mode.ordinal() + 1;
+        if (BitherjSettings.signForkID > 0) {
+            sighashFlags |= BitherjSettings.signForkID;
+        }
         if (anyoneCanPay)
             sighashFlags |= SIGHASH_ANYONECANPAY_VALUE;
         return sighashFlags;

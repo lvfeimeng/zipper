@@ -19,6 +19,7 @@
             android:layout_height="match_parent"
             app:collapsedTitleGravity="center"
             app:contentScrim="@color/white"
+            app:expandedTitleTextAppearance="@style/MyExpandedTitle"
             app:expandedTitleGravity="left|bottom"
             app:expandedTitleMarginBottom="22dp"
             app:expandedTitleMarginStart="20dp"

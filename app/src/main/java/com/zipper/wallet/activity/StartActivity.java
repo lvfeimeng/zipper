@@ -20,19 +20,21 @@ import com.zipper.wallet.utils.PreferencesUtils;
 
 public class StartActivity extends BaseActivity {
 
-    private Button btnCreate, btnImport, btnHome;
+    private Button btnCreate, btnImport;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_start);
         btnCreate = (Button) findViewById(R.id.btn_create);
         btnImport = (Button) findViewById(R.id.btn_import);
-        btnHome = (Button) findViewById(R.id.btn_wallet_home);
         btnCreate.setVisibility(View.INVISIBLE);
         btnImport.setVisibility(View.INVISIBLE);
-        btnHome.setVisibility(View.GONE);
         boolean isfirst = PreferencesUtils.getBoolean(this, "is_first", true, PreferencesUtils.PROJECT);
         setTransparentStatusBar();
         if (isfirst) {
@@ -102,12 +104,6 @@ public class StartActivity extends BaseActivity {
                 startActivity(new Intent(StartActivity.this, ImportWalletActivity.class));
             }
         });
-
-
-        btnHome.setOnClickListener(v ->
-                startActivity(new Intent(StartActivity.this, MyWalletActivity.class))
-        );
-
     }
 
     @Override

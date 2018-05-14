@@ -73,7 +73,7 @@ public abstract class ImportPrivateKey {
                 return null;
             } else {
                 List<String> addressList = new ArrayList<String>();
-                addressList.add(ecKey.toAddress());
+                addressList.add(ecKey.toBtcAddress());
                 return addECKey(ecKey);
             }
         } catch (Exception e) {
@@ -98,7 +98,7 @@ public abstract class ImportPrivateKey {
             ecKey = PrivateKeyUtil.encrypt(ecKey, password);
             encryptedPrivateString = PrivateKeyUtil.getEncryptedString(ecKey);
         }
-        Address address = new Address(ecKey.toAddress(), ecKey.getPubKey(), encryptedPrivateString
+        Address address = new Address(ecKey.toBtcAddress(), ecKey.getPubKey(), encryptedPrivateString
                 , false, ecKey.isFromXRandom());
         if (AddressManager.getInstance().getWatchOnlyAddresses().contains(address)) {
             password.wipe();

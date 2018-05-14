@@ -1,106 +1,91 @@
 package com.zipper.wallet.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.zipper.wallet.R;
+import com.zipper.wallet.activity.home.contract.HomeContract;
+import com.zipper.wallet.activity.home.presenter.HomePresenter;
 import com.zipper.wallet.adapter.TransactionHistoryAdapter;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.PropertyRecord;
 import com.zipper.wallet.utils.NormalDecoration;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionActivity extends BaseActivity {
-    private RecyclerView mRecyclehistory;
+public class TransactionActivity extends BaseActivity implements HomeContract.View {
+    private SwipeMenuRecyclerView mRecyclerView;
     private Toolbar mToolbar;
     private TransactionHistoryAdapter mAdapter;
     private List<PropertyRecord> items = null;
     private NormalDecoration mDecoration;
 
+    private HomePresenter presenter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
+        presenter = new HomePresenter(this, this);
         initView();
     }
 
     private void initView() {
 
-        mRecyclehistory = findViewById(R.id.recycler_history);
+        mRecyclerView = findViewById(R.id.recycler_view);
         mToolbar = findViewById(R.id.toolbar_transaction);
         setSupportActionBar(mToolbar);
-        findViewById(R.id.img_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        findViewById(R.id.img_back).setOnClickListener(v -> finish());
 
-        headView();
-        testData();
-    }
-
-    private void testData() {
-
-        List<PropertyRecord> list = DataSupport.findAll(PropertyRecord.class);
-        List<PropertyRecord> list2 = new ArrayList<>();
-        if (list != null) {
-            for (PropertyRecord record : list) {
-                list2.add(record);
-            }
-            loadData(list2);
-        } else {
-            mRecyclehistory.setVisibility(View.GONE);
-        }
-
-    }
-
-    private void loadData(List<PropertyRecord> list) {
-        if (list == null) {
-            return;
-        }
         items = new ArrayList<>();
-        items.addAll(list);
-//        for (PropertyRecord item : items) {
-//            if (!item.getFrom().equals("item.getAddr()") || !item.getTo().equals("item.getAddr()")) {
-//                mRecyclehistory.setVisibility(View.GONE);
-//            }
-//            item.setUnit("");
-//        }
-        isAdapter();
+        mAdapter = new TransactionHistoryAdapter(this, items);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setItemViewSwipeEnabled(false);
+        mRecyclerView.setLongPressDragEnabled(false);
+        headView();
+        mRecyclerView.setSwipeItemClickListener((itemView, position) -> {
+            startActivity(new Intent(mContext, TransactionDetailsActivity.class)
+                    .putExtra("coin_id", items.get(position).getCoin_id())
+                    .putExtra("currency", items.get(position)));
+        });
+        mRecyclerView.setAdapter(mAdapter);
+
+        loadData();
     }
 
-    private void isAdapter() {
-        mAdapter = new TransactionHistoryAdapter(items, this);
-        mRecyclehistory.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclehistory.setNestedScrollingEnabled(false);
-        mRecyclehistory.addItemDecoration(mDecoration);
-        mRecyclehistory.setAdapter(mAdapter);
+    private void loadData() {
+        List<PropertyRecord> list = DataSupport.order("timestamp desc").find(PropertyRecord.class);
+        items.addAll(list);
+//        PropertyRecord record = items.get(0);//测试数据
+//        record.setTimestamp(1527782400);
+//        items.add(0, record);
         mAdapter.notifyDataSetChanged();
+        for (PropertyRecord item : items) {
+            presenter.getBlockChainInfo(item.getCoin_id());
+        }
     }
 
     private void headView() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM月");
 
         mDecoration = new NormalDecoration() {
             @Override
             public String getHeaderName(int pos) {
-                if (items.get(pos).getAddr().equals(items.get(pos).getFrom()) || items.get(pos).getAddr().equals(items.get(pos).getTo())) {
-                    String date = sdf.format(items.get(pos).getTimestamp() * 1000);
-                    String subDate = date.substring(0, date.indexOf("月"));
-                    return subDate + "月";
-                }
-                return null;
+                return sdf.format(items.get(pos).getTimestamp() * 1000);
             }
         };
 
@@ -114,7 +99,32 @@ public class TransactionActivity extends BaseActivity {
             }
         });
 
-
+        mRecyclerView.addItemDecoration(mDecoration);
     }
 
+    public int blockHeight = 0;
+
+    @Override
+    public void doSuccess(int coin_id, Object obj) {
+        //{"data":{"height":41517},"errCode":0,"hash":"3c161dd82e4b4e51fc634c56267e6bd7"}
+        Log.d(TAG, "doSuccess: result=" + obj);
+        try {
+            JSONObject jsonObject = new JSONObject(obj.toString());
+            JSONObject object = jsonObject.optJSONObject("data");
+            if (object.optInt("errCode") == 0) {
+                blockHeight = object.optInt("height");
+                putString("blockHeight", String.valueOf(blockHeight));
+            }
+            mAdapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void doFailure() {
+        if (!TextUtils.isEmpty(getString("blockHeight"))) {
+            blockHeight = Integer.parseInt(getString("blockHeight"));
+        }
+    }
 }

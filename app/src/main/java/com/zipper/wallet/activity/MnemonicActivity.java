@@ -74,7 +74,7 @@ public class MnemonicActivity extends CreateActvity {
         PreferencesUtils.putStringSet(mContext,KEY_MNEN_WORDS,set,PreferencesUtils.VISITOR);*/
         switch (mode){
             case 0:
-                showTipDialog("请勿截图","如果有人获取你的助记词将直接获取你的资产！请抄写下助记词并存放在安全地方.",R.mipmap.no_photo,null);
+                showTipDialog("请勿截图","如果有人获取你的助记词将直接获取你的资产！请抄写下助记词并存放在安全地方.","", "知道了",R.mipmap.no_photo,null);
                 break;
             case 1:
                 startVerify();

@@ -71,7 +71,7 @@ public class ExportWalletFragment extends BaseFragment {
             type = getArguments().getInt(ARG_PARAM);
             switch (type) {
                 case 0:
-                    ((ExportWalletActivity)getActivity()).showTipDialog("请勿截图","如果有人获取你的助记词将直接获取你的资产！请抄写下助记词并存放在安全地方.",R.mipmap.no_photo,null);
+                    ((ExportWalletActivity)getActivity()).showTipDialog("请勿截图","如果有人获取你的助记词将直接获取你的资产！请抄写下助记词并存放在安全地方.","", "知道了",R.mipmap.no_photo,null);
                     resultStr = getArguments().getString(ARG_PARAM2);
                     break;
                 case 1:

@@ -51,10 +51,12 @@ public class CreatePwdAcitivty extends CreateActvity {
         txtAgree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext , WebBrowserActivity.class);
-                intent.putExtra(PARAMS_TITLE,"服务协议");
-                intent.putExtra(PARAMS_URL,"file:///android_asset/agreement.html");
-                startActivity(intent);
+//                Intent intent = new Intent(mContext , WebBrowserActivity.class);
+//                intent.putExtra(PARAMS_TITLE,"服务协议");
+//                intent.putExtra(PARAMS_URL,"file:///android_asset/agreement.html");
+//                startActivity(intent);
+                startActivity(new Intent(mContext, WebActivity.class)
+                        .putExtra("type", 1));
             }
         });
 

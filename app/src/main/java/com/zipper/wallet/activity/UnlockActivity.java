@@ -37,6 +37,7 @@ public class UnlockActivity extends BaseActivity {
         if(mode ==0 && pwd !=null && !pwd.equals("")){
             mode =1;
         }
+        titlebar.setLeftIcon(R.mipmap.back_white);
         txtTitle.setText(getString(R.string.input_hand_pwd));
         mUnlockView.setMode(UnlockView.CHECK_MODE);
         txtTip.setText("");

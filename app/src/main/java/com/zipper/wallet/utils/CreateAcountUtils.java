@@ -6,12 +6,14 @@ import android.database.sqlite.SQLiteException;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.zipper.wallet.activity.home.RegAddr;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
 
 import junit.framework.Assert;
 
+import net.bither.bitherj.BitherjSettings;
 import net.bither.bitherj.core.AbstractHD;
 import net.bither.bitherj.core.HDAccount;
 import net.bither.bitherj.crypto.ECKey;
@@ -199,27 +201,27 @@ public class CreateAcountUtils {
     }
 
 
-    /**
-     * 获取统一地址
-     *
-     * @param externalKey
-     * @return
-     */
-    public static String getFirstAddress(DeterministicKey externalKey) {
-        return getAddress(externalKey, 0);
-    }
+//    /**
+//     * 获取统一地址
+//     *
+//     * @param externalKey
+//     * @return
+//     */
+//    public static String getFirstAddress(DeterministicKey externalKey) {
+//        return getAddress(externalKey, 0);
+//    }
 
-    /**
-     * 获取指定的地址
-     *
-     * @param externalKey
-     * @param i
-     * @return
-     */
-    public static String getAddress(DeterministicKey externalKey, int i) {
-        DeterministicKey key = externalKey.deriveSoftened(i);
-        return key.toAddress();
-    }
+//    /**
+//     * 获取指定的地址
+//     *
+//     * @param externalKey
+//     * @param i
+//     * @return
+//     */
+//    public static String getAddress(DeterministicKey externalKey, int i) {
+//        DeterministicKey key = externalKey.deriveSoftened(i);
+//        return key.toBtcAddress();
+//    }
 
     /**
      * 生成根公私钥对象
@@ -278,6 +280,29 @@ public class CreateAcountUtils {
      * @param master
      * @return
      */
+    public static String getWalletAddr(DeterministicKey master, int coin_type, String coinInfoList) {
+        if (!isInstanced()) {
+            MyLog.e("CreateAcountUtils", "doesn't new this class, please use the method 'instance()' first");
+            throw new NullPointerException();
+        }
+        DeterministicKey purpose = master.deriveHardened(44);
+        DeterministicKey coinType = purpose.deriveHardened(coin_type);
+        DeterministicKey account = coinType.deriveHardened(0);
+        DeterministicKey account1 = account.deriveSoftened(0);
+        DeterministicKey account2 = account1.deriveSoftened(0);
+
+        purpose.wipe();
+        coinType.wipe();
+        account.wipe();
+        account1.wipe();
+        String addr = account2.toEthAddress();
+        if (!"1".equals(PreferencesUtils.getString(mContext, "isRegisterAddress", PreferencesUtils.USER))) {//注册地址失败，需要重新检查
+            new RegAddr(mContext).checkFullAddress(account2, "0x" + addr, coinInfoList);
+        }
+
+        return addr;
+    }
+
     public static String getWalletAddr(DeterministicKey master, int coin_type) {
         if (!isInstanced()) {
             MyLog.e("CreateAcountUtils", "doesn't new this class, please use the method 'instance()' first");
@@ -293,36 +318,45 @@ public class CreateAcountUtils {
         coinType.wipe();
         account.wipe();
         account1.wipe();
-        return account2.toAddress1();
+        String addr = account2.toEthAddress();
+        return addr;
     }
 
-    public static void saveCoins(DeterministicKey master, Context context,Callback callback) {
+    public static void saveCoins(DeterministicKey master, Context context, Callback callback) {
         try {
-            try {
-                SqliteUtils.execSQL("drop table coininfo");
-            } catch (SQLiteException e) {
-                e.printStackTrace();
-            }
-            SqliteUtils.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42),addr VARCHAR(42),decimals VARCHAR(42),amount VARCHAR(42),nonce VARCHAR(42),gas_price VARCHAR(42),icon VARCHAR(42));");
+//            try {
+//                SqliteUtils.execSQL("drop table coininfo");
+//            } catch (SQLiteException e) {
+//                e.printStackTrace();
+//            }
+//            SqliteUtils.execSQL("CREATE TABLE IF NOT EXISTS coininfo (id INTEGER PRIMARY KEY NOT NULL ,type INTEGER NOT NULL,name VARCHAR(42) NOT NULL,full_name VARCHAR(420) NOT NULL,addr_algorithm VARCHAR(42) NOT NULL,addr_algorithm_param TEXT,sign_algorithm VARCHAR(42) NOT NULL,sing_algorithm_param TEXT,token_type VARCHAR(42),token_addr VARCHAR(42),addr VARCHAR(42),decimals VARCHAR(42),amount VARCHAR(42),nonce VARCHAR(42),gas_price VARCHAR(42),icon VARCHAR(42));");
             String json = CoinsUtil.getJson(context);
             List<CoinInfo> list = new Gson().fromJson(json, new TypeToken<List<CoinInfo>>() {
             }.getType());
             if (list != null) {
                 for (CoinInfo coinInfo : list) {
-                    MyLog.i(TAG,"btc coinInfo:"+coinInfo);
+                    MyLog.i(TAG, "btc coinInfo:" + coinInfo);
                     String addr = "";
                     if ("btc".equalsIgnoreCase(coinInfo.getAddr_algorithm())) {
-                        addr = getAccount(master, coinInfo.getType()).toAddress();
-                        MyLog.i(TAG,"btc addr:"+addr);
+                        DeterministicKey key = getAccount(master, coinInfo.getType());
+                        //addr = com.zipper.wallet.crypto.utils.Utils.toBTCAddress(key.getPubKeyHash(),Integer.parseInt(coinInfo.getAddr_public()));
+                        BitherjSettings.addressHeader=Integer.parseInt(coinInfo.getAddr_public());
+                        BitherjSettings.p2shHeader=Integer.parseInt(coinInfo.getAddr_script());
+                        BitherjSettings.signForkID=Integer.parseInt(coinInfo.getSign_fork());
+                        addr = key.toBtcAddress();
+                        MyLog.i(TAG, "btc addr:" + addr);
                     } else if ("eth".equalsIgnoreCase(coinInfo.getAddr_algorithm())) {
-                        addr = "0x"+getWalletAddr(master, coinInfo.getType());
-                        MyLog.i(TAG,"eth addr:"+addr);
+                        addr = "0x" + getWalletAddr(master, coinInfo.getType());
+                        MyLog.i(TAG, "eth addr:" + addr);
                     }
                     coinInfo.setAddr(addr);
+                    coinInfo.setAddr(addr);
+                    coinInfo.setAmount("0");
+                    coinInfo.setGas_price("0");
                 }
                 DataSupport.saveAll(list);
             }
-            callback.saveSuccess();
+            callback.saveSuccess(list);
         } catch (Exception e) {
             callback.saveFailure();
             e.printStackTrace();
@@ -352,7 +386,10 @@ public class CreateAcountUtils {
                                     CoinInfo coinInfo = new CoinInfo(map);
                                     MyLog.i(TAG, coinInfo.getName() + "信息正在保存");
                                     if (coinInfo.getName().toLowerCase().equals("btc")) {
-                                        String addr = getAccount(master, coinInfo.getType()).toAddress();
+                                        BitherjSettings.addressHeader=Integer.parseInt(coinInfo.getAddr_public());
+                                        BitherjSettings.p2shHeader=Integer.parseInt(coinInfo.getAddr_script());
+                                        BitherjSettings.signForkID=Integer.parseInt(coinInfo.getSign_fork());
+                                        String addr = getAccount(master, coinInfo.getType()).toBtcAddress();
                                         MyLog.i(TAG, "addr:" + addr);
                                         coinInfo.setAddr(addr);
                                     } else if (coinInfo.getName().toLowerCase().equals("eth")) {
@@ -445,7 +482,6 @@ public class CreateAcountUtils {
             resPonse.doErrorThing(param);
         }
     }
-
 
     /**
      * 读取词库
@@ -761,8 +797,9 @@ public class CreateAcountUtils {
         return true;
     }
 
-    public interface Callback{
-        void saveSuccess();
+    public interface Callback {
+        void saveSuccess(List<CoinInfo> list);
+
         void saveFailure();
     }
 

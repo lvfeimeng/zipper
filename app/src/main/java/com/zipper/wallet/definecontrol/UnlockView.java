@@ -354,7 +354,8 @@ public class UnlockView extends View {
     private Circle getOuterCircle(int x, int y) {
         for (int i = 0; i < circleList.size(); i++) {
             Circle circle = circleList.get(i);
-            if ((x - circle.getX()) * (x - circle.getX()) + (y - circle.getY()) * (y - circle.getY()) <= normalR * normalR) {
+            //if ((x - circle.getX()) * (x - circle.getX()) + (y - circle.getY()) * (y - circle.getY()) <= normalR * normalR) {
+            if ((x - circle.getX()) * (x - circle.getX()) + (y - circle.getY()) * (y - circle.getY()) <= selectR * selectR) {
                 if (circle.getState() != CIRCLE_SELECTED) {
                     return circle;
                 }

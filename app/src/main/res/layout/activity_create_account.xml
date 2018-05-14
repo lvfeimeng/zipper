@@ -21,34 +21,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="20dp"
+        android:paddingLeft="24dp"
         android:paddingTop="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/wallet_name"
-            android:textColor="@color/black"/>
+            android:textSize="14sp"
+            android:textColor="@color/text_major"/>
 
         <EditText
             android:id="@+id/ed_name"
             android:layout_marginLeft="-4dp"
+            android:layout_marginTop="20dp"
             style="@style/EditText_register"
             android:layout_marginRight="30dp"
+            android:textColor="@color/text_major"
+            android:textColorHint="@color/text_hint"
             android:hint="@string/wallet_hint"
+            android:text=""
             android:singleLine="true"
-            />
+            android:textSize="16sp"/>
 
         <Button
             android:id="@+id/btn_next"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginTop="40dp"
+            android:layout_width="125dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="60dp"
             android:layout_marginBottom="10dp"
+
             android:background="@drawable/btn_ripple_blue_corner"
             android:enabled="false"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
             android:text="@string/next"
             android:textColor="@color/white"/>
     </LinearLayout>

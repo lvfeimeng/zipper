@@ -29,6 +29,7 @@ import com.zipper.wallet.utils.SqliteUtils;
 import net.bither.bitherj.crypto.EncryptedData;
 import net.bither.bitherj.utils.Utils;
 
+import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
@@ -136,6 +137,7 @@ public class WalletInfoActivity extends BaseActivity {
                                             SQLiteDatabase sqlDB = mContext.openOrCreateDatabase(SqliteUtils.DB, Context.MODE_PRIVATE, null);
                                             try {
                                                 sqlDB.execSQL("drop table walletinfo");
+                                                LitePal.deleteDatabase(SqliteUtils.DB);
                                             } catch (SQLiteException e) {
                                                 e.printStackTrace();
                                             }

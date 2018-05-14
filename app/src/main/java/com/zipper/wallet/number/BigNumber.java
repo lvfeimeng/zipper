@@ -2,6 +2,7 @@ package com.zipper.wallet.number;
 
 import com.zipper.wallet.utils.MyLog;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
@@ -52,7 +53,8 @@ public class BigNumber {
         return new BigInteger(doubleStr);
     }
     public BigInteger getBigInteger() {
-        return new BigInteger(intStr+doubleStr);
+        //return new BigInteger(intStr+doubleStr);
+        return new BigDecimal(toString()).toBigInteger();
     }
 
     @Override

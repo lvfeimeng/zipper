@@ -11,9 +11,9 @@ import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 import com.zipper.wallet.R;
 import com.zipper.wallet.database.CoinInfo;
-import com.zipper.wallet.number.BigNumber;
 import com.zipper.wallet.utils.ScreenUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -32,7 +32,8 @@ public class SelectCoinsAdapter extends CommonAdapter<CoinInfo> {
         vh.textName.setText(bean.getName());
         if (!TextUtils.isEmpty(bean.getAmount()) && !"null".equalsIgnoreCase(bean.getAmount())
                 && !TextUtils.isEmpty(bean.getDecimals()) && !"null".equalsIgnoreCase(bean.getDecimals())) {
-            String amount = new BigNumber(bean.getAmount()).divide(new BigNumber(bean.getDecimals())).toString();
+            BigDecimal decimal = new BigDecimal(bean.getAmount()).divide(new BigDecimal(bean.getDecimals()),8, BigDecimal.ROUND_HALF_UP);
+            String amount = decimal.toPlainString();
             vh.textBalance.setText(amount);
         } else {
             vh.textBalance.setText("0.00000000");

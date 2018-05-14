@@ -19,6 +19,7 @@ package net.bither.bitherj.crypto;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
+import net.bither.bitherj.BitherjSettings;
 import net.bither.bitherj.utils.Sha256Hash;
 import net.bither.bitherj.utils.Utils;
 
@@ -346,10 +347,11 @@ public class ECKey implements Serializable {
      * Returns the address that corresponds to the public part of this ECKey. Note that an address is derived from
      * the RIPEMD-160 hash of the public key and is not the public key itself (which is too large to be convenient).
      */
-    public String toAddress() {
+    public String toBtcAddress() {
         return Utils.toAddress(Utils.sha256hash160(pub));
     }
-    public String toAddress1() {
+
+    public String toEthAddress() {
         ECKey tecKey = new ECKey(priv,null,false);
         return Utils.bytesToHexString(Utils.sha256hash1601(tecKey.pub));
     }

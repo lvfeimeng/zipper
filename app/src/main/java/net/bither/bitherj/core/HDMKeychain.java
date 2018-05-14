@@ -63,7 +63,7 @@ public class HDMKeychain extends AbstractHD {
         EncryptedData encryptedMnemonicSeed = null;
         EncryptedData encryptedHDSeed = null;
         ECKey k = new ECKey(mnemonicSeed, null);
-        String address = k.toAddress();
+        String address = k.toBtcAddress();
         k.clearPrivateKey();
 
         hdSeed = seedFromMnemonic(mnemonicSeed);
@@ -97,7 +97,7 @@ public class HDMKeychain extends AbstractHD {
             }
         }
         ECKey k = new ECKey(mnemonicSeed, null);
-        String address = k.toAddress();
+        String address = k.toBtcAddress();
         k.clearPrivateKey();
         wipeHDSeed();
         wipeMnemonicSeed();
@@ -152,7 +152,7 @@ public class HDMKeychain extends AbstractHD {
             }
         }
         ECKey k = new ECKey(mnemonicSeed, null);
-        String address = k.toAddress();
+        String address = k.toBtcAddress();
         k.clearPrivateKey();
         String firstAddress = getFirstAddressFromSeed(password);
         wipeMnemonicSeed();
@@ -473,7 +473,7 @@ public class HDMKeychain extends AbstractHD {
         String encrypted = AbstractDb.addressProvider.getEncryptMnemonicSeed(hdSeedId);
         byte[] priv = new EncryptedData(encrypted).decrypt(password);
         ECKey k = new ECKey(priv, null);
-        String address = k.toAddress();
+        String address = k.toBtcAddress();
         Utils.wipeBytes(priv);
         k.clearPrivateKey();
         return new PasswordSeed(address, encrypted);

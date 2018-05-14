@@ -30,8 +30,8 @@
                 android:maxLines="4"
                 android:padding="5dp"
                 android:text=""
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textColor="@color/text_major"
+                android:textSize="16sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -39,8 +39,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:text="密码"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textColor="@color/text_major"
+                android:textSize="14sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -65,6 +65,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/pwd_warning"
+                        android:textSize="12sp"
                         android:textColor="@color/btn_delete" />
                 </LinearLayout>
 
@@ -79,12 +80,12 @@
                     android:hint="输入密码"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="0dp"
                     android:paddingRight="45dp"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:textColor="@color/text_major"
+                    android:textSize="16sp" />
 
 
                 <LinearLayout
@@ -118,8 +119,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
                 android:text="重复钱包密码"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textColor="@color/text_major"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/editConfirmPassword"
@@ -133,9 +134,12 @@
                 android:hint="重复密码"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:padding="5dp"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:paddingLeft="0dp"
+                android:paddingRight="45dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/text_major"
+                android:textSize="16sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -144,8 +148,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
                 android:text="密码提示"
-                android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textColor="@color/text_major"
+                android:textSize="14sp"
                 android:visibility="gone" />
 
             <EditText
@@ -160,8 +164,8 @@
                 android:hint="选填"
                 android:maxLines="1"
                 android:padding="5dp"
-                android:textColor="@color/black"
-                android:textSize="14sp"
+                android:textColor="@color/text_major"
+                android:textSize="16sp"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -180,8 +184,8 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="5dp"
                     android:text="我已经仔细阅读并同意"
-                    android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textColor="@color/text_major"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textAgreement"
@@ -190,7 +194,7 @@
                     android:layout_marginLeft="10dp"
                     android:text="服务及隐私条款"
                     android:textColor="@color/btn_normal"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
 

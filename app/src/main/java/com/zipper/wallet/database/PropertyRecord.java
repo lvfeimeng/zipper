@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by AlMn on 2018/04/21.
  */
 
-public class PropertyRecord extends DataSupport implements Serializable{
+public class PropertyRecord extends DataSupport implements Serializable {
 
     /**
      * timestamp : 1524204129
@@ -19,7 +19,7 @@ public class PropertyRecord extends DataSupport implements Serializable{
      * fee : 0
      * height : 5472635
      */
-
+    private long id;
     private long timestamp;
     private String hash;
     private String from;
@@ -30,17 +30,52 @@ public class PropertyRecord extends DataSupport implements Serializable{
 
     private String name;
     private String unit;
-
     private String addr;
+    private String decimals;
+    private int state;//转入1  转出-1
 
-    private String deciamls;
+    private String remark;
 
-    public String getDeciamls() {
-        return deciamls;
+    private int coin_id;
+
+    public int getCoin_id() {
+        return coin_id;
     }
 
-    public void setDeciamls(String deciamls) {
-        this.deciamls = deciamls;
+    public void setCoin_id(int coin_id) {
+        this.coin_id = coin_id;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public String getDecimals() {
+        return decimals;
+    }
+
+    public void setDecimals(String decimals) {
+        this.decimals = decimals;
     }
 
     public String getAddr() {

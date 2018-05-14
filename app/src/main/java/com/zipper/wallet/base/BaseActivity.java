@@ -1,8 +1,9 @@
 package com.zipper.wallet.base;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
@@ -20,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gyf.barlibrary.ImmersionBar;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zipper.wallet.R;
 import com.zipper.wallet.definecontrol.TitleBarView;
 import com.zipper.wallet.dialog.InputDialog;
@@ -30,13 +30,6 @@ import com.zipper.wallet.utils.PreferencesUtils;
 import com.zipper.wallet.utils.RuntHTTPApi;
 import com.zipper.wallet.utils.ScreenUtils;
 import com.zipper.wallet.utils.SqliteUtils;
-
-import org.litepal.LitePal;
-import org.litepal.LitePalDB;
-
-import java.net.HttpURLConnection;
-
-import io.reactivex.functions.Consumer;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -75,17 +68,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         TAG = getLocalClassName();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        HttpURLConnection con = null;
-        try {
-            // some code
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (con != null) {
-                con.disconnect();
-            }
-        }
+//        HttpURLConnection con = null;
+//        try {
+//            // some code
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (con != null) {
+//                con.disconnect();
+//            }
+//        }
     }
 
     public void putString(String key, String value) {
@@ -93,23 +85,23 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public String getString(String key) {
-        return PreferencesUtils.getString(mContext, KEY_IS_LOGIN, key);
+        return PreferencesUtils.getString(mContext, key, PreferencesUtils.USER);
     }
 
-    public void requestWritePermission() {
-        new RxPermissions(this)
-                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe(granted -> {
-                    LitePalDB lite = new LitePalDB("ZipperOne", 2);
-                    if (granted) {
-                        lite.setExternalStorage(true);
-                        lite.setStorage("zipper_one/database");
-                    } else {
-                        //toast("请授予写入权限");
-                        lite.setExternalStorage(false);
-                    }
-                });
-    }
+//    public void requestWritePermission() {
+//        new RxPermissions(this)
+//                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                .subscribe(granted -> {
+//                    LitePalDB lite = new LitePalDB("ZipperOne", 2);
+//                    if (granted) {
+//                        lite.setExternalStorage(true);
+//                        lite.setStorage("zipper_one/database");
+//                    } else {
+//                        //toast("请授予写入权限");
+//                        lite.setExternalStorage(false);
+//                    }
+//                });
+//    }
 
     public int getColorById(int colorId) {
         return getResources().getColor(colorId);
@@ -253,7 +245,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void hideProgressDialog() {
-        progressDialog.cancel();
+        if (progressDialog!=null) {
+            progressDialog.cancel();
+        }
     }
 
     private ImmersionBar mImmersionBar = null;
@@ -337,4 +331,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keycode, event);
     }
+
+    public static void copyToClipboard(Context context, String text) {
+        ClipboardManager systemService = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        if (systemService != null) {
+            systemService.setPrimaryClip(ClipData.newPlainText("text", text));
+        }
+    }
+
 }

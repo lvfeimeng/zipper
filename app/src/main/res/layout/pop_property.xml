@@ -25,8 +25,8 @@
             android:layout_centerHorizontal="true"
             android:background="@drawable/bg_rectangle_corner"
             android:orientation="vertical"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
+            android:paddingBottom="0dp"
+            android:paddingTop="0dp">
 
             <RadioButton
                 android:id="@+id/radio_all"
@@ -35,11 +35,11 @@
                 android:button="@null"
                 android:drawableRight="@drawable/bg_cost_selector"
                 android:gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:text="全部"
                 android:textColor="@color/raido_text3"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <RadioButton
                 android:id="@+id/radio_transfer"
@@ -48,11 +48,11 @@
                 android:button="@null"
                 android:drawableRight="@drawable/bg_cost_selector"
                 android:gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:text="转账"
                 android:textColor="@color/raido_text3"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <RadioButton
                 android:id="@+id/radio_receive"
@@ -61,11 +61,11 @@
                 android:button="@null"
                 android:drawableRight="@drawable/bg_cost_selector"
                 android:gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:text="收款"
                 android:textColor="@color/raido_text3"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <RadioButton
                 android:id="@+id/radio_going"
@@ -74,11 +74,11 @@
                 android:button="@null"
                 android:drawableRight="@drawable/bg_cost_selector"
                 android:gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:text="进行中"
                 android:textColor="@color/raido_text3"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
         </RadioGroup>
     </RelativeLayout>

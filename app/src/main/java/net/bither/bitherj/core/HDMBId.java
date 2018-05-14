@@ -63,7 +63,7 @@ public class HDMBId {
         String message = getBitidString();
         byte[] hash = Utils.getPreSignMessage(message);
         ECKey key = ECKey.signedMessageToKey(hash, signed);
-        if (Utils.compareString(address, key.toAddress())) {
+        if (Utils.compareString(address, key.toBtcAddress())) {
             throw new SignatureException();
 
         }
@@ -74,7 +74,7 @@ public class HDMBId {
         if (result) {
             encryptedBitherPassword = new EncryptedData(decryptedPassword, password);
             ECKey k = new ECKey(decryptedPassword, null);
-            addressOfSP = k.toAddress();
+            addressOfSP = k.toBtcAddress();
             k.clearPrivateKey();
             if (firstHotAddress == null) {
                 save(addressOfSP);
@@ -97,7 +97,7 @@ public class HDMBId {
         String message = getBitidString();
         byte[] hash = Utils.getPreSignMessage(message);
         ECKey key = ECKey.signedMessageToKey(hash, Utils.hexStringToByteArray(signString));
-        if (Utils.compareString(address, key.toAddress())) {
+        if (Utils.compareString(address, key.toBtcAddress())) {
             throw new SignatureException();
 
         }
@@ -106,7 +106,7 @@ public class HDMBId {
         recoveryHDMApi.handleHttpPost();
         List<HDMAddress.Pubs> result = recoveryHDMApi.getResult();
         ECKey k = new ECKey(decryptedPassword, null);
-        String address = k.toAddress();
+        String address = k.toBtcAddress();
         k.clearPrivateKey();
         encryptedBitherPassword = new EncryptedData(decryptedPassword, secureCharSequence);
         AbstractDb.addressProvider.addAndUpdateHDMBId(HDMBId.this, address);

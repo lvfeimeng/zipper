@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="130dp">
+    android:layout_height="130dp"
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/liner_gradient"
@@ -13,8 +13,8 @@
         <RelativeLayout
             android:id="@+id/rel_back"
             android:layout_width="match_parent"
-            android:layout_marginTop="20dp"
             android:layout_height="@dimen/item_lin_height"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -30,7 +30,7 @@
                     android:id="@+id/img_back"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@mipmap/back_white"/>
+                    android:background="@mipmap/back_white" />
 
             </LinearLayout>
 
@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:text="交易详情"
                     android:textColor="@color/white"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -68,9 +68,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="修改"
-                    android:visibility="gone"
                     android:textColor="@color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -86,8 +86,7 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@mipmap/inprocess"
-        />
+        android:src="@mipmap/inprocess" />
 
 
 </RelativeLayout>

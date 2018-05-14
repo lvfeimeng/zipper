@@ -3,6 +3,7 @@ package com.zipper.wallet.activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -11,7 +12,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
@@ -23,7 +23,10 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.gyf.barlibrary.ImmersionBar;
-import com.readystatesoftware.viewbadger.BadgeView;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zipper.wallet.R;
@@ -33,11 +36,11 @@ import com.zipper.wallet.adapter.ConisAdapter;
 import com.zipper.wallet.base.ActivityManager;
 import com.zipper.wallet.base.BaseActivity;
 import com.zipper.wallet.bean.WalletBean;
+import com.zipper.wallet.database.BtcUtxo;
 import com.zipper.wallet.database.CoinBalance;
 import com.zipper.wallet.database.CoinInfo;
 import com.zipper.wallet.database.WalletInfo;
 import com.zipper.wallet.definecontrol.AppBarStateChangeListener;
-import com.zipper.wallet.number.BigNumber;
 import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.NetworkUtils;
 import com.zipper.wallet.utils.PreferencesUtils;
@@ -46,9 +49,9 @@ import com.zipper.wallet.utils.ScreenUtils;
 import com.zipper.wallet.utils.SqliteUtils;
 
 import org.litepal.crud.DataSupport;
+import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +64,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
 //    public static final int REQUEST_CODE = 1000;
 
     protected TextView textWallet;
+    protected TextView textTitle;
     protected CollapsingToolbarLayout collapsingToolbar;
     protected AppBarLayout appBar;
     protected NavigationView navView;
@@ -72,6 +76,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     protected ImageView imgQrCode;
     protected ImageView imgSwitch;
     protected TextView textName;
+    protected SmartRefreshLayout refreshLayout;
 
     //headerview控件
     protected TextView textWalletAddress;
@@ -109,26 +114,31 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
 
         presenter = new HomePresenter(this, this);
         //presenter.getCoins();
+        getWalletInfo();
         loadData();
     }
 
     private void loadData() {
         List<CoinInfo> list = DataSupport.findAll(CoinInfo.class);
-        for (CoinInfo info : list) {
-            Map<String, String> map = new HashMap<>();
-//            if ("btc".equalsIgnoreCase(info.getAddr_algorithm())) {
-//                info.setAddr("159FTr7Gjs2Qbj4Q5q29cvmchhqymQA7of");
-//            } else if ("eth".equalsIgnoreCase(info.getAddr_algorithm())) {
-//                info.setAddr("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
-//            }
-//            if (info.getId() == 4) {
-//                map.put("address", "0x570d21bd8dd425093b803439625c26aa7a68e3eb");
-//            } else {
-//            }
-            map.put("address", info.getAddr());
-            presenter.getCoinBalance(info.getId(), new Gson().toJson(map));
+        if (list != null && list.size() > 0) {
+            items.clear();
         }
-        items.addAll(list);
+        for (CoinInfo info : list) {
+            if (info.isDefault()) {
+                items.add(info);
+                Map<String, String> map = new HashMap<>();
+                map.put("address", info.getAddr());
+                if (TextUtils.isEmpty(info.getToken_addr())) {
+                    presenter.getCoinBalance(info.getCoin_id(), new Gson().toJson(map));
+                } else {
+                    map.put("token_address", info.getToken_addr());
+                    presenter.getTokenCoinBalance(info.getCoin_id(), info.getToken_type(), new Gson().toJson(map));
+                }
+                if ("btc".equalsIgnoreCase(info.getAddr_algorithm())) {
+                    presenter.getBtcUtxo(info.getCoin_id(), new Gson().toJson(map));
+                }
+            }
+        }
         adapter.notifyDataSetChanged();
     }
 
@@ -143,6 +153,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
 
     private void initView() {
         textWallet = (TextView) findViewById(R.id.text_wallet);
+        textTitle = (TextView) findViewById(R.id.text_title);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         appBar = (AppBarLayout) findViewById(R.id.appBar);
         navView = (NavigationView) findViewById(R.id.nav_view);
@@ -163,7 +174,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         imgSwitch.setOnClickListener(MyWalletActivity.this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         View view = inflate(R.layout.layout_wallet_center);
-        view.setLayoutParams(new LinearLayout.LayoutParams(-1, ScreenUtils.dp2px(mContext, 40)));
+        view.setLayoutParams(new LinearLayout.LayoutParams(-1, ScreenUtils.dp2px(mContext, 60)));
         recyclerView.addHeaderView(view);
 
         view.findViewById(R.id.image_add).setOnClickListener(v ->
@@ -185,27 +196,14 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         );
         recyclerView.setSwipeItemClickListener((itemView, position) -> {
             CoinInfo bean = items.get(position);
-            String amount = "";
-            if (TextUtils.isEmpty(bean.getAmount())) {
-                amount = "0.00000000";
-            } else {
-                //getFormatData(balance.getAmount(), item.getDecimals())
-                amount = new BigNumber(bean.getAmount()).divide(new BigNumber(bean.getDecimals())).toString();
-            }
             startActivity(new Intent(this, PropertyDetailActivity.class)
-                    .putExtra("id", bean.getId())
-                    .putExtra("full_address", address)
-                    .putExtra("address", bean.getAddr())
-                    .putExtra("deciamls", bean.getDecimals())
-                    .putExtra("amount", amount)
-                    .putExtra("name", bean.getName())
-                    .putExtra("full_name", bean.getFull_name()));
+                    .putExtra("item", bean)
+                    .putExtra("full_address", address));
         });
         initSwipeSetting();
         items = new ArrayList<>();
         adapter = new ConisAdapter(this, items);
         recyclerView.setAdapter(adapter);
-//        addScrollListener();
         initNavHeaderView();
         appBar.addOnOffsetChangedListener(new AppBarStateChangeListener() {
             @Override
@@ -214,33 +212,32 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                     //展开状态
                     imgQrCode.setVisibility(View.GONE);
                     imgSwitch.setVisibility(View.GONE);
+                    textTitle.setVisibility(View.GONE);
                 } else if (state == State.COLLAPSED) {
                     //折叠状态
                     imgQrCode.setVisibility(View.VISIBLE);
                     imgSwitch.setVisibility(View.VISIBLE);
+                    textTitle.setVisibility(View.VISIBLE);
                 } else {
                     //中间状态
                     imgQrCode.setVisibility(View.GONE);
                     imgSwitch.setVisibility(View.GONE);
+                    textTitle.setVisibility(View.GONE);
                 }
             }
         });
-    }
 
-    private void addScrollListener() {
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int distance = getScollYDistance();
-                if (distance >= 1) {
-                    imgQrCode.setVisibility(View.VISIBLE);
-                    imgSwitch.setVisibility(View.VISIBLE);
-                } else {
-                    imgQrCode.setVisibility(View.GONE);
-                    imgSwitch.setVisibility(View.GONE);
-                }
-            }
+        refreshLayout = (SmartRefreshLayout) findViewById(R.id.refresh_layout);
+        refreshLayout.setEnableRefresh(true);
+        refreshLayout.setEnableLoadmore(false);
+        refreshLayout.setRefreshHeader(new ClassicsHeader(mContext).setSpinnerStyle(SpinnerStyle.Translate));
+        refreshLayout.setRefreshFooter(new ClassicsFooter(mContext).setSpinnerStyle(SpinnerStyle.Translate));
+        refreshLayout.setOnRefreshListener(refreshlayout -> {
+            loadData();
+            refreshlayout.finishRefresh(1000);
+        });
+        refreshLayout.setOnLoadmoreListener(refreshlayout -> {
+            refreshlayout.finishLoadmore(1000);
         });
     }
 
@@ -307,11 +304,12 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             //drawerLayout.closeDrawer(GravityCompat.START);
         });
 
-        BadgeView badge = new BadgeView(this, textBadger);
-        badge.setText("1");
-        badge.show();
+//        BadgeView badge = new BadgeView(this, textBadger);
+//        badge.setText("1");
+//        badge.show();
 
-        headerView.findViewById(R.id.img_setting)
+        headerView
+                .findViewById(R.id.img_setting)
                 .setOnClickListener(
                         v -> startActivity(new Intent(this, WalletInfoActivity.class))
                 );
@@ -322,16 +320,23 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         });
     }
 
+    WalletInfo walletInfo = null;
+
+    private void getWalletInfo() {
+        List<WalletInfo> list = new ArrayList<>();
+        SqliteUtils.openDataBase(this);
+        List<Map> maps = SqliteUtils.selecte("walletinfo");
+        for (Map map : maps) {
+            list.add(new WalletInfo(map));
+        }
+        walletInfo = list.get(0);
+        walletId = walletInfo.getId();
+        address = walletInfo.getAddress();
+    }
+
     private void setWalletName() {
         try {
-            List<WalletInfo> list = new ArrayList<>();
-            SqliteUtils.openDataBase(this);
-            List<Map> maps = SqliteUtils.selecte("walletinfo");
-            for (Map map : maps) {
-                list.add(new WalletInfo(map));
-            }
-            WalletInfo walletInfo = list.get(0);
-            walletId = walletInfo.getId();
+            getWalletInfo();
             //WalletInfo walletInfo = DataSupport.find(WalletInfo.class, walletId);
             if (!TextUtils.isEmpty(walletInfo.getName()) && !"null".equalsIgnoreCase(walletInfo.getName())) {
                 textWalletName.setText(walletInfo.getName());
@@ -341,16 +346,19 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 textWalletName.setText("我的钱包");
                 textName.setText("我的钱包");
             }
-            address = walletInfo.getAddress();
+
             if (!TextUtils.isEmpty(address)) {
                 String result = "zp" + address.substring(0, 5) + "..." + address.substring(address.length() - 7);
                 textWallet.setText(result.toUpperCase());
                 textWalletAddress.setText(result.toUpperCase());
+                textTitle.setText(result.toUpperCase());
             } else {
                 textWallet.setText("");
                 textWalletAddress.setText("");
+                textTitle.setText("");
             }
             WalletBean.setWalletBean(walletInfo.toMap());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -414,8 +422,8 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             case R.id.text_switch_account:
             case R.id.img_switch:
 
-                if(NetworkUtils.getNetworkType(this, (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)) == NetworkUtils.NetworkType.NONE){
-                    showTipDialog("没有网络连接","是否开启网络设置","取消","去设置", new RuntHTTPApi.ResPonse() {
+                if (NetworkUtils.getNetworkType(this, (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)) == NetworkUtils.NetworkType.NONE) {
+                    showTipDialog("没有网络连接", "是否开启网络设置", "取消", "去设置", new RuntHTTPApi.ResPonse() {
                         @Override
                         public void doSuccessThing(Map<String, Object> param) {
                             NetworkUtils.setNetwork(mContext);
@@ -425,9 +433,9 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                         public void doErrorThing(Map<String, Object> param) {
                         }
                     });
-                }else if(!NetworkUtils.checkNetworkState(this)){
+                } else if (!NetworkUtils.checkNetworkState(this)) {
                     toast("连接不到互联网，请稍后再试！！！");
-                }else {
+                } else {
                     startActivity(new Intent(this, TransferAccountActivity.class));
                 }
                 break;
@@ -491,19 +499,54 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     private boolean isResponse = false;
 
     @Override
-    public void doSuccess(int id, Object obj) {
+    public void doSuccess(int coin_id, Object obj) {
         if (obj == null) {
-            //getLocalData();
             return;
         }
         isResponse = true;
-        CoinBalance balance = (CoinBalance) obj;
-        if (balance == null) {
+        if (obj instanceof CoinBalance) {
+            CoinBalance balance = (CoinBalance) obj;
+            saveBalanceData(coin_id, balance);
+        } else if (obj instanceof List) {
+            List<BtcUtxo> utxoList = (List<BtcUtxo>) obj;
+            saveUtxoData(coin_id, utxoList);
+        }
+    }
+
+    private void saveUtxoData(int coin_id, List<BtcUtxo> utxoList) {
+        if (utxoList == null) {
             return;
         }
-        balance.save();
+        CoinInfo coinInfo = getCoinInfo(coin_id);
+        for (BtcUtxo utxo : utxoList) {
+            utxo.setAddr(coinInfo.getAddr());
+            utxo.setCoin_id(coin_id);
+        }
+        String sql = "CREATE TABLE IF NOT EXISTS btcutxo (id INTEGER PRIMARY KEY ,coin_id INTEGER ,n INTEGER,value TEXT,addr TEXT,hash TEXT,script TEXT);";
+        SqliteUtils.execSQL(sql);
+        if (DataSupport.count(BtcUtxo.class) > 0) {
+            DataSupport.deleteAll(BtcUtxo.class, "coin_id =" + coin_id);
+        }
+        DataSupport.saveAll(utxoList);
+    }
+
+    private CoinInfo getCoinInfo(int coin_id) {
         for (CoinInfo item : items) {
-            if (id == item.getId()) {
+            if (item.getCoin_id() == coin_id) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    private void saveBalanceData(int coin_id, CoinBalance balance) {
+        if (balance == null) {
+            getLocalData();
+            return;
+        }
+        //balance.save();
+        for (CoinInfo item : items) {
+            if (coin_id == item.getCoin_id()) {
                 item.setAmount(balance.getAmount());
                 item.setGas_price(balance.getGas_price());
                 item.setNonce(balance.getNonce());
@@ -511,11 +554,10 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 values.put("amount", item.getAmount());
                 values.put("gas_price", item.getGas_price());
                 values.put("nonce", item.getNonce());
-                DataSupport.update(CoinInfo.class, values, item.getId());
+                DataSupport.updateAll(CoinInfo.class, values, "coin_id = " + item.getCoin_id());
                 break;
             }
         }
-        //DataSupport.saveAll(items);
         adapter.notifyDataSetChanged();
     }
 
@@ -528,25 +570,17 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void getLocalData() {
-        items.clear();
         List<CoinInfo> list = DataSupport.findAll(CoinInfo.class);
-        if (list != null) {
-            items.addAll(list);
+        if (list != null && list.size() > 0) {
+            items.clear();
         }
-        adapter.notifyDataSetChanged();
-    }
-
-    private String getFormatData(String amount, String decimals) {
-        try {
-            if (TextUtils.isEmpty(amount) || TextUtils.isEmpty(decimals) || "null".equalsIgnoreCase(amount) || "null".equalsIgnoreCase(decimals)) {
-                return "0";
+        for (CoinInfo coinInfo : list) {
+            if (coinInfo.isDefault()) {
+                items.add(coinInfo);
             }
-            double result = Double.parseDouble(amount) / Double.parseDouble(decimals);
-            return new DecimalFormat("0.00000000").format(result);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
         }
-        return "";
+
+        adapter.notifyDataSetChanged();
     }
 
 }

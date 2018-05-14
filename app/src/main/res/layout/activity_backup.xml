@@ -10,8 +10,8 @@
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:left_icon_visible="visible"
         app:bottom_visible="gone"
+        app:left_icon_visible="visible"
         app:title_text="">
 
     </com.zipper.wallet.definecontrol.TitleBarView>
@@ -19,44 +19,47 @@
 
     <ImageView
         android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:src="@mipmap/backup_icon"/>
+        android:layout_height="60dp"
+        android:layout_marginLeft="24dp"
+        android:src="@mipmap/backup_icon" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="20dp"
         android:text="@string/backup_wallet"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="20dp"
-        android:textColor="@color/black"
-        android:textSize="25sp"/>
+        android:textColor="@color/text_major"
+        android:textSize="32sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
         android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="30dp"
-                    android:lineSpacingExtra="5dp"
-                    android:text="@string/backup_tips" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="24dp"
+            android:layout_marginLeft="24dp"
+            android:lineSpacingExtra="5dp"
+            android:text="@string/backup_tips"
+            android:textColor="@color/text_minor"
+            android:textSize="14sp" />
     </LinearLayout>
 
 
     <Button
         android:id="@+id/btn_backup"
         style="@style/btn_small"
-        android:layout_width="110dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="20dp"
+        android:layout_width="125dp"
+        android:layout_height="45dp"
         android:layout_gravity="left"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="60dp"
         android:text="@string/backup"
         android:textColor="@color/white"
-        android:theme="@style/btn_sky_blue" />
+        android:background="@drawable/btn_ripple_blue_corner" />
 
 </LinearLayout>

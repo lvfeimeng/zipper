@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="70dp">
 
     <TextView
         android:id="@+id/text_name"
@@ -9,11 +9,11 @@
         android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
         android:text=""
         android:drawableRight="@mipmap/arrow_right"
-        android:textColor="@color/black"
+        android:textColor="@color/text_major"
         android:textSize="16sp" />
 
     <!--<View-->
