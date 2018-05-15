@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -253,6 +254,9 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
         if (TextUtils.isEmpty(inputAmount)) {
             toast("请输入转账金额");
             return;
+        }else if((inputAmount.indexOf(".") > -1?inputAmount.substring(inputAmount.indexOf(".")).length():inputAmount.length())>8||(inputAmount.indexOf(".") > -1?inputAmount.substring(0,inputAmount.indexOf(".")).length():inputAmount.length())>8){
+            toast("转账金额整数和小数部分不得超过8位");
+            return;
         }
         remark = editRemark.getText().toString().trim();
         if (TextUtils.isEmpty(remark)) {
@@ -299,6 +303,7 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
         String total = new BigDecimal(coinsChoosed.getAmount()).divide(new BigDecimal(coinsChoosed.getDecimals())).toString();
         if (miner_cost_type == 0) {//从余额中扣除
             //判断输入的转账金额+矿工费用<=账户余额
+            MyLog.i(TAG,String.format("inputAmount:%s,cost:%s,total:%s",inputAmount,cost,total));
             int result = new BigDecimal(inputAmount).add(cost).compareTo(new BigDecimal(total));
             if (result == 1) {
                 toast("转账金额+矿工费用不能大于账户余额");
@@ -637,6 +642,7 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
         }
         WalletInfo walletInfo = list.get(0);
         byte[] seed = new EncryptedData(walletInfo.getEsda_seed()).decrypt(pwd);
+        confirmDialog.dismiss();
         DeterministicKey master = HDKeyDerivation.createMasterPrivateKey(seed);
         CreateAcountUtils.instance(mContext);
         DeterministicKey master2 = CreateAcountUtils.getAccount(master, coinsChoosed.getType());
@@ -660,6 +666,11 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
             if (TextUtils.isEmpty(coinsChoosed.getToken_addr())) {
                 eth = EtherRawTransaction.createTransaction(nonce, gasPrice, gasLimit, payeeAddress.toLowerCase(), value, "0x");
             } else {
+                //6.0以下系统，取消请求权限
+                if(Build.VERSION.SDK_INT< Build.VERSION_CODES.N){
+                    toast("暂不支持android 6.0 及以前的系统");
+                    return;
+                }
                 eth = EtherRawTransaction.createTransaction(nonce, gasPrice, gasLimit, coinsChoosed.getToken_addr().toLowerCase()
                         , new BigInteger("0"), ERC20Token.transfer(payeeAddress.toLowerCase(), value));
             }
@@ -756,6 +767,8 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
 
     @Override
     public void doSuccess(int coin_id, Object obj) {
+        Log.d(TAG, "doSuccess: coin_id=" + coin_id+ " obj:"+obj);
+        MyLog.i(TAG,"obj class:"+obj.getClass());
         if (isSendTransaction) {
             hideProgressDialog();
         }
@@ -767,7 +780,6 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
         try {
             if (isSendTransaction) {
                 String json = (String) obj;
-                Log.d(TAG, "doSuccess: json=" + json);
                 if (json == null) {
                     return;
                 }
@@ -816,7 +828,6 @@ public class TransferAccountActivity extends BaseActivity implements HomeContrac
             coinInfoSetting(coinsChoosed);
         }
     }
-
     private void handleTransferResult(String hash, String height) {
         PropertyRecord record = new PropertyRecord();
         record.setHash(hash);

@@ -13,9 +13,9 @@ import com.zipper.wallet.database.CoinInfo;
 import java.util.List;
 
 /**
+ * 币种选择适配器
  * Created by AlMn on 2018/04/12.
  */
-
 public class DialogSelectCoinsAdapter extends CommonAdapter<CoinInfo> {
 
 
@@ -36,7 +36,7 @@ public class DialogSelectCoinsAdapter extends CommonAdapter<CoinInfo> {
         }
         radioButton.setText(text);
         radioButton.setGravity(Gravity.CENTER);
-        radioButton.setOnClickListener(v -> {
+        radioButton.setOnClickListener(v -> {//设置是否选中
             item.setChecked(true);
             for (CoinInfo mData : mDatas) {
                 if (mData != item) {

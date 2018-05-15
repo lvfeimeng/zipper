@@ -1,5 +1,7 @@
 package com.zipper.wallet.btc;
 
+import com.zipper.wallet.utils.MyLog;
+
 import net.bither.bitherj.BitherjSettings;
 import net.bither.bitherj.exception.TxBuilderException;
 import net.bither.bitherj.script.Script;
@@ -34,7 +36,12 @@ public class TxBuilder {
 
         Tx tx = new Tx();
         for (int i = 0; i < amounts.size(); i++) {
-            tx.addOutput(new Out(amounts.get(i), ScriptBuilder.createOutputScript(addresses.get(i)).getProgram()));
+            try {
+                tx.addOutput(new Out(amounts.get(i), ScriptBuilder.createOutputScript(addresses.get(i)).getProgram()));
+            }catch (NullPointerException e){
+                e.printStackTrace();
+                MyLog.e("NullPointerException","i:"+i+" amounts:"+amounts.get(i) );
+            }
         }
 
         for (Out out : tx.getOuts()) {

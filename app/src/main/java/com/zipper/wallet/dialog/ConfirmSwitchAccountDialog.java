@@ -18,7 +18,6 @@ import com.zipper.wallet.utils.ScreenUtils;
 /**
  * Created by AlMn on 2018/04/11.
  */
-
 public class ConfirmSwitchAccountDialog extends Dialog {
 
     private View rootView;

@@ -93,6 +93,9 @@ public class RuntHTTPApi {
     //以json为参数传递
     public static void request(String lastUrl, String json, StringCallback callback) {
         String url = SERVER_URL + lastUrl;
+        System.out.println("---------------传输的数据-------------------");
+        System.out.println("url:" + url);
+        System.out.println("json:" + json);
         if (json == null) {
             return;
         }

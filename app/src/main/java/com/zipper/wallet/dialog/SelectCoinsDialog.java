@@ -14,15 +14,16 @@ import android.widget.TextView;
 import com.zipper.wallet.R;
 import com.zipper.wallet.adapter.DialogSelectCoinsAdapter;
 import com.zipper.wallet.database.CoinInfo;
+import com.zipper.wallet.utils.MyLog;
 import com.zipper.wallet.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 收款币种选择弹框
  * Created by AlMn on 2018/04/12.
  */
-
 public class SelectCoinsDialog extends Dialog {
 
     private View rootView;
@@ -35,6 +36,7 @@ public class SelectCoinsDialog extends Dialog {
 
     private Callback callback;
 
+
     public SelectCoinsDialog(@NonNull Context context, List<CoinInfo> list) {
         super(context, R.style.BottomDialog);
         View rootView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_select_coins, null);
@@ -44,7 +46,7 @@ public class SelectCoinsDialog extends Dialog {
         if (list != null) {
             items.addAll(list);
         }
-        adapter = new DialogSelectCoinsAdapter(getContext(), items);
+        adapter = new DialogSelectCoinsAdapter(getContext(), items);//弹框适配器
         listView.setAdapter(adapter);
     }
 
@@ -65,8 +67,8 @@ public class SelectCoinsDialog extends Dialog {
         textConfirm = (TextView) rootView.findViewById(R.id.text_confirm);
         listView = (ListView) rootView.findViewById(R.id.list_view);
 
-        imgClose.setOnClickListener(v -> dismiss());
-        textConfirm.setOnClickListener(v -> confim());
+        imgClose.setOnClickListener(v -> back());//取消
+        textConfirm.setOnClickListener(v -> confim());//确认
     }
 
     private void confim() {
@@ -80,6 +82,10 @@ public class SelectCoinsDialog extends Dialog {
         if (callback != null) {
             callback.confirmCoinType(bean);
         }
+    }
+
+    private void back(){
+        dismiss();
     }
 
     public void setCallback(Callback callback) {
