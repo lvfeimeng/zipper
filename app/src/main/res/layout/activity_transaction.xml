@@ -18,12 +18,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:collapsedTitleGravity="center"
-            app:expandedTitleTextAppearance="@style/MyExpandedTitle"
             app:contentScrim="@color/white"
+            app:expandedTitleMarginStart="15dp"
+            app:expandedTitleTextAppearance="@style/MyExpandedTitle"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
             app:statusBarScrim="@color/white"
             app:title="交易记录"
-            app:expandedTitleMarginStart="15dp"
             app:titleEnabled="true">
 
             <!--app:statusBarScrim="@android:color/transparent"-->
@@ -61,11 +61,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-    <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
-        android:id="@+id/recycler_view"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </android.support.design.widget.CoordinatorLayout>

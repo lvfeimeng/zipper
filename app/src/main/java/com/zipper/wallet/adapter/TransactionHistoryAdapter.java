@@ -43,7 +43,13 @@ public class TransactionHistoryAdapter extends CommonAdapter<PropertyRecord> {
             holder.mCurrency.setText("");
         }
         holder.mDate.setText(sdf.format(mItem.getTimestamp() * 1000));
-        int times = ((TransactionActivity) mContext).blockHeight - Integer.parseInt(mItem.getHeight()) + 1;
+        if (TextUtils.isEmpty(mItem.getBlockHeight())||"null".equalsIgnoreCase(mItem.getBlockHeight())) {
+            mItem.setBlockHeight("0");
+        }
+        if (TextUtils.isEmpty(mItem.getHeight())||"null".equalsIgnoreCase(mItem.getHeight())) {
+            mItem.setHeight("0");
+        }
+        int times = Integer.parseInt(mItem.getBlockHeight()) - Integer.parseInt(mItem.getHeight()) + 1;
         holder.mConfirmNum.setText("确定次数:" + times);
         //String formatData = getFormatData(item.getValue(), ((PropertyDetailActivity) mContext).deciamls);
         String symbol = "";

@@ -27,6 +27,7 @@ public class PropertyRecord extends DataSupport implements Serializable {
     private String value;
     private String fee;
     private String height;
+    private String blockHeight;
 
     private String name;
     private String unit;
@@ -37,6 +38,14 @@ public class PropertyRecord extends DataSupport implements Serializable {
     private String remark;
 
     private int coin_id;
+
+    public String getBlockHeight() {
+        return blockHeight;
+    }
+
+    public void setBlockHeight(String blockHeight) {
+        this.blockHeight = blockHeight;
+    }
 
     public int getCoin_id() {
         return coin_id;
