@@ -33,7 +33,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="30dp"
                 android:textSize="14sp"
                 android:text="@string/pwd_work"
                 android:textColor="@color/text_minor" />
